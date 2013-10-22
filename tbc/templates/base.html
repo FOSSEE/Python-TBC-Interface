@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+       {% block title %}
+       Python Textbook Companion Project | FOSSEE, IIT Bombay
+       {% endblock %}
+     </title>
+   {% block meta %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+   {% endblock %}
+   
+   <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css" /> 
+   <link rel ="stylesheet" href="{% static 'css/responsive.css' %}" type="text/css"/>
+   {% block css %}
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+   {% endblock %}
+
+   {% block script %}
+   {% endblock %}
+   </head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/">Python Textbook Companion</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="#">Internship Forms</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">About<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Python TBC</a></li>
+                  <li><a href="http://fossee.in" target="_blank">FOSSEE</a></li>
+                  <li><a href="#" target="_blank">Python Team</a></li>
+                </ul>
+              </li>
+            </ul>
+	    {% if not user %}
+	    <form action="" method="post" class="navbar-form pull-right">
+          <button type="button" class="btn" onclick='location.replace("{% url 'tbc:UserLogin' %}");'>Login</button>
+	      <button type="button" class="btn" onclick='location.replace("{% url 'tbc:UserRegister' %}");'>Sign Up</button>
+        </form>
+	    {% else %}
+	    <div class="btn-group pull-right">
+		  <button class="btn">{{ user.first_name }} {{ user.last_name }}</button>
+		  <button class="btn dropdown-toggle" data-toggle="dropdown">
+		  <span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu">
+		  <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book</a></li>
+		  <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
+		  </ul>
+	    </div>
+	    {% endif %}
+	    
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <!-- Main hero unit for a primary marketing message or call to action -->
+    <div class="hero-unit">
+	{% block content %}
+	<div class="row-fluid">
+    <center><h3>Latest Books</h3></center>
+    {% for item in items %}
+        <div class ="module-list">
+            <a href="{% url 'tbc:BookDetails' item.book.id %}"><img src="{% static 'uploads/' %}{{ item.image.image }}"></a>
+            <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.name }}</a></center>
+        </div>
+    {% endfor %}
+    </div>
+    <hr>
+    <input type=text> <input type=submit value=Search><a href="{% url 'tbc:BrowseBooks' %}" style="float:right;">Browse All Books</a>
+	{% endblock %}
+      </div>
+      <hr>
+      
+      <footer>
+        <center><p>&copy; FOSSEE - IIT Bombay 2013</p></center>
+      </footer>
+
+    </div> <!-- /container -->
+    
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap-transition.js' %}"></script>
+    <script src="{% static 'static/js/bootstrap-alert.js' %}"></script>
+    <script src="{% static 'js/bootstrap-modal.js' %}"></script>
+    <script src="{% static 'js/bootstrap-dropdown.js' %}"></script>
+    <script src="{% static 'js/bootstrap-scrollspy.js' %}"></script>
+    <script src="{% static 'js/bootstrap-tab.js' %}"></script>
+    <script src="{% static 'js/bootstrap-tooltip.js' %}"></script>
+    <script src="{% static 'js/bootstrap-popover.js' %}"></script>
+    <script src="{% static 'js/bootstrap-button.js' %}"></script>
+    <script src="{% static 'js/bootstrap-collapse.js' %}"></script>
+    <script src="{% static 'js/bootstrap-carousel.js' %}"></script>
+    <script src="{% static 'js/bootstrap-typeahead.js' %}"></script>
+  </body>
+</html>
+

@@ -26,7 +26,6 @@ def email_send(to,subject,msg):
     s.quit()
 
 
-
 def Home(request):
     context = {}
     images = []
@@ -88,12 +87,6 @@ def UserRegister(request):
     context['form'] = form
     return render_to_response('tbc/register.html', context)
 
-def UserLogout(request):
-    user = request.user
-    if user.is_authenticated() and user.is_active:
-        logout(request)
-    return redirect('/')
-
 
 def UserProfile(request):
     user = request.user
@@ -119,25 +112,14 @@ def UserProfile(request):
         return render_to_response('tbc/profile.html', context)
     else:
         return HttpResponse('invalid user')
+        
 
-
-def ChapterUpload(request):
+def UserLogout(request):
     user = request.user
-    curr_book = Book.objects.order_by("-id")[0]
-    if request.method == 'POST':
-        for i in range(1, curr_book.no_chapters+1):
-            chapter = Chapters()
-            chapter.name = request.POST['chapter'+str(i)]
-            chapter.notebook = request.FILES['notebook'+str(i)]
-            chapter.book = curr_book
-            chapter.save()
-        return HttpResponseRedirect('/upload-images')
-    context = {}
-    context.update(csrf(request))
-    context['user'] = user
-    context['no_notebooks'] = [i for i in range(1, curr_book.no_chapters+1)]
-    return render_to_response('tbc/upload-chapters.html', context)
-
+    if user.is_authenticated() and user.is_active:
+        logout(request)
+    return redirect('/')
+    
 
 def SubmitBook(request):
     curr_user = request.user
@@ -161,6 +143,24 @@ def SubmitBook(request):
     context['form'] = form
     context['user'] = curr_user
     return render_to_response('tbc/submit-book.html', context)
+
+
+def ChapterUpload(request):
+    user = request.user
+    curr_book = Book.objects.order_by("-id")[0]
+    if request.method == 'POST':
+        for i in range(1, curr_book.no_chapters+1):
+            chapter = Chapters()
+            chapter.name = request.POST['chapter'+str(i)]
+            chapter.notebook = request.FILES['notebook'+str(i)]
+            chapter.book = curr_book
+            chapter.save()
+        return HttpResponseRedirect('/upload-images')
+    context = {}
+    context.update(csrf(request))
+    context['user'] = user
+    context['no_notebooks'] = [i for i in range(1, curr_book.no_chapters+1)]
+    return render_to_response('tbc/upload-chapters.html', context)
 
 
 def ImageUpload(request):

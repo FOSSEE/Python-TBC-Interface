@@ -4,6 +4,7 @@ from django.core.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from models import *
 from tbc.forms import *
+from local import *
 import os
 import zipfile
 import StringIO
@@ -14,8 +15,6 @@ from email.mime.text import MIMEText
 def email_send(to,subject,msg):
     s = smtplib.SMTP('smtp-auth.iitb.ac.in')
     s.starttls()
-    LDAP_ID = "hardythe1"
-    LDAP_PWD = "H+Mghaghada"
     MAIL_FROM = "textbook@fossee.in"
     s.login(LDAP_ID, LDAP_PWD)
     message = MIMEText(msg)

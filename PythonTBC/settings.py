@@ -1,9 +1,11 @@
 # Django settings for PythonTBC project.
 
 from os.path import *
+from tbc.local import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
 
 ADMINS = (
     ('Hardik Ghaghada', 'hardik@fossee.in'),
@@ -11,13 +13,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 PROJDIR = abspath(dirname(__file__))
+DATABASE_PASSWORD = DB_PASS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pythontbc',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': 'root',
-        'PASSWORD': 'Pyth0n321',
+        'PASSWORD': DATABASE_PASSWORD,
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
     }

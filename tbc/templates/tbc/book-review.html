@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<center><h3>Books to be reviewed</h3></center>
+<ol>
+{% for book in books %}
+    <li><a href="{% url 'tbc:BookReview' book.id %}">{{ book.title }} {{ book.edition }} Edition</a>
+{% endfor %}
+</ol>
+{% endblock %}

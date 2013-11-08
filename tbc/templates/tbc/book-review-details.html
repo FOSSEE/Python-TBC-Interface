@@ -17,7 +17,11 @@
 {% endfor %}
 </ol>
 <hr>
-<a href="{% url 'tbc:GetZip' book.id %}" style="float:right;">Download Book as Zip</a>
+<form action="/approve-book/{{ book.id }}" method=POST enctype="multipart/form-data">
+{% csrf_token %}
+<center><input type=submit name=approve value="Approve & Push">
+<input type=submit name=sendmail value="Notify for changes"></center>
+</form>
 <table>
 <tr><td>Author: &nbsp;&nbsp;<td>{{ book.author }}
 <tr><td>Publisher: &nbsp;&nbsp;<td>{{ book.publisher }}

@@ -129,7 +129,7 @@ def SubmitBook(request):
             profile = Profile.objects.get(user=request.user.id)
             data.contributor = profile
             data.save()
-            return HttpResponseRedirect('/upload-chapters')
+            return HttpResponseRedirect('/upload-content')
         else:
             context = {}
             context.update(csrf(request))
@@ -144,7 +144,7 @@ def SubmitBook(request):
     return render_to_response('tbc/submit-book.html', context)
 
 
-def ChapterUpload(request):
+def ContentUpload(request):
     user = request.user
     curr_book = Book.objects.order_by("-id")[0]
     if request.method == 'POST':
@@ -154,15 +154,22 @@ def ChapterUpload(request):
             chapter.notebook = request.FILES['notebook'+str(i)]
             chapter.book = curr_book
             chapter.save()
-        return HttpResponseRedirect('/upload-images')
+        for i in range(1, 4):
+            screenshot = ScreenShots()
+            screenshot.caption = request.POST['caption'+str(i)]
+            screenshot.image = request.FILES['image'+str(i)]
+            screenshot.book = curr_book
+            screenshot.save()
+        return HttpResponseRedirect('/')
     context = {}
     context.update(csrf(request))
     context['user'] = user
     context['no_notebooks'] = [i for i in range(1, curr_book.no_chapters+1)]
-    return render_to_response('tbc/upload-chapters.html', context)
+    context['no_images'] = [i for i in range(1, 4)]
+    return render_to_response('tbc/upload-content.html', context)
 
 
-def ImageUpload(request):
+"""def ImageUpload(request):
     user = request.user
     curr_book = Book.objects.order_by("-id")[0]
     if request.method == 'POST':
@@ -177,7 +184,7 @@ def ImageUpload(request):
     context.update(csrf(request))
     context['user'] = user
     context['no_images'] = [i for i in range(1, 4)]
-    return render_to_response('tbc/upload-images.html', context)
+    return render_to_response('tbc/upload-images.html', context)"""
     
 
 def GetZip(request, book_id=None):
@@ -189,13 +196,13 @@ def GetZip(request, book_id=None):
     notebooks = Chapters.objects.filter(book=book)
     for notebook in notebooks:
         files_to_zip.append(file_path+str(notebook.notebook))
-    zip_subdir = book.name.strip()
+    zip_subdir = book.title.strip()
     zipfile_name = "%s.zip" %zip_subdir
     s = StringIO.StringIO()
     zip_file = zipfile.ZipFile(s, 'w')
     for fpath in files_to_zip:
         fdir, fname = os.path.split(fpath)
-        zip_path = os.path.join(book.name, fname)
+        zip_path = os.path.join(book.title, fname)
         zip_file.write(fpath, zip_path)
     zip_file.close()
     resp = HttpResponse(s.getvalue(), mimetype = "application/x-zip-compressed")
@@ -204,14 +211,49 @@ def GetZip(request, book_id=None):
 
 
 def BookDetails(request, book_id=None):
-    chapters = Chapters.objects.filter(book=book_id)
-    images = ScreenShots.objects.filter(book=book_id)
+    user = request.user
     book = Book.objects.get(id=book_id)
+    chapters = Chapters.objects.filter(book=book)
+    images = ScreenShots.objects.filter(book=book)
     context = {}
     context['chapters'] = chapters
     context['images'] = images
+    context['user'] = user
     context['book'] = book
     return render_to_response('tbc/book-details.html', context)
+    
+
+def BookReview(request, book_id=None):
+    context = {}
+    if book_id:
+        book = Book.objects.get(id=book_id)
+        chapters = Chapters.objects.filter(book=book)
+        images = ScreenShots.objects.filter(book=book)
+        context['chapters'] = chapters
+        context['images'] = images
+        #context['user'] = user
+        context['book'] = book
+        return render_to_response('tbc/book-review-details.html', context)
+    else:
+        books = Book.objects.filter(approved=False)
+        context['books'] = books
+        return render_to_response('tbc/book-review.html', context)
+
+
+def ApproveBook(request, book_id=None):
+    user = request.user
+    context = {}
+    if method == 'POST' and request.POST.get('approve') == "approve":
+        #book = Books.objects.get(id=book_id)
+        #book.approved = True
+        context.update(csrf(request))
+        context['user'] = user
+        return render_to_response("Book Approved", context)
+    elif method == 'POST' and request.POST.get('sendmail') == "sendmail":
+        context.update(csrf(request))
+        context['user'] = user
+        return render_to_response("Mail Sent", context) 
+
 
 def BrowseBooks(request):
     context = {}

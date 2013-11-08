@@ -32,11 +32,11 @@ ABOUT_PROJ = (("pythontbc website", "PythonTBC Website"),
               ("others", "Others"))
 
 def get_notebook_dir(instance, filename):
-    return '%s/%s/%s' % (instance.book.contributor, instance.book.name, filename)
+    return '%s/%s/%s' % (instance.book.contributor, instance.book.title, filename)
 
 
 def get_image_dir(instance, filename):
-    return '%s/%s/screenshots/%s' % (instance.book.contributor, instance.book.name, filename)
+    return '%s/%s/screenshots/%s' % (instance.book.contributor, instance.book.title, filename)
 
 
 class Profile(models.Model):
@@ -74,8 +74,9 @@ class Book(models.Model):
     no_chapters = models.IntegerField(max_length=2)
     contributor = models.ForeignKey(Profile)
     reviewer = models.ForeignKey(Reviewer)
+    approved = models.BooleanField(default=False)
     def __unicode__(self):
-        name = self.name or 'Book'
+        name = self.title or 'Book'
         return '%s'%(name)
         
 class Chapters(models.Model):

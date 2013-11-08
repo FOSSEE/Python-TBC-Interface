@@ -1,9 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block script %}
+<script type="text/javascript">
+function submitCategory()
+{
+    category = document.getElementById("category").value;
+    window.location.replace("/browse-books/"+category);
+}
+</script>
+{% endblock %}
+
 {% block content %}
-<form action="/browse-books/" method=POST enctype="multipart/form-data">
-{% csrf_token %}
-<center><select name="category">
+<center><select name="category" id="category" onchange="submitCategory();">
   <option value="computer science">Computer Science</option>
   <option value="chemical engg">Chemical Engg</option>
   <option value="aerospace engg">Aerospace Engg</option>
@@ -12,13 +21,11 @@
   <option value="mechanical engg">Mechanical Engg</option>
   <option value="mathematics">Mathematics</option>
 </select>
-<input type=submit value=Search>
-</form>
 <div class="row-fluid">
     {% for item in items %}
         <div class ="module-list">
             <img src="{% static 'uploads/' %}{{ item.image.image }}">
-            <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.name }}</a></center>
+            <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.title }}</a></center>
         </div>
     {% endfor %}
     </div>

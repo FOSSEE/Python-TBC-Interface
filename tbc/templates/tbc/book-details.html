@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
 <center><h3>{{ book.title }}</h3></center>
 <div class="row-fluid">
 {% for image in images %}
     <div class ="module-list">
-            <img src="{% static 'uploads/' %}{{ image.image }}">
-            <center><p>{{ image.caption }}</p></center>
+        <img src="{% static 'uploads/' %}{{ image.image }}">
+        <center><p>{{ image.caption }}</p></center>
     </div>
 {% endfor %}
 </div>

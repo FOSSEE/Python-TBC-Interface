@@ -21,7 +21,7 @@ def email_send(to,subject,msg):
     message['Subject'] = subject
     message['From'] = MAIL_FROM
     message['to'] = to
-    s.sendmail(settings.MAIL_FROM, to, message.as_string())
+    s.sendmail(MAIL_FROM, to, message.as_string())
     s.quit()
 
 
@@ -160,6 +160,19 @@ def ContentUpload(request):
             screenshot.image = request.FILES['image'+str(i)]
             screenshot.book = curr_book
             screenshot.save()
+        book = Book.objects.order_by("-id")[0]
+        subject = "Python-TBC: Book Submission"
+        message = "Hi "+curr_book.reviewer.name+",\n"+\
+                  "A book has been submitted on the interface.\n"+\
+                  "Details of the Book & Contributor are:\n"+\
+                  "Contributor: "+curr_book.contributor.user.first_name+curr_book.contributor.user.last_name+"\n"+\
+                  "Book Title: "+curr_book.title+"\n"+\
+                  "Author: "+curr_book.author+"\n"+\
+                  "Publisher: "+curr_book.publisher_place+"\n"+\
+                  "ISBN: "+curr_book.isbn+"\n"+\
+                  "Follow the link to review the book: \n"+\
+                  "http://dev.fossee.in/book-review/"+str(curr_book.id)
+        email_send(book.reviewer.email, subject, message)
         return HttpResponseRedirect('/')
     context = {}
     context.update(csrf(request))
@@ -198,14 +211,16 @@ def GetZip(request, book_id=None):
 
 
 def BookDetails(request, book_id=None):
-    user = request.user
+    context = {}
+    if request.user.is_anonymous():
+        context['user'] = None
+    else:
+        context['user'] = request.user
     book = Book.objects.get(id=book_id)
     chapters = Chapters.objects.filter(book=book)
     images = ScreenShots.objects.filter(book=book)
-    context = {}
     context['chapters'] = chapters
     context['images'] = images
-    context['user'] = user
     context['book'] = book
     return render_to_response('tbc/book-details.html', context)
     
@@ -261,9 +276,14 @@ def ApproveBook(request, book_id=None):
         os.popen("git commit -m "+commit_msg)
         os.popen("git push")"""
         context['user'] = user
-        return HttpResponse("worked")
+        return HttpResponseRedirect("/book-review")
     elif request.method == 'POST' and request.POST['approve_notify'] == "notify":
         context['user'] = user
+        book = Book.objects.get(id=book_id)
+        subject = "Python-TBC: Book Submission"
+        message = "Hi "+Book.reviewer.name+",\n"\
+                  "A book has been submitted on the interface.\n"\
+                  ""
         return HttpResponse("Mail Sent")
     else:
         context['user'] = user
@@ -271,6 +291,10 @@ def ApproveBook(request, book_id=None):
 
 def BrowseBooks(request):
     context = {}
+    if request.user.is_anonymous():
+        context['user'] = None
+    else:
+        context['user'] = request.user
     images = []
     if request.method == 'POST':
         category = request.POST['category']

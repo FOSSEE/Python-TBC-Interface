@@ -185,10 +185,9 @@ def ContentUpload(request):
     context['user'] = user
     context['no_images'] = [i for i in range(1, 4)]
     return render_to_response('tbc/upload-images.html', context)"""
-    
 
-def GetZip(request, book_id=None):
-    user = request.user
+
+def generateZip(book_id):
     book = Book.objects.get(id=book_id)
     files_to_zip = []
     file_path = os.path.abspath(os.path.dirname(__file__))
@@ -205,6 +204,12 @@ def GetZip(request, book_id=None):
         zip_path = os.path.join(book.title, fname)
         zip_file.write(fpath, zip_path)
     zip_file.close()
+    return s, zipfile_name
+
+
+def GetZip(request, book_id=None):
+    user = request.user
+    s, zipfile_name = generateZip(book_id)
     resp = HttpResponse(s.getvalue(), mimetype = "application/x-zip-compressed")
     resp['Content-Disposition'] = 'attachment; filename=%s' % zipfile_name
     return resp
@@ -233,27 +238,53 @@ def BookReview(request, book_id=None):
         context['images'] = images
         #context['user'] = user
         context['book'] = book
+        context.update(csrf(request))
         return render_to_response('tbc/book-review-details.html', context)
     else:
         books = Book.objects.filter(approved=False)
         context['books'] = books
+        context.update(csrf(request))
         return render_to_response('tbc/book-review.html', context)
 
 
 def ApproveBook(request, book_id=None):
     user = request.user
     context = {}
-    if method == 'POST' and request.POST.get('approve') == "approve":
-        #book = Books.objects.get(id=book_id)
-        #book.approved = True
-        context.update(csrf(request))
+    if request.method == 'POST' and request.POST['approve_notify'] == "approve":
+        book = Book.objects.get(id=book_id)
+        book.approved = True
+        file_path = os.path.abspath(os.path.dirname(__file__))
+        zip_path = "/".join(file_path.split("/")[1:-2])
+        zip_path = "/"+zip_path+"/Python-Textbook-Companions/"
+        file_path = file_path+"/static/uploads/"
+        directory = file_path+book.contributor.user.first_name
+        os.chdir(directory)
+        fp = open(book.title+"/README.txt", 'w')
+        fp.write("Contributed By: "+book.contributor.user.first_name+" "+book.contributor.user.last_name+"\n")
+        fp.write("Course: "+book.contributor.course+"\n")
+        fp.write("College/Institute/Organization: "+book.contributor.insti_org+"\n")
+        fp.write("Department/Designation: "+book.contributor.dept_desg+"\n")
+        fp.write("Book Title: "+book.title+"\n")
+        fp.write("Author: "+book.author+"\n")
+        fp.write("Publisher: "+book.publisher_place+"\n")
+        fp.write("Year of publication: "+book.year_of_pub+"\n")
+        fp.write("Isbn: "+book.isbn+"\n")
+        fp.write("Edition: "+book.edition)
+        fp.close()
+        os.popen("cp -r "+book.title+" "+zip_path)
+        os.chdir(zip_path)
+        os.popen("git add .")
+        commit_msg = "adding "+book.title
+        os.popen("git commit -m "+commit_msg)
+        os.popen("git push")
         context['user'] = user
-        return render_to_response("Book Approved", context)
-    elif method == 'POST' and request.POST.get('sendmail') == "sendmail":
-        context.update(csrf(request))
+        return HttpResponse("worked")
+    elif request.method == 'POST' and request.POST['approve_notify'] == "notify":
         context['user'] = user
-        return render_to_response("Mail Sent", context) 
-
+        return HttpResponse("Mail Sent")
+    else:
+        context['user'] = user
+        return HttpResponseRedirect("/book-review/"+book_id)
 
 def BrowseBooks(request):
     context = {}

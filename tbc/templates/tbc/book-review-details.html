@@ -17,10 +17,14 @@
 {% endfor %}
 </ol>
 <hr>
-<form action="/approve-book/{{ book.id }}" method=POST enctype="multipart/form-data">
+<form action="/approve-book/{{ book.id }}" method="POST">
 {% csrf_token %}
-<center><input type=submit name=approve value="Approve & Push">
-<input type=submit name=sendmail value="Notify for changes"></center>
+<select name=approve_notify>
+    <option value=none>Select an Action</option>
+    <option value="approve">Approve</option>
+    <option value="notify">Notify Changes</option>
+</select>
+<input type=submit value=GO>
 </form>
 <table>
 <tr><td>Author: &nbsp;&nbsp;<td>{{ book.author }}

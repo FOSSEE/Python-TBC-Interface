@@ -5,13 +5,15 @@
 <script type="text/javascript">
 function submitCategory()
 {
-    category = document.getElementById("category").value;
-    window.location.replace("/browse-books/"+category);
+    document.forms.browseBooks.submit();
 }
 </script>
+
 {% endblock %}
 
 {% block content %}
+<form name="browseBooks" action="/browse-books/" method=POST enctype="multipart/form-data">
+{% csrf_token %}
 <center><select name="category" id="category" onchange="submitCategory();">
   <option value="computer science">Computer Science</option>
   <option value="chemical engg">Chemical Engg</option>
@@ -24,9 +26,12 @@ function submitCategory()
 <div class="row-fluid">
     {% for item in items %}
         <div class ="module-list">
-            <img src="{% static 'uploads/' %}{{ item.image.image }}">
+            <a href="{% url 'tbc:BookDetails' item.book.id %}"><img src="{% static 'uploads/' %}{{ item.image.image }}"></a>
             <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.title }}</a></center>
         </div>
     {% endfor %}
     </div>
+<script>
+document.getElementById('category').value = "{{ category }}";
+</script>
 {% endblock %}

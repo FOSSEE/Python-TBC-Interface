@@ -32,12 +32,12 @@ def Home(request):
         context['user'] = None
     else:
         context['user'] = request.user
-    books = Book.objects.order_by("-id")[0:6]
-    if len(books)>=6:
+    books = Book.objects.filter(approved=True)[0:6]
+    """if len(books)>=6:
         context['books'] = books
     else:
         books = Book.objects.all()
-        context['books'] = books
+        context['books'] = books"""
     for book in books:
         images.append(ScreenShots.objects.filter(book=book)[0])
     context['images'] = images
@@ -169,24 +169,6 @@ def ContentUpload(request):
     return render_to_response('tbc/upload-content.html', context)
 
 
-"""def ImageUpload(request):
-    user = request.user
-    curr_book = Book.objects.order_by("-id")[0]
-    if request.method == 'POST':
-        for i in range(1, 4):
-            screenshot = ScreenShots()
-            screenshot.caption = request.POST['caption'+str(i)]
-            screenshot.image = request.FILES['image'+str(i)]
-            screenshot.book = curr_book
-            screenshot.save()
-        return HttpResponse('images uploaded')
-    context = {}
-    context.update(csrf(request))
-    context['user'] = user
-    context['no_images'] = [i for i in range(1, 4)]
-    return render_to_response('tbc/upload-images.html', context)"""
-
-
 def generateZip(book_id):
     book = Book.objects.get(id=book_id)
     files_to_zip = []
@@ -253,6 +235,7 @@ def ApproveBook(request, book_id=None):
     if request.method == 'POST' and request.POST['approve_notify'] == "approve":
         book = Book.objects.get(id=book_id)
         book.approved = True
+        book.save()
         file_path = os.path.abspath(os.path.dirname(__file__))
         zip_path = "/".join(file_path.split("/")[1:-2])
         zip_path = "/"+zip_path+"/Python-Textbook-Companions/"
@@ -272,11 +255,11 @@ def ApproveBook(request, book_id=None):
         fp.write("Edition: "+book.edition)
         fp.close()
         os.popen("cp -r "+book.title+" "+zip_path)
-        os.chdir(zip_path)
+        """os.chdir(zip_path)
         os.popen("git add .")
         commit_msg = "adding "+book.title
         os.popen("git commit -m "+commit_msg)
-        os.popen("git push")
+        os.popen("git push")"""
         context['user'] = user
         return HttpResponse("worked")
     elif request.method == 'POST' and request.POST['approve_notify'] == "notify":
@@ -295,6 +278,7 @@ def BrowseBooks(request):
         for book in books:
             images.append(ScreenShots.objects.filter(book=book)[0])
     else:
+        category = 'computer science'
         books = Book.objects.filter(category='computer science')
         for book in books:
             images.append(ScreenShots.objects.filter(book=book)[0])
@@ -304,4 +288,5 @@ def BrowseBooks(request):
         obj = {'book':books[i], 'image':images[i]}
         book_images.append(obj)
     context['items'] = book_images
+    context['category'] = category
     return render_to_response('tbc/browse-books.html', context)

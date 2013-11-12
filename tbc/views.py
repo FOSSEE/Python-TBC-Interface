@@ -254,7 +254,7 @@ def ApproveBook(request, book_id=None):
         file_path = os.path.abspath(os.path.dirname(__file__))
         zip_path = "/".join(file_path.split("/")[1:-2])
         zip_path = "/"+zip_path+"/Python-Textbook-Companions/"
-        file_path = file_path+"/static/uploads/"
+        file_path = file_path+"/uploads/"
         directory = file_path+book.contributor.user.first_name
         os.chmod(directory, 0777)
         os.chdir(directory)

@@ -13,7 +13,7 @@
 <hr>
 <ol>
 {% for chapter in chapters %}
-    <li><a href="https://www.nbviewer.ipython.org/url/fosseeapps.in{% static 'uploads/' %}{{ chapter.notebook }}">{{ chapter.name }}</a>
+    <li><a href="https://nbviewer.ipython.org/url/dev.fossee.in{% static 'uploads/' %}{{ chapter.notebook }}">{{ chapter.name }}</a>
 {% endfor %}
 </ol>
 <hr>
@@ -28,7 +28,7 @@
 </form>
 <table>
 <tr><td>Author: &nbsp;&nbsp;<td>{{ book.author }}
-<tr><td>Publisher: &nbsp;&nbsp;<td>{{ book.publisher }}
+<tr><td>Publisher: &nbsp;&nbsp;<td>{{ book.publisher_place }}
 <tr><td>ISBN: &nbsp;&nbsp;<td>{{ book.isbn }}
 <tr><td>Contributor: &nbsp;&nbsp;<td>{{ book.contributor.user.first_name }} {{ book.contributor.user.last_name }}
 <tr><td>Email: &nbsp;&nbsp;<td>{{ book.contributor.user.email }}<br>

@@ -9,6 +9,7 @@ import os
 import zipfile
 import StringIO
 import smtplib
+import shutil
 from email.mime.text import MIMEText
 
 
@@ -255,7 +256,6 @@ def ApproveBook(request, book_id=None):
         zip_path = "/".join(file_path.split("/")[1:-2])
         zip_path = "/"+zip_path+"/Python-Textbook-Companions/"
         file_path = file_path+"/static/uploads/"
-        return HttpResponse(file_path)
         directory = file_path+book.contributor.user.first_name
         os.chmod(directory, 0777)
         os.chdir(directory)
@@ -271,12 +271,7 @@ def ApproveBook(request, book_id=None):
         fp.write("Isbn: "+book.isbn+"\n")
         fp.write("Edition: "+book.edition)
         fp.close()
-        os.popen("cp -r "+book.title+" "+zip_path)
-        os.chdir(zip_path)
-        os.popen("git add .")
-        commit_msg = "adding "+book.title
-        os.popen("git commit -m "+commit_msg)
-        os.popen("git push")
+        x = shutil.copytree(book.title, zip_path+book.title)
         context['user'] = user
         return HttpResponseRedirect("/book-review")
     elif request.method == 'POST' and request.POST['approve_notify'] == "notify":

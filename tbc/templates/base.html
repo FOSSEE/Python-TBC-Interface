@@ -81,11 +81,12 @@
     <center><h3>Latest Books</h3></center>
     {% for item in items %}
         <div class ="module-list">
-            <a href="{% url 'tbc:BookDetails' item.book.id %}"><img src="{% static 'uploads/' %}{{ item.image.image }}"></a>
             <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.title }}</a></center>
+            <a href="{% url 'tbc:BookDetails' item.book.id %}"><img src="{% static 'uploads/' %}{{ item.image.image }}"></a>
         </div>
     {% endfor %}
     </div>
+    <br>
     <hr>
     <input type=text> <input type=submit value=Search><a href="{% url 'tbc:BrowseBooks' %}" style="float:right;">Browse All Books</a>
 	{% endblock %}

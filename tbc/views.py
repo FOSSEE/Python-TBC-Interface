@@ -14,17 +14,16 @@ from email.mime.text import MIMEText
 
 
 def email_send(to,subject,msg):
-    s = smtplib.SMTP('smtp-auth.iitb.ac.in')
-    s.starttls()
-    MAIL_FROM = "textbook@fossee.in"
-    s.login(LDAP_ID, LDAP_PWD)
-    message = MIMEText(msg)
-    message['Subject'] = subject
-    message['From'] = MAIL_FROM
-    message['to'] = to
-    s.sendmail(MAIL_FROM, to, message.as_string())
-    s.quit()
-
+	try:
+		smtpObj = smtplib.SMTP('localhost')
+		mail_from = "textbook@fosse.in"
+		message = MIMEText(msg)
+		message['Subject'] = subject
+		message['From'] = mail_from
+		message['to'] = to
+		smtpObj.sendmail(mail_from, to, message.as_string())         
+	except SMTPException:
+		return HttpResponse("Error:unable to send email")
 
 def Home(request):
     context = {}
@@ -164,9 +163,9 @@ def ContentUpload(request):
         book = Book.objects.order_by("-id")[0]
         subject = "Python-TBC: Book Submission"
         message = "Hi "+curr_book.reviewer.name+",\n"+\
-                  "A book has been submitted on the interface.\n"+\
-                  "Details of the Book & Contributor are:\n"+\
-                  "Contributor: "+curr_book.contributor.user.first_name+curr_book.contributor.user.last_name+"\n"+\
+                  "A book has been submitted on the Python TBC interface.\n"+\
+                  "Details of the Book & Contributor:\n"+\
+                  "Contributor: "+curr_book.contributor.user.first_name+" "+curr_book.contributor.user.last_name+"\n"+\
                   "Book Title: "+curr_book.title+"\n"+\
                   "Author: "+curr_book.author+"\n"+\
                   "Publisher: "+curr_book.publisher_place+"\n"+\

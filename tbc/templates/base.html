@@ -51,22 +51,35 @@
                 </ul>
               </li>
             </ul>
-	    {% if not user %}
-	    <form action="" method="post" class="navbar-form pull-right">
-          <button type="button" class="btn" onclick='location.replace("{% url 'tbc:UserLogin' %}");'>Login</button>
-	      <button type="button" class="btn" onclick='location.replace("{% url 'tbc:UserRegister' %}");'>Sign Up</button>
-        </form>
-	    {% else %}
-	    <div class="btn-group pull-right">
-		  <button class="btn">{{ user.first_name }} {{ user.last_name }}</button>
-		  <button class="btn dropdown-toggle" data-toggle="dropdown">
-		  <span class="caret"></span>
-		  </button>
-		  <ul class="dropdown-menu">
-		  <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book</a></li>
-		  <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
-		  </ul>
-	    </div>
+	    {% if user %}
+	        <div class="btn-group pull-right">
+		      <button class="btn">{{ user.first_name }} {{ user.last_name }}</button>
+		      <button class="btn dropdown-toggle" data-toggle="dropdown">
+		      <span class="caret"></span>
+		      </button>
+		      <ul class="dropdown-menu">
+		      <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book</a></li>
+		      <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
+		      </ul>
+	        </div>
+	    {% endif %}
+	    {% if reviewer %}
+ 	        <div class="btn-group pull-right">
+		      <button class="btn">{{ reviewer.first_name }} {{ reviewer.last_name }}</button>
+		      <button class="btn dropdown-toggle" data-toggle="dropdown">
+		      <span class="caret"></span>
+		      </button>
+		      <ul class="dropdown-menu">
+		      <li><a href="{% url 'tbc:BookReview' %}">Review Books</a></li>
+		      <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
+		      </ul>
+	        </div>
+	    {% endif %}
+	    {% if anonymous %}
+	        <form action="" method="post" class="navbar-form pull-right">
+              <button type="button" class="btn" onclick='location.replace("{% url 'tbc:UserLogin' %}");'>Login</button>
+	          <button type="button" class="btn" onclick='location.replace("{% url 'tbc:UserRegister' %}");'>Sign Up</button>
+            </form>
 	    {% endif %}
 	    
           </div><!--/.nav-collapse -->

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<center><h3>Notify Changes</h3></center>
+<p>Notifing Chages for book {{ book.title }} to {{ book.contributor.user.first_name }} {{ book.contributor.user.last_name }}
+<form action="/notify-changes/{{ book_id }}" method=POST enctype="multipart/form-data">
+{% csrf_token %}
+    <table>
+        <tr><td>To</td></tr>
+        <tr><td><input type="text" value="{{ mailto }}" readonly></td></tr>
+        <tr><td>Changes Required</td></tr>
+        <tr><td><textarea rows="5" cols="100" name="changes_required"></textarea></td></tr>
+        <tr><td><input type="submit" value="Send"></td></tr>
+    </table>
+</form>
+{% endblock %}

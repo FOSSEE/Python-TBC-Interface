@@ -64,11 +64,11 @@ class Reviewer(models.Model):
 
 class Book(models.Model):
     """Model to store the book details"""
-    title = models.CharField(max_length=32)
-    author = models.CharField(max_length=32)
+    title = models.CharField(max_length=500)
+    author = models.CharField(max_length=300)
     category = models.CharField(max_length=32, choices=CATEGORY)
-    publisher_place = models.CharField(max_length=50)
-    isbn = models.CharField(max_length=20)
+    publisher_place = models.CharField(max_length=150)
+    isbn = models.CharField(max_length=50)
     edition = models.CharField(max_length=15)
     year_of_pub = models.CharField(max_length=4)
     no_chapters = models.IntegerField(max_length=2)

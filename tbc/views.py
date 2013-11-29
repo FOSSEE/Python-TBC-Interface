@@ -152,7 +152,45 @@ def SubmitBook(request):
     context['form'] = form
     context['user'] = curr_user
     return render_to_response('tbc/submit-book.html', context)
+    
 
+def UpdateBook(request):
+    current_user = request.user
+    user_profile = Profile.objects.get(user=current_user)
+    book_to_update = Book.objects.get(contributor=user_profile, approved=False)
+    title = book_to_update.title
+    chapters = Chapters.objects.filter(book=book_to_update)
+    screenshots = ScreenShots.objects.filter(book=book_to_update)
+    context = {}
+    if request.method == 'POST':
+        book_form = BookForm(request.POST, instance=book_to_update)
+        if book_form.is_valid():
+            file_path = os.path.abspath(os.path.dirname(__file__))
+            file_path = file_path+"/static/uploads/"
+            directory = file_path+book_to_update.contributor.user.first_name
+            os.chdir(directory)
+            os.popen("mv '"+title+"' '"+book_to_update.title+"'")
+            data = book_form.save(commit=False)
+            data.contributor = user_profile
+            data.save()
+            context.update(csrf(request))
+            context['form'] = book_form
+            return HttpResponseRedirect('/update-content/'+str(book_to_update.id))
+    else:
+        book_form = BookForm()
+        book_form.initial['title'] = book_to_update.title
+        book_form.initial['author'] = book_to_update.author
+        book_form.initial['publisher_place'] = book_to_update.publisher_place
+        book_form.initial['category'] = book_to_update.category
+        book_form.initial['isbn'] = book_to_update.isbn
+        book_form.initial['edition'] = book_to_update.edition
+        book_form.initial['year_of_pub'] = book_to_update.year_of_pub
+        book_form.initial['no_chapters'] = book_to_update.no_chapters
+        book_form.initial['reviewer'] = book_to_update.reviewer
+        context.update(csrf(request))
+        context['form'] = book_form
+        return render_to_response('tbc/update-book.html', context)
+    
 
 def ContentUpload(request):
     user = request.user
@@ -190,6 +228,48 @@ def ContentUpload(request):
     context['no_notebooks'] = [i for i in range(1, curr_book.no_chapters+1)]
     context['no_images'] = [i for i in range(1, 4)]
     return render_to_response('tbc/upload-content.html', context)
+
+
+def UpdateContent(request, book_id=None):
+    user = request.user
+    current_book = Book.objects.get(id=book_id)
+    chapters_to_update = Chapters.objects.filter(book=current_book)
+    screenshots_to_update = ScreenShots.objects.filter(book=current_book)
+    context = {}
+    if request.method == 'POST':
+        for i in range(1, current_book.no_chapters+1):
+            chapter = Chapters.objects.get(id=chapters_to_update[i-1].id)
+            chapter.name = request.POST['chapter'+str(i)]
+            chapter.notebook = request.FILES['notebook'+str(i)]
+            chapter.book = current_book
+            chapter.save()
+        for i in range(1, 4):
+            screenshot = ScreenShots.objects.get(id=screenshots_to_update[i-1].id)
+            screenshot.caption = request.POST['caption'+str(i)]
+            screenshot.image = request.FILES['image'+str(i)]
+            screenshot.book = current_book
+            screenshot.save()
+        """book = Book.objects.order_by("-id")[0]
+        subject = "Python-TBC: Book Submission"
+        message = "Hi "+curr_book.reviewer.name+",\n"+\
+                  "A book has been submitted on the Python TBC interface.\n"+\
+                  "Details of the Book & Contributor:\n"+\
+                  "Contributor: "+curr_book.contributor.user.first_name+" "+curr_book.contributor.user.last_name+"\n"+\
+                  "Book Title: "+curr_book.title+"\n"+\
+                  "Author: "+curr_book.author+"\n"+\
+                  "Publisher: "+curr_book.publisher_place+"\n"+\
+                  "ISBN: "+curr_book.isbn+"\n"+\
+                  "Follow the link to review the book: \n"+\
+                  "http://dev.fossee.in/book-review/"+str(curr_book.id)
+        email_send(book.reviewer.email, subject, message)"""
+        return HttpResponse('thai gayu update :D')
+    else:
+        context.update(csrf(request))
+        context['user'] = user
+        context['current_book'] = current_book
+        context['chapters'] = chapters_to_update
+        context['screenshots'] = screenshots_to_update
+        return render_to_response('tbc/update-content.html', context)
 
 
 def generateZip(book_id):
@@ -300,7 +380,6 @@ def ApproveBook(request, book_id=None):
         "IIT Bombay, Powai, Mumbai - 400076\n"+\
         "Kindly, write Python Texbook Companion on top of the envelope.\n\n\n"+\
         "Regards,\n"+"Python TBC,\n"+"FOSSEE, IIT - Bombay"
-        return HttpResponse(message)
         email_send(book.reviewer.email, subject, message)
         context['user'] = user
         return HttpResponseRedirect("/book-review")

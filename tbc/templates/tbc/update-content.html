@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<p>Upload chapters as individual IPython notebooks </p>
+<form action="/update-content/{{ current_book.id }}" method=POST enctype="multipart/form-data">
+{% csrf_token %}
+{% for chapter in chapters %}
+<input type=text name=chapter{{forloop.counter}} value="{{ chapter.name }}">
+<input type=file name=notebook{{forloop.counter}}>
+{% endfor %}
+<br>
+<hr>
+<p>Upload 3 screenshots from any 3 random chapters and give proper captions</p>
+{% for screenshot in screenshots  %}
+<input type=text name=caption{{forloop.counter}} value="{{ screenshot.caption }}">
+<input type=file name=image{{forloop.counter}}>
+{% endfor %}
+<center><input type=submit value=submit></center>
+</form>
+{% endblock %}

@@ -41,6 +41,16 @@ def Home(request):
             context['reviewer'] = request.user
         else:
             context['user'] = request.user
+    if 'up' in request.GET:
+        context['up'] = True
+    if 'profile' in request.GET:
+        context['profile'] = True
+    if 'login' in request.GET:
+        context['login'] = True
+    if 'logout' in request.GET:
+        context['logout'] = True
+    if 'update_book' in request.GET:
+        context['update_book'] = True
     books = Book.objects.filter(approved=True)[0:6]
     for book in books:
         images.append(ScreenShots.objects.filter(book=book)[0])
@@ -67,9 +77,9 @@ def UserLogin(request):
             context['user'] = curr_user
             try:
                 Profile.objects.get(user=curr_user)
-                return HttpResponseRedirect("/")
+                return HttpResponseRedirect("/?login=success")
             except:
-                return HttpResponseRedirect("/profile")
+                return HttpResponseRedirect("/profile/?update=profile")
     else:
         form = UserLoginForm()
     context.update(csrf(request))
@@ -126,7 +136,7 @@ def UserLogout(request):
     user = request.user
     if user.is_authenticated() and user.is_active:
         logout(request)
-    return redirect('/')
+    return redirect('/?logout=done')
     
 
 def SubmitBook(request):
@@ -221,7 +231,7 @@ def ContentUpload(request):
                   "Follow the link to review the book: \n"+\
                   "http://dev.fossee.in/book-review/"+str(curr_book.id)
         email_send(book.reviewer.email, subject, message)
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/?up=done')
     context = {}
     context.update(csrf(request))
     context['user'] = user
@@ -249,20 +259,19 @@ def UpdateContent(request, book_id=None):
             screenshot.image = request.FILES['image'+str(i)]
             screenshot.book = current_book
             screenshot.save()
-        """book = Book.objects.order_by("-id")[0]
-        subject = "Python-TBC: Book Submission"
-        message = "Hi "+curr_book.reviewer.name+",\n"+\
-                  "A book has been submitted on the Python TBC interface.\n"+\
+        subject = "Python-TBC: Book Updated"
+        message = "Hi "+current_book.reviewer.name+",\n"+\
+                  "Submission for a book has been updated on the Python TBC interface.\n"+\
                   "Details of the Book & Contributor:\n"+\
-                  "Contributor: "+curr_book.contributor.user.first_name+" "+curr_book.contributor.user.last_name+"\n"+\
-                  "Book Title: "+curr_book.title+"\n"+\
-                  "Author: "+curr_book.author+"\n"+\
-                  "Publisher: "+curr_book.publisher_place+"\n"+\
-                  "ISBN: "+curr_book.isbn+"\n"+\
+                  "Contributor: "+current_book.contributor.user.first_name+" "+current_book.contributor.user.last_name+"\n"+\
+                  "Book Title: "+current_book.title+"\n"+\
+                  "Author: "+current_book.author+"\n"+\
+                  "Publisher: "+current_book.publisher_place+"\n"+\
+                  "ISBN: "+current_book.isbn+"\n"+\
                   "Follow the link to review the book: \n"+\
-                  "http://dev.fossee.in/book-review/"+str(curr_book.id)
-        email_send(book.reviewer.email, subject, message)"""
-        return HttpResponse('thai gayu update :D')
+                  "http://dev.fossee.in/book-review/"+str(current_book.id)
+        email_send(current_book.reviewer.email, subject, message)
+        return HttpResponseRedirect('/?update_book=done')
     else:
         context.update(csrf(request))
         context['user'] = user
@@ -332,6 +341,8 @@ def BookReview(request, book_id=None):
             context.update(csrf(request))
             return render_to_response('tbc/book-review-details.html', context)
         else:
+            if 'book_review' in request.GET:
+                context['book_review'] = True
             books = Book.objects.filter(approved=False)
             context['books'] = books
             context['reviewer'] = request.user
@@ -382,7 +393,7 @@ def ApproveBook(request, book_id=None):
         "Regards,\n"+"Python TBC,\n"+"FOSSEE, IIT - Bombay"
         email_send(book.reviewer.email, subject, message)
         context['user'] = user
-        return HttpResponseRedirect("/book-review")
+        return HttpResponseRedirect("/book-review/?book_review=done")
     elif request.method == 'POST' and request.POST['approve_notify'] == "notify":
         return HttpResponseRedirect("/notify-changes/"+book_id)
     else:

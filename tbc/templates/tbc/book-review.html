@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{% if book_review %}
+<p>Book has been approved !</p>
+{% endif %}
 <center><h3>Books to be reviewed</h3></center>
 <ol>
 {% for book in books %}

@@ -91,6 +91,21 @@
       <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="hero-unit">
 	{% block content %}
+	{% if up %}
+        <p>Book has been uploaded successfully. Please be patient while the reviewer reviews the book</p>
+    {% endif %}
+    {% if profile %}
+        <p>Congratulations on your first log in. Please update your profile below.</p>
+    {% endif %}
+    {% if login %}
+        <p>Login Successful</p>
+    {% endif %}
+    {% if logout %}
+        <p>You have logged out successfully</p>
+    {% endif %}
+    {% if update_book %}
+        <p>Book has been updated successfully </p>
+    {% endif %}
 	<div class="row-fluid">
     <center><h3>Latest Books</h3></center>
     {% for item in items %}

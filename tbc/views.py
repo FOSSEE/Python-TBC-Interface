@@ -343,6 +343,8 @@ def BookReview(request, book_id=None):
         else:
             if 'book_review' in request.GET:
                 context['book_review'] = True
+            if 'mail_notify' in request.GET:
+                context['mail_notify'] = True
             books = Book.objects.filter(approved=False)
             context['books'] = books
             context['reviewer'] = request.user
@@ -413,6 +415,7 @@ def NotifyChanges(request, book_id=None):
             changes_required
             context.update(csrf(request))
             email_send(book.contributor.user.email, subject, message)
+            return HttpResponseRedirect("/book-review/?mail_notify=done")
         else:
             context['book'] = book
             context['book_id'] = book_id

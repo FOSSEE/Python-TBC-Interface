@@ -65,6 +65,8 @@ def Home(request):
 
 def UserLogin(request):
     context = {}
+    if 'require_login' in request.GET:
+        context['require_login'] = True
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -129,7 +131,7 @@ def UserProfile(request):
         context['user'] = user
         return render_to_response('tbc/profile.html', context)
     else:
-        return HttpResponse('invalid user')
+        return HttpResponseRedirect('/login/?require_login=True')
         
 
 def UserLogout(request):
@@ -351,56 +353,59 @@ def BookReview(request, book_id=None):
             context.update(csrf(request))
             return render_to_response('tbc/book-review.html', context)
     else:
-        return HttpResponse("You are not allowed to view this page.")
+        return render_to_response('tbc/forbidden.html')
 
 
 def ApproveBook(request, book_id=None):
     user = request.user
     context = {}
-    if request.method == 'POST' and request.POST['approve_notify'] == "approve":
-        book = Book.objects.get(id=book_id)
-        book.approved = True
-        book.save()
-        file_path = os.path.abspath(os.path.dirname(__file__))
-        zip_path = "/".join(file_path.split("/")[1:-2])
-        zip_path = "/"+zip_path+"/Python-Textbook-Companions/"
-        file_path = file_path+"/static/uploads/"
-        directory = file_path+book.contributor.user.first_name
-        os.chmod(directory, 0777)
-        os.chdir(directory)
-        fp = open(book.title+"/README.txt", 'w')
-        fp.write("Contributed By: "+book.contributor.user.first_name+" "+book.contributor.user.last_name+"\n")
-        fp.write("Course: "+book.contributor.course+"\n")
-        fp.write("College/Institute/Organization: "+book.contributor.insti_org+"\n")
-        fp.write("Department/Designation: "+book.contributor.dept_desg+"\n")
-        fp.write("Book Title: "+book.title+"\n")
-        fp.write("Author: "+book.author+"\n")
-        fp.write("Publisher: "+book.publisher_place+"\n")
-        fp.write("Year of publication: "+book.year_of_pub+"\n")
-        fp.write("Isbn: "+book.isbn+"\n")
-        fp.write("Edition: "+book.edition)
-        fp.close()
-        x = shutil.copytree(book.title, zip_path+book.title)
-        subject = "Python-TBC: Book Completion"
-        message = "Hi "+book.contributor.user.first_name+",\n"+\
-        "Congratulations !\n"+\
-        "The book - "+book.title+" is now complete.\n"+\
-        "Please visit the below given link to download the forms to be filled to complete the formalities.\n"+\
-        "http://dev.fossee.in/internship-forms"+"\n"+\
-        "The forms should be duly filled(fill only sections which are applicable) & submit at the following address:\n"+\
-        "Dr. Prabhu Ramachandran, \n"+\
-        "Department of Aerospace Engineering,\n"+\
-        "IIT Bombay, Powai, Mumbai - 400076\n"+\
-        "Kindly, write Python Texbook Companion on top of the envelope.\n\n\n"+\
-        "Regards,\n"+"Python TBC,\n"+"FOSSEE, IIT - Bombay"
-        email_send(book.reviewer.email, subject, message)
-        context['user'] = user
-        return HttpResponseRedirect("/book-review/?book_review=done")
-    elif request.method == 'POST' and request.POST['approve_notify'] == "notify":
-        return HttpResponseRedirect("/notify-changes/"+book_id)
+    if is_reviewer(request.user):
+        if request.method == 'POST' and request.POST['approve_notify'] == "approve":
+            book = Book.objects.get(id=book_id)
+            book.approved = True
+            book.save()
+            file_path = os.path.abspath(os.path.dirname(__file__))
+            zip_path = "/".join(file_path.split("/")[1:-2])
+            zip_path = "/"+zip_path+"/Python-Textbook-Companions/"
+            file_path = file_path+"/static/uploads/"
+            directory = file_path+book.contributor.user.first_name
+            os.chmod(directory, 0777)
+            os.chdir(directory)
+            fp = open(book.title+"/README.txt", 'w')
+            fp.write("Contributed By: "+book.contributor.user.first_name+" "+book.contributor.user.last_name+"\n")
+            fp.write("Course: "+book.contributor.course+"\n")
+            fp.write("College/Institute/Organization: "+book.contributor.insti_org+"\n")
+            fp.write("Department/Designation: "+book.contributor.dept_desg+"\n")
+            fp.write("Book Title: "+book.title+"\n")
+            fp.write("Author: "+book.author+"\n")
+            fp.write("Publisher: "+book.publisher_place+"\n")
+            fp.write("Year of publication: "+book.year_of_pub+"\n")
+            fp.write("Isbn: "+book.isbn+"\n")
+            fp.write("Edition: "+book.edition)
+            fp.close()
+            x = shutil.copytree(book.title, zip_path+book.title)
+            subject = "Python-TBC: Book Completion"
+            message = "Hi "+book.contributor.user.first_name+",\n"+\
+            "Congratulations !\n"+\
+            "The book - "+book.title+" is now complete.\n"+\
+            "Please visit the below given link to download the forms to be filled to complete the formalities.\n"+\
+            "http://dev.fossee.in/internship-forms"+"\n"+\
+            "The forms should be duly filled(fill only sections which are applicable) & submit at the following address:\n"+\
+            "Dr. Prabhu Ramachandran, \n"+\
+            "Department of Aerospace Engineering,\n"+\
+            "IIT Bombay, Powai, Mumbai - 400076\n"+\
+            "Kindly, write Python Texbook Companion on top of the envelope.\n\n\n"+\
+            "Regards,\n"+"Python TBC,\n"+"FOSSEE, IIT - Bombay"
+            email_send(book.reviewer.email, subject, message)
+            context['user'] = user
+            return HttpResponseRedirect("/book-review/?book_review=done")
+        elif request.method == 'POST' and request.POST['approve_notify'] == "notify":
+            return HttpResponseRedirect("/notify-changes/"+book_id)
+        else:
+            context['user'] = user
+            return HttpResponseRedirect("/book-review/"+book_id)
     else:
-        context['user'] = user
-        return HttpResponseRedirect("/book-review/"+book_id)
+        return render_to_response('tbc/forbidden.html')
         
 
 def NotifyChanges(request, book_id=None):
@@ -424,7 +429,7 @@ def NotifyChanges(request, book_id=None):
             context.update(csrf(request))
             return render_to_response('tbc/notify-changes.html', context)
     else:
-        return HttpResponse('invalid user')
+        return render_to_response('tbc/forbidden.html')
 
 
 def BrowseBooks(request):

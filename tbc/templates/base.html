@@ -106,6 +106,9 @@
     {% if update_book %}
         <p>Book has been updated successfully </p>
     {% endif %}
+    {% if not_found %}
+        <p>There is no submission to be updated !</p>
+    {% endif %}
 	<div class="row-fluid">
     <center><h3>Latest Books</h3></center>
     {% for item in items %}

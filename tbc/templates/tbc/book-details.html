@@ -17,7 +17,6 @@
 <th>#</th>
 <th>Chapters</th>
 {% for chapter in chapters %}
-<<<<<<< HEAD
     <tr>
         <td>
             {{ forloop.counter }}
@@ -26,9 +25,6 @@
             <a href="https://nbviewer.ipython.org/url/dev.fossee.in{% static 'uploads/' %}{{ chapter.notebook }}">{{ chapter.name }}</a>
         </td>
     </tr>
-=======
-    <li><a href="http://nbviewer.ipython.org/url/tbc-python.fossee.in{% static 'uploads/' %}{{ chapter.notebook }}">{{ chapter.name }}</a>
->>>>>>> b9102b56140db8ad81b2b4e3d1dfb99c6bebb3ab
 {% endfor %}
 </table>
 <hr>

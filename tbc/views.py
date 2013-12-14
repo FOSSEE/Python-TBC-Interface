@@ -51,6 +51,8 @@ def Home(request):
         context['logout'] = True
     if 'update_book' in request.GET:
         context['update_book'] = True
+    if 'not_found' in request.GET:
+        context['not_found'] = True
     books = Book.objects.filter(approved=True)[0:6]
     for book in books:
         images.append(ScreenShots.objects.filter(book=book)[0])
@@ -169,7 +171,10 @@ def SubmitBook(request):
 def UpdateBook(request):
     current_user = request.user
     user_profile = Profile.objects.get(user=current_user)
-    book_to_update = Book.objects.get(contributor=user_profile, approved=False)
+    try:
+        book_to_update = Book.objects.get(contributor=user_profile, approved=False) or None
+    except:
+        return HttpResponseRedirect("/?not_found=True")
     title = book_to_update.title
     chapters = Chapters.objects.filter(book=book_to_update)
     screenshots = ScreenShots.objects.filter(book=book_to_update)

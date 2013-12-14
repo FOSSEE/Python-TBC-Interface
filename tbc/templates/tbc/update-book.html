@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-<form action="/update-book/" method=POST enctype="multipart/form-data">
-{% csrf_token %}
-{{ form.as_table }}
-<br>
-<input type=submit value=submit>
-</form>
+<div id="content-wrap" style="max-width:600px;">
+    <form action="/update-book/" method=POST enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <br>
+        <input class="btn btn-primary" type=submit value="Update Book">
+    </form>
+</div>
 {% endblock %}

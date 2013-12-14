@@ -12,13 +12,23 @@
 {% endfor %}
 </div>
 <hr>
-<ol>
+<div id="content-wrap">
+<table class="table table-bordered table-hover">
+<th>#</th>
+<th>Chapters</th>
 {% for chapter in chapters %}
-    <li><a href="https://nbviewer.ipython.org/url/dev.fossee.in{% static 'uploads/' %}{{ chapter.notebook }}">{{ chapter.name }}</a>
+    <tr>
+        <td>
+            {{ forloop.counter }}
+        </td>
+        <td>
+            <a href="https://nbviewer.ipython.org/url/dev.fossee.in{% static 'uploads/' %}{{ chapter.notebook }}">{{ chapter.name }}</a>
+        </td>
+    </tr>
 {% endfor %}
-</ol>
+</table>
 <hr>
-<a href="{% url 'tbc:GetZip' book.id %}" style="float:right;">Download Book as Zip</a>
+<a class="btn btn-primary btn-large" href="{% url 'tbc:GetZip' book.id %}" style="float:right; margin-top:20px;">Download Book as Zip</a>
 <table>
 <tr><td>Author: &nbsp;&nbsp;<td>{{ book.author }}
 <tr><td>Publisher: &nbsp;&nbsp;<td>{{ book.publisher_place }}
@@ -26,4 +36,5 @@
 <tr><td>Contributor: &nbsp;&nbsp;<td>{{ book.contributor.user.first_name }} {{ book.contributor.user.last_name }}
 <tr><td>Email: &nbsp;&nbsp;<td>{{ book.contributor.user.email }}<br>
 </table>
+</div>
 {% endblock %}

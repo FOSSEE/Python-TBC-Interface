@@ -14,7 +14,7 @@
 <hr>
 <ol>
 {% for chapter in chapters %}
-    <li><a href="http://nbviewer.ipython.org/url/tbc-python.fossee.in/{% static 'uploads/' %}{{ chapter.notebook }}">{{ chapter.name }}</a>
+    <li><a href="http://nbviewer.ipython.org/url/tbc-python.fossee.in{% static 'uploads/' %}{{ chapter.notebook }}">{{ chapter.name }}</a>
 {% endfor %}
 </ol>
 <hr>

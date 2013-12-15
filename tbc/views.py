@@ -73,7 +73,10 @@ def UserLogin(request):
         username = request.POST['username']
         password = request.POST['password']
         curr_user = authenticate(username=username, password=password)
-        login(request, curr_user)
+        if curr_user is  not None:
+            login(request, curr_user)
+        else:
+            return  HttpResponseRedirect('/login')
         if curr_user.groups.filter(name='reviewer').count() == 1:
             context['reviewer'] = curr_user
             return HttpResponseRedirect("/book-review")

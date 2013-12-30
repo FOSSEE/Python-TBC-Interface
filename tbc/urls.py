@@ -2,8 +2,8 @@ from django.conf.urls import patterns, include, url
 
 
 urlpatterns = patterns('',
-    # Home page
     url(r'^$', 'tbc.views.Home', name='Home'),
+    url(r'^internship-forms/$', 'tbc.views.InternshipForms', name='InternshipForms'),
     url(r'^register/$', 'tbc.views.UserRegister', name='UserRegister'),
     url(r'^login/$', 'tbc.views.UserLogin', name='UserLogin'),
     url(r'^logout/$', 'tbc.views.UserLogout', name='UserLogout'),

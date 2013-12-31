@@ -43,6 +43,21 @@ def InternshipForms(request):
             context['user'] = request.user
     return render_to_response('tbc/internship-forms.html', context)
 
+
+def AboutPytbc(request):
+    context = {}
+    images = []
+    if request.user.is_anonymous():
+        context['anonymous'] = True
+    else:
+        if is_reviewer(request.user):
+            context['reviewer'] = request.user
+        else:
+            context['user'] = request.user
+    return render_to_response('tbc/about-pytbc.html', context)
+
+
+
 def Home(request):
     context = {}
     images = []

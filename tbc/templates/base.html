@@ -125,21 +125,38 @@
     <div class="container">
 	{% block content %}
 	{% if up %}
-        <p>Book has been uploaded successfully. Please be patient while the reviewer reviews the book</p>
-    {% endif %}
-    {% if profile %}
-        <p>Congratulations on your first log in. Please update your profile below.</p>
+        <center>
+            <div class="alert" style="width:500px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>Book has been uploaded successfully.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
     {% endif %}
     {% if login %}
-        <p>Login Successful</p>
+        <center>
+            <div class="alert" style="width:150px;height:23px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>Login Successful</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
     {% endif %}
     {% if logout %}
-        <p>You have logged out successfully</p>
+        <center>
+            <div class="alert" style="width:300px;height:23px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>You have logged out successfully !</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
     {% endif %}
     {% if update_book %}
-        <p>Book has been updated successfully </p>
+        <div data-alert class="alert span8">
+            <p>Book has been updated successfully </p>
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+        </div>
     {% endif %}
-
 	<div class="row-fluid">
         <center><h3>Recent Submissions</h3></center>
         {% for item in items %}
@@ -149,9 +166,7 @@
             </div>
         {% endfor %}
     </div>
-
     <br>
-
     <center> 
         <a  class="btn btn-primary" href="{% url 'tbc:BrowseBooks' %}">Browse All Books</a>
     </center>
@@ -170,18 +185,7 @@
     </div> <!-- /container -->
     
     <script src="{% static 'js/jquery.js' %}"></script>
-    <script src="{% static 'js/bootstrap-transition.js' %}"></script>
-    <script src="{% static 'static/js/bootstrap-alert.js' %}"></script>
-    <script src="{% static 'js/bootstrap-modal.js' %}"></script>
-    <script src="{% static 'js/bootstrap-dropdown.js' %}"></script>
-    <script src="{% static 'js/bootstrap-scrollspy.js' %}"></script>
-    <script src="{% static 'js/bootstrap-tab.js' %}"></script>
-    <script src="{% static 'js/bootstrap-tooltip.js' %}"></script>
-    <script src="{% static 'js/bootstrap-popover.js' %}"></script>
-    <script src="{% static 'js/bootstrap-button.js' %}"></script>
-    <script src="{% static 'js/bootstrap-collapse.js' %}"></script>
-    <script src="{% static 'js/bootstrap-carousel.js' %}"></script>
-    <script src="{% static 'js/bootstrap-typeahead.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
   </body>
 </html>
 

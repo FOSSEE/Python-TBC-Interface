@@ -146,6 +146,8 @@ def UserProfile(request):
         context.update(csrf(request))
         context['form'] = form
         context['user'] = user
+        if 'update' in request.GET:
+            context['profile'] = True
         return render_to_response('tbc/profile.html', context)
     else:
         return HttpResponseRedirect('/login/?require_login=True')

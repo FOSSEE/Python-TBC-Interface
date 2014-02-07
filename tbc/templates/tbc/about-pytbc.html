@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block script %}
 <script type='text/javascript'>
@@ -30,7 +31,7 @@ function data(showHideDiv)
         <li>Contributor selects 3 appropriate textbooks and <a href="/submitproposal">submits a proposal</a>
         <li>Reviewer will have a look at the proposed books, will select an appropriate book and allot to the contributor
         <li>Contributor will be notified to send sample codes for the allotted book (around 10 examples from random chapters) in form of iPython Notebook</li>
-        <li>Sample Notebook for your reference (see additional links for more details on iPython Notebook)</li>
+        <li><a href="http://nbviewer.ipython.org/url/tbc-python.fossee.in{% static 'uploads/' %}Sample.ipynb" target="_blank">Sample IPython Notebook</a> for your reference (see additional links for more details on iPython Notebook)</li>
         <li>Contributor sends the required solved examples (sample code) as mentioned earlier in form of iPython Notebook
         <li>Reviewer reviews the pilot examples and gives consent for further work
         <li>Contributor is provided a time period of 2 months to code all the solved examples of allotted book once the pilot examples are approved

@@ -3,32 +3,39 @@ from django.contrib.auth.models import User
 from PythonTBC import settings
 
 
-CATEGORY = (("computer science", "Computer Science"),
-            ("chemical engg", "Chemical Engg"),
-            ("aerospace engg", "Aerospace Engg"),
-            ("electronics engg", "Electronics Engg"),
+CATEGORY = (("fluid mechanics", "Fluid Mechanics"),
+            ("control systems", "Control Theory & Control Systems"),
+            ("chemical engineering", "Chemical Engineering"),
             ("thermodynamics", "Thermodynamics"),
-            ("mechanical engg", "Mechanical Engg"),
-            ("mathematics", "Mathematics"))
+            ("mechanical engineering", "Mechanical Engineering"),
+            ("signal processing", "Signal Processing"),
+            ("digital communications", "Digital Communications"),
+            ("electrical technology", "Electrical Technology"),
+            ("maths & science", "Mathematics & Pure Science"),
+            ("analog electronics", "Analog Electronics"),
+            ("digital electronics", "Digital Electronics"),
+            ("computer programming", "Computer Programming"),
+            ("others", "Others"))
 
 GENDER = (("male", "Male"), 
           ("female", "Female"))
 
-COURSES = (("mtech", "Mtech"),
+COURSES = (("mtech", "M.Tech"),
            ("me", "ME"),
            ("msc", "MSc"),
            ("mscit", "MScIT"),
            ("mca", "MCA"),
+           ("btech", "B.Tech"),
            ("be", "BE"),
            ("bca", "BCA"),
            ("bscit", "BScIt"),
            ("others", "Others"))
            
-ABOUT_PROJ = (("pythontbc website", "PythonTBC Website"),
-              ("through friend", "Through Friend"),
-              ("through prof/teacher", "Through Prof/Teacher"),
-              ("through mailing list", "Through Mailing List"),
-              ("through posters in college", "Through Posters in College"),
+ABOUT_PROJ = (("pythontbc website", "Python TBC Website"),
+              ("friend", "Through Friend"),
+              ("prof/teacher", "Through Prof/Teacher"),
+              ("mailing list", "Through Mailing List"),
+              ("posters in college", "Through Posters in College"),
               ("others", "Others"))
 
 def get_notebook_dir(instance, filename):

@@ -116,6 +116,8 @@ def UserLogin(request):
                 return HttpResponseRedirect("/profile/?update=profile")
     else:
         form = UserLoginForm()
+        if 'signup' in request.GET:
+            context['signup'] = True
     context.update(csrf(request))
     context['form'] = form
     return render_to_response('tbc/login.html', context)
@@ -126,7 +128,7 @@ def UserRegister(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/login')
+            return HttpResponseRedirect('/login/?signup=done')
         else:
             context = {}
             context.update(csrf(request))

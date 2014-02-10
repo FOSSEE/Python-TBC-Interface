@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if signup %}
+    <center>
+        <div class="alert" style="width:550px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>You have registered successfully, kindly login with your credentials !!</p>
+        </div>
+    </center>
+    <div class="clearfix"></div>
+{% endif %}
+
 <div id="content-wrap" style="max-width: 400px;">
 <br><br>
     {% if require_login %}

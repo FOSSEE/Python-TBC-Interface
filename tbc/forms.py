@@ -19,6 +19,7 @@ class UserProfileForm(forms.ModelForm):
         exclude = ('user')
         widgets = {
         'about':forms.TextInput(attrs={'placeholder':'Tell us about yourself'}),
+        'dob':forms.TextInput(attrs={'placeholder':'mm/dd/yyyy'}),
         'insti_org':forms.TextInput(attrs={'placeholder':'Name of University/Organizaiton(if corporate)'}),
         'dept_desg':forms.TextInput(attrs={'placeholder':'Name of the Department/Branch or your designation'}),
         'phone_no':forms.TextInput(attrs={'placeholder':'Phone Number Please'}),

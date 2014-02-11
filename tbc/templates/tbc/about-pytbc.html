@@ -2,140 +2,67 @@
 {% load static %}
 
 {% block script %}
-<script type='text/javascript'>
-function data(showHideDiv)
-{
-       var ele=document.getElementById(showHideDiv);
-       if (ele.style.display=="block")
-       {
-               ele.style.display = "none";
-       }
-       else
-       {
-               ele.style.display = "block";
-       }
-}
-</script>
+    <script src="http://code.jquery.com/jquery-1.4.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+		$(document).ready(function(){
+		   $("#contribute").click(function(){
+		   	$('#details').load('{% static "templates/contribute.html" %}');
+		   }); 
+ 
+		   $("#goodies").click(function(){
+		   	$('#details').load('{% static "templates/goodies.html" %}');
+		   });
+		   
+  		   $("#disclaimer").click(function(){
+		   	$('#details').load('{% static "templates/disclaimer.html" %}');
+		   }); 
+ 
+		   $("#faqs").click(function(){
+		   	$('#details').load('{% static "templates/faqs.html" %}');
+		   });
+
+		   $("#contact").click(function(){
+		   	$('#details').load('{% static "templates/contact.html" %}');
+		   });
+		 });
+	</script>
 {% endblock %}
 
 {% block content %}
-<center><h2> Textbook Companion Project </h2></center>
-<hr>
-<a href="" onClick="data('contri'); return false;" style="cursor:pointer;" /><h4>How do I contribute?</h4></strong></p></a>
-<div id="contentDiv">
-     <div id="contri" style="padding:5px; display:none;">
-        <p><h4> Anyone can contribute to the project. </p>
-    Stage 1</h4>
+<div class="well span3" style="width:18%;margin-left:5px;">
+    <div class="nav nav-list">
+        <ul>
+            <li><a id="contribute" href="#"><strong>How do I Contribute?</strong></a></li>
+            <li><a id="goodies" href="#"><strong>Goodies</strong></a></li>
+            <li><a id="disclaimer" href="#"><strong>Disclaimer</strong></a></li>
+            <li><a id="faqs" href="#"><strong>FAQs</strong></a></li>
+            <li><a id="contact" href="#"><strong>Contact</strong></a></li>
+        </ul>
+    </div>
+</div>
+<div class="well span9" id="details" style="float:right;width:74%;margin-left:5px;">
+    <h4>Stage 1</h4>
     <ul>
+        <li>Anyone can contribute to the project.</li>
         <li>Contributor should visit the website to check the books that have already been selected by others and send proposals. This is to avoid multiple contributors working on same books
-        <li>Contributor selects 3 appropriate textbooks and <a href="/submitproposal">submits a proposal</a>
+        <li>Contributor selects 3 appropriate textbooks and submits a proposal through mail
         <li>Reviewer will have a look at the proposed books, will select an appropriate book and allot to the contributor
-        <li>Contributor will be notified to send sample codes for the allotted book (around 10 examples from random chapters) in form of iPython Notebook</li>
-        <li><a href="http://nbviewer.ipython.org/url/tbc-python.fossee.in{% static 'uploads/' %}Sample.ipynb" target="_blank">Sample IPython Notebook</a> for your reference (see additional links for more details on iPython Notebook)</li>
-        <li>Contributor sends the required solved examples (sample code) as mentioned earlier in form of iPython Notebook
+        <li>Contributor will be notified to send sample codes for the allotted book (around 10 examples from random chapters) in form of IPython Notebook</li>
+        <li><a href="http://nbviewer.IPython.org/url/tbc-python.fossee.in{% static 'uploads/' %}Sample.ipynb" target="_blank">Sample IPython Notebook</a> for your reference (see additional links for more details on IPython Notebook)</li>
+        <li>Contributor sends the required solved examples (sample code) as mentioned earlier in form of IPython Notebook
         <li>Reviewer reviews the pilot examples and gives consent for further work
         <li>Contributor is provided a time period of 2 months to code all the solved examples of allotted book once the pilot examples are approved
     </ul>
+    <hr>
     <h4>Stage 2</h4>
     <ul>
-        <li>Contributor is required to update the progress of the work if the reviewer request
+        <li>Contributor is required to update the progress of the work if the reviewer request</li>
         <li>As soon as the contributor completes coding all the solved examples of the book, the final code should be submitted</li>
-        <li>Note: each chapter of the textbook should be a separate iPython Notebook</li>
-        <li>Thorough review will be done whenever content is submited &amp; the contributor will be notified for any changes, if required
-        <li>On completion of the entire book, the contributor will be notified for further proceedings
-     </div>
-</div>
-<a href="" onClick="data('goodies'); return false;" style="cursor:pointer;" /><h4>Goodies</h4></strong></p></a>
-<div id="contentDiv">
-     <div id="goodies" style="padding:5px; display:none;">
-        <p>
-    <ul>
-    <li>Honorarium of Rs. 10000 on successful completion of a book to the student (read disclaimer)
-    <li>An IIT Bombay certificate
-    <li>More than anything else, the satisfaction that you are making the world a little bit better!
+        <li>Note: each chapter of the textbook should be a separate IPython Notebook</li>
+        <li>Thorough review will be done whenever content is submited &amp; the contributor will be notified for any changes, if required</li>
+        <li>On completion of the entire book, the contributor will be notified for further proceedings</li>
     </ul>
-
- </p>
-   </div>
 </div>
-<a href="" onClick="data('disclaimer'); return false;" style="cursor:pointer;" /><h4>Disclaimer</h4></strong></p></a>
-<div id="contentDiv">
-     <div id="disclaimer" style="padding:5px; display:none;">
-        <p>
-    <ol>
-    <li>A minimum of 60 solved examples are required to receive the full honorarium of Rs. 10000
-    <li>However, if the book has more than 60 examples, the contributor has to complete the whole book
-    <li>For books having less than 60 examples, honorarium will be provided at Principal Investigator's discretion
-    <li>Exceptional contributions will be rewarded at Principal Investigator's discretion
-    <li>Only after the whole books is called as "Complete" by reviewer, payment &amp; certificate shall be provided</li>
-    <li>This work is not meant to count for any academic credit and is totally out of the scope of your curriculum.
-    <li>All the code generated (and other content on the site), is licensed under <a href="http://creativecommons.org/licenses/by-sa/2.5/in/deed.en" target="_blank"> Creative Commons Attribution-ShareAlike 2.5 India (CC BY-SA 2.5)</a>
-        </ol>
 
-</p>
-     </div>
-</div>
-<a href="" onClick="data('faqs'); return false;" style="cursor:pointer;" /><h4>FAQs</h4></strong></p></a>
-<div id="contentDiv">
-     <div id="faqs" style="padding:5px; display:none;">
-        <p>
-    <ul>
-    <p><li>What is the last date to finish my textbook?
-
-    <br><b>Ans: </b>Time duration shall be provided by the reviewer.<br>
-
-    <p><li>If I am unable to finish within the time frame, can I continue ?
-
-    <br><b>Ans: </b>In such cases, you are required to contact the reviewer as early as possible. <br>
-  <p><li>Is this only for Computer Science students and their textbooks?
-
-    <br><b>Ans: </b>No! Any course that needs computational tasks to be performed, is under our purview.<br>
-
-    <p><li>I want to convert only a few chapters. Is that OK?
-
-    <br><b>Ans: </b>Yes, you will have to talk to the respective reviewer.<br>
-
-    <p><li>I have no idea of any of the opensource tools mentioned. Is that OK?
-
-    <br><b>Ans: </b>Absolutely, the whole idea is to spread the goodness of these tools. You can pick up the basics during an initial workshop and learn more as you go along.<br>
-
-    <p><li>Can I take a textbook from another department?
-
-    <br><b>Ans: </b>Yes, you will have to talk to the reviewer.<br>
-
-    <p><li>I am a freshman. Can I be a part of this?
-
-    <br><b>Ans: </b>Yeah! The earlier you get hold of these tools the better.<br>
-
-    <p><li>Which textbooks do we need to code?
-
-    <br><b>Ans: </b>Any book that needs computational tools.<br>
-
-    <p><li>Can I use C/C++?
-
-    <br><b>Ans: </b>Yes you may, however, you will not be paid.<br>
-
-    <p><li>Can I use Java?
-
-    <br><b>Ans: </b>Are you kidding? ;)
-
-    <p><li>Can I use software X?
-
-    <br><b>Ans: </b>Yes, as long as X is <a href="http://opensource.org/docs/osd" target="_blank">Open-source</a>, does a great job for that particular course and the reviewer is comfortable with reviewing and approving your code.
-
- </p>
-     </div>
-</div>
-<a href="" onClick="data('contact'); return false;" style="cursor:pointer;" /><h4>Contact</h4></strong></p></a>
-<div id="contentDiv">
-     <div id="contact" style="padding:5px; display:none;">
-        <p>For any queries or assistance you my require, feel free to contact us through below given mediums.
-    <ul>
-    <li>Mail - textbook@fossee.in
-    <li>Contact No.: 022-25764133
-    </ul>
-
- </p>
-     </div>
 </div>
 {% endblock %}

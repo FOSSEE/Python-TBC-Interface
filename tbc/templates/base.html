@@ -152,10 +152,22 @@
         <div class="clearfix"></div>
     {% endif %}
     {% if update_book %}
-        <div data-alert class="alert span8">
-            <p>Book has been updated successfully </p>
-            <a class="close" data-dismiss="alert" href="#">&times;</a>
-        </div>
+        <center>
+            <div class="alert" style="width:300px;height:23px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>Book has been updated successfully !</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    {% if not_found %}
+        <center>
+            <div class="alert" style="width:650px;height:23px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>It seems that currently there is no book that you can update !! Please submit one.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
     {% endif %}
 	<div class="row-fluid">
         <center><h3>Recent Submissions</h3></center>

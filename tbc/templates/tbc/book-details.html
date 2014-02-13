@@ -7,7 +7,7 @@
 {% for image in images %}
     <div class ="module-list">
         <img src="{% static 'uploads/' %}{{ image.image }}">
-        <center><p>{{ image.caption }}</p></center>
+        <center><p style="margin-top:30px;">{{ image.caption }}</p></center>
     </div>
 {% endfor %}
 </div>
@@ -23,6 +23,9 @@
         </td>
         <td>
             <a href="http://nbviewer.ipython.org/url/tbc-python.fossee.in{% static 'uploads/' %}{{ chapter.notebook }}">{{ chapter.name }}</a>
+        </td>
+        <td>
+            <a href="{% static 'uploads/' %}{{ chapter.notebook }}">Download</a>
         </td>
     </tr>
 {% endfor %}

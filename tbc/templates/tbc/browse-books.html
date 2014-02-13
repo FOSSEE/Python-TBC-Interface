@@ -12,16 +12,23 @@ function submitCategory()
 {% endblock %}
 
 {% block content %}
+<center><h4>Select a Category</h4></center>
 <form name="browseBooks" action="/browse-books/" method=POST enctype="multipart/form-data">
 {% csrf_token %}
 <center><select name="category" id="category" onchange="submitCategory();">
-  <option value="computer science">Computer Science</option>
-  <option value="chemical engg">Chemical Engg</option>
-  <option value="aerospace engg">Aerospace Engg</option>
-  <option value="electronics engg">Electronics Engg</option>
+  <option value="fluid mechanics">Fluid Mechanics</option>
+  <option value="control systems">Control Theory & Control Systems</option>
+  <option value="chemical engineering">Chemical Engineering</option>
   <option value="thermodynamics">Thermodynamics</option>
-  <option value="mechanical engg">Mechanical Engg</option>
-  <option value="mathematics">Mathematics</option>
+  <option value="mechanical engineering">Mechanical Engineering</option>
+  <option value="signal processing">Signal Processing</option>
+  <option value="digital communications">Digital Communications</option>
+  <option value="electrical technology">Electrical Technology</option>
+  <option value="maths & science">Mathematics & Pure Science</option>
+  <option value="analog electronics">Analog Electronics</option>
+  <option value="digital electronics">Digital Electronics</option>
+  <option value="computer programming">Computer Programming</option>
+  <option value="others">Others</option>
 </select>
 <div class="row-fluid">
     {% for item in items %}

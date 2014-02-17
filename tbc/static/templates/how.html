@@ -1,57 +1,4 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block script %}
-    <script src="http://code.jquery.com/jquery-1.4.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-		$(document).ready(function(){
-		   $("#who").click(function(){
-		   	$('#details').load('{% static "templates/who.html" %}');
-		   });
-		   
-		   $("#how").click(function(){
-		   	$('#details').load('{% static "templates/how.html" %}');
-		   }); 
-		   
-		   $("#guidelines").click(function(){
-		   	$('#details').load('{% static "templates/guidelines.html" %}');
-		   }); 
-		    
-		   $("#goodies").click(function(){
-		   	$('#details').load('{% static "templates/goodies.html" %}');
-		   });
-		   
-  		   $("#disclaimer").click(function(){
-		   	$('#details').load('{% static "templates/disclaimer.html" %}');
-		   }); 
- 
-		   $("#faqs").click(function(){
-		   	$('#details').load('{% static "templates/faqs.html" %}');
-		   });
-
-		   $("#contact").click(function(){
-		   	$('#details').load('{% static "templates/contact.html" %}');
-		   });
-		 });
-	</script>
-{% endblock %}
-
-{% block content %}
-<div class="well span3" style="width:18%;margin-left:5px;">
-    <div class="nav nav-list">
-        <ul>
-            <li><a id="who" href="#"><strong>Who can contribute ?</strong></a></li>
-            <li><a id="how" href="#"><strong>How to contribute ?</strong></a></li>
-            <li><a id="guidelines" href="#"><strong>Guidelines for Coding</strong></a></li>
-            <li><a id="goodies" href="#"><strong>Goodies</strong></a></li>
-            <li><a id="disclaimer" href="#"><strong>Disclaimer</strong></a></li>
-            <li><a id="faqs" href="#"><strong>FAQs</strong></a></li>
-            <li><a id="contact" href="#"><strong>Contact</strong></a></li>
-        </ul>
-    </div>
-</div>
-<div class="well span9" id="details" style="float:right;width:74%;margin-left:5px;min-height:150px;">
-    <h4>How to contribute ?</h4>
+<h4>How to contribute ?</h4>
     <ol>
         <li>Contributor selects 3 textbooks and sends proposal through mail to <strong>textbook[at]fossee[dot]in</strong> in the preferred order.</li>
         <ul>
@@ -80,6 +27,3 @@ Kindly refer to the <a href="http://nbviewer.IPython.org/url/tbc-python.fossee.i
         <li>The contributor has to submit the codes on the interface through <a href="{% url 'tbc:SubmitBook' %}">Submit Book</a> link when he/she finishes coding the book.</li>
         <li>The entire submission will then be reviewed and the contributor will be notified about corrections, if required. The review of the book will typically take approximately 25 working days to finish. Each time the codes are submitted, it will be queued up with other review requests and will result in subsequent delays. When no more corrections are required, the book is termed as completed and the contributor will be notified to fill the <a href="{% url 'tbc:InternshipForms' %}">Internship Forms</a>
     </ol>
-</div>
-</div>
-{% endblock %}

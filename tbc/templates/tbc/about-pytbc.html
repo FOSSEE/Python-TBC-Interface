@@ -18,7 +18,7 @@
 		   }); 
 		    
 		   $("#goodies").click(function(){
-		   	$('#details').load('{% static "templates/goodies.html" %}');
+		   	$('#details').load('{% static "templates/goodie.html" %}');
 		   });
 		   
   		   $("#disclaimer").click(function(){
@@ -26,11 +26,11 @@
 		   }); 
  
 		   $("#faqs").click(function(){
-		   	$('#details').load('{% static "templates/faqs.html" %}');
+		   	$('#details').load('{% static "templates/faq.html" %}');
 		   });
 
 		   $("#contact").click(function(){
-		   	$('#details').load('{% static "templates/contact.html" %}');
+		   	$('#details').load('{% static "templates/contactus.html" %}');
 		   });
 		 });
 	</script>
@@ -51,35 +51,15 @@
     </div>
 </div>
 <div class="well span9" id="details" style="float:right;width:74%;margin-left:5px;min-height:150px;">
-    <h4>How to contribute ?</h4>
-    <ol>
-        <li>Contributor selects 3 textbooks and sends proposal through mail to <strong>textbook[at]fossee[dot]in</strong> in the preferred order.</li>
-        <ul>
-            <li>Contributor is requested to visit the website and ensure that the books proposed have not been completed or undertaken by some other contributor. This is to avoid multiple contributors working on the same books. </li>
-            <li>Please make sure that the book proposed has at least 60 examples. </li>
-            <li>The Edition and the ISBN number of all the textbooks should also be mentioned.</li>
-        </ul>
-        <li>This mail should carry information about the Contributor. Details should be mentioned as under: </li>
-        <ul>
-            <li>For Students</li>
-            <ul>
-                <li>Full name of the student</li>
-                <li>Course name</li>
-            </ul>
-            <li>For Others</li>
-            <ul>
-                <li>Full name of the Individual</li>
-                <li>Designation</li>
-                <li>Organization name</li>
-            </ul>
-        </ul>
-        <li> Reviewer will have a look at the proposed books, select an appropriate book and allot to the contributor. At this stage, the contributor will be asked to send sample examples (through mail) i.e. solved examples from any one chapter as an IPython Notebook.
-Kindly refer to the <a href="http://nbviewer.IPython.org/url/tbc-python.fossee.in{% static 'uploads/' %}Sample.ipynb" target="_blank">Sample IPython Notebook</a></li>
-        <li>Reviewer reviews the sample notebook and if not satisfied, the contributor will be notified to make necessary corrections and send the sample notebook again.</li>
-        <li>Once the reviewer is satisfied with the sample notebook, he/she will give a consent to the contributor to complete the book in 2 months.</li>
-        <li>The contributor has to submit the codes on the interface through <a href="{% url 'tbc:SubmitBook' %}">Submit Book</a> link when he/she finishes coding the book.</li>
-        <li>The entire submission will then be reviewed and the contributor will be notified about corrections, if required. The review of the book will typically take approximately 25 working days to finish. Each time the codes are submitted, it will be queued up with other review requests and will result in subsequent delays. When no more corrections are required, the book is termed as completed and the contributor will be notified to fill the <a href="{% url 'tbc:InternshipForms' %}">Internship Forms</a>
-    </ol>
+    <h4>Python Textbook Companion Activity</h4>
+    <p>
+        The Textbook Companion activity aims to create a repository of reference material for Python by coding solved examples of standard engineering textbooks using Python.
+        This activity intends to -
+        <ol>
+            <li>Make individuals learn Python through a practical approach</li>
+            <li>Provide a huge database of Companions as a learning resource</li>
+        </ol>
+    </p>
 </div>
 </div>
 {% endblock %}

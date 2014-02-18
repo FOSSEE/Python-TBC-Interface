@@ -270,7 +270,7 @@ def ContentUpload(request):
                   "Publisher: "+curr_book.publisher_place+"\n"+\
                   "ISBN: "+curr_book.isbn+"\n"+\
                   "Follow the link to review the book: \n"+\
-                  "http://dev.fossee.in/book-review/"+str(curr_book.id)
+                  "http://tbc-python.fossee.in/book-review/"+str(curr_book.id)
         email_send(book.reviewer.email, subject, message)
         return HttpResponseRedirect('/?up=done')
     context = {}
@@ -428,7 +428,7 @@ def ApproveBook(request, book_id=None):
             "Congratulations !\n"+\
             "The book - "+book.title+" is now complete.\n"+\
             "Please visit the below given link to download the forms to be filled to complete the formalities.\n"+\
-            "http://dev.fossee.in/internship-forms"+"\n"+\
+            "http://tbc-python.fossee.in/internship-forms"+"\n"+\
             "The forms should be duly filled(fill only sections which are applicable) & submit at the following address:\n"+\
             "Dr. Prabhu Ramachandran, \n"+\
             "Department of Aerospace Engineering,\n"+\

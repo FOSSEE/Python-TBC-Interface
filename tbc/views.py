@@ -473,6 +473,7 @@ def NotifyChanges(request, book_id=None):
 
 def BrowseBooks(request):
     context = {}
+    category = None
     if request.user.is_anonymous():
         context['anonymous'] = True
     else:
@@ -487,8 +488,7 @@ def BrowseBooks(request):
         for book in books:
             images.append(ScreenShots.objects.filter(book=book)[0])
     else:
-        category = 'computer science'
-        books = Book.objects.filter(category='computer science')
+        books = Book.objects.all()
         for book in books:
             images.append(ScreenShots.objects.filter(book=book)[0])
     context.update(csrf(request))

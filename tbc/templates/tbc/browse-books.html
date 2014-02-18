@@ -16,6 +16,7 @@ function submitCategory()
 <form name="browseBooks" action="/browse-books/" method=POST enctype="multipart/form-data">
 {% csrf_token %}
 <center><select name="category" id="category" onchange="submitCategory();">
+  <option value="all">All</option>
   <option value="fluid mechanics">Fluid Mechanics</option>
   <option value="control systems">Control Theory & Control Systems</option>
   <option value="chemical engineering">Chemical Engineering</option>

@@ -33,11 +33,35 @@
 <hr>
 <a class="btn btn-primary btn-large" href="{% url 'tbc:GetZip' book.id %}" style="float:right; margin-top:20px;">Download Book as Zip</a>
 <table>
-<tr><td>Author: &nbsp;&nbsp;<td>{{ book.author }}
-<tr><td>Publisher: &nbsp;&nbsp;<td>{{ book.publisher_place }}
-<tr><td>ISBN: &nbsp;&nbsp;<td>{{ book.isbn }}
-<tr><td>Contributor: &nbsp;&nbsp;<td>{{ book.contributor.user.first_name }} {{ book.contributor.user.last_name }}
-<tr><td>Email: &nbsp;&nbsp;<td>{{ book.contributor.user.email }}<br>
+    <tr>
+        <td>Author: &nbsp;&nbsp;</td>
+        <td>{{ book.author }}</td>
+    </tr>
+    <tr>
+        <td>Publisher: &nbsp;&nbsp;</td>
+        <td>{{ book.publisher_place }}</td>
+    </tr>
+    <tr>
+        <td>ISBN: &nbsp;&nbsp;</td>
+        <td>{{ book.isbn }}</td>
+    </tr>
+    <tr>
+        <td>Contributor: &nbsp;&nbsp;</td>
+        <td>{{ book.contributor.user.first_name }} {{ book.contributor.user.last_name }}</td>
+    </tr>
+    <tr>
+        <td>Institute/Organization: &nbsp;&nbsp;</td>
+        <td>{{ book.contributor.insti_org }}</td>
+    </tr>
+    <tr>
+        <td>Department/Designation: &nbsp;&nbsp;</td>
+        <td>{{ book.contributor.dept_desg }}</td>
+    </tr>
+    <tr>
+        <td>Reviewer: &nbsp;&nbsp;</td>
+        <td>{{ book.reviewer.name }}</td>
+    </tr>
+
 </table>
 </div>
 {% endblock %}

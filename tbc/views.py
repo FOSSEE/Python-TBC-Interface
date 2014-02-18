@@ -330,7 +330,7 @@ def generateZip(book_id):
     notebooks = Chapters.objects.filter(book=book)
     for notebook in notebooks:
         files_to_zip.append(file_path+str(notebook.notebook))
-    zip_subdir = book.title.strip()
+    zip_subdir = "PythonTBC"
     zipfile_name = "%s.zip" %zip_subdir
     s = StringIO.StringIO()
     zip_file = zipfile.ZipFile(s, 'w')

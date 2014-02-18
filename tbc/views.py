@@ -474,6 +474,9 @@ def NotifyChanges(request, book_id=None):
 def BrowseBooks(request):
     context = {}
     category = None
+    images = []
+    book_images = []
+    books = []
     if request.user.is_anonymous():
         context['anonymous'] = True
     else:
@@ -481,10 +484,12 @@ def BrowseBooks(request):
             context['reviewer'] = request.user
         else:
             context['user'] = request.user
-    images = []
     if request.method == 'POST':
         category = request.POST['category']
-        books = Book.objects.filter(category=category)
+        if category == "all":
+            books = Book.objects.all()
+        else:
+            books = Book.objects.filter(category=category)
         for book in books:
             images.append(ScreenShots.objects.filter(book=book)[0])
     else:
@@ -492,7 +497,6 @@ def BrowseBooks(request):
         for book in books:
             images.append(ScreenShots.objects.filter(book=book)[0])
     context.update(csrf(request))
-    book_images = []
     for i in range(len(books)):
         obj = {'book':books[i], 'image':images[i]}
         book_images.append(obj)

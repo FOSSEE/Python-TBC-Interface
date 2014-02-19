@@ -13,7 +13,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 PROJDIR = abspath(dirname(__file__))
-DATABASE_PASSWORD = DB_PASS
+DATABASE_PASSWORD = db_pass
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.

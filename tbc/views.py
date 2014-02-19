@@ -80,7 +80,7 @@ def Home(request):
         context['update_book'] = True
     if 'not_found' in request.GET:
         context['not_found'] = True
-    books = Book.objects.filter(approved=True)[0:6]
+    books = Book.objects.filter(approved=True).order_by("-id")[0:6]
     for book in books:
         images.append(ScreenShots.objects.filter(book=book)[0])
     context['images'] = images

@@ -1,7 +1,7 @@
 # Django settings for PythonTBC project.
 
 from os.path import *
-from tbc.local import *
+from local import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

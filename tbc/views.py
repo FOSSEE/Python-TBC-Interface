@@ -278,6 +278,7 @@ def ContentUpload(request, book_id=None):
     context = {}
     context.update(csrf(request))
     context['user'] = user
+    context['curr_book'] = curr_book
     context['no_notebooks'] = [i for i in range(1, curr_book.no_chapters+1)]
     context['no_images'] = [i for i in range(1, 4)]
     return render_to_response('tbc/upload-content.html', context)

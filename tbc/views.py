@@ -188,7 +188,9 @@ def SubmitBook(request):
             data.contributor = profile
             data.save()
             context['user'] = curr_user
-            return HttpResponseRedirect('/upload-content')
+            curr_book = Book.objects.order_by("-id")[0]
+            curr_book_id = curr_book.id
+            return HttpResponseRedirect('/upload-content/'+str(curr_book_id))
         else:
             context.update(csrf(request))
             context['form'] = form
@@ -243,9 +245,9 @@ def UpdateBook(request):
         return render_to_response('tbc/update-book.html', context)
     
 
-def ContentUpload(request):
+def ContentUpload(request, book_id=None):
     user = request.user
-    curr_book = Book.objects.order_by("-id")[0]
+    curr_book = Book.objects.get(id=book_id)
     if request.method == 'POST':
         for i in range(1, curr_book.no_chapters+1):
             chapter = Chapters()

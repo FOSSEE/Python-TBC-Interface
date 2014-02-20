@@ -490,7 +490,7 @@ def BrowseBooks(request):
     if request.method == 'POST':
         category = request.POST['category']
         if category == "all":
-            books = Book.objects.all()
+            books = Book.objects.filter(approved=True)
         else:
             books = Book.objects.filter(category=category)
         for book in books:

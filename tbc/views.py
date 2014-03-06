@@ -186,6 +186,7 @@ def SubmitBook(request):
             data = form.save(commit=False)
             profile = Profile.objects.get(user=request.user.id)
             data.contributor = profile
+            data.reviewer = Reviewer.objects.get(pk=1)
             data.save()
             context['user'] = curr_user
             curr_book = Book.objects.order_by("-id")[0]

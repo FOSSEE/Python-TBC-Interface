@@ -39,11 +39,11 @@ ABOUT_PROJ = (("pythontbc website", "Python TBC Website"),
               ("others", "Others"))
 
 def get_notebook_dir(instance, filename):
-    return '%s/%s/%s' % (instance.book.contributor, instance.book.title, filename)
+    return '%s/%s/%s' % (instance.book.contributor, instance.book.title.replace(' ', '_'), filename)
 
 
 def get_image_dir(instance, filename):
-    return '%s/%s/screenshots/%s' % (instance.book.contributor, instance.book.title, filename)
+    return '%s/%s/screenshots/%s' % (instance.book.contributor, instance.book.title.replace(' ', '_'), filename)
 
 
 class Profile(models.Model):

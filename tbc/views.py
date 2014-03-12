@@ -506,3 +506,25 @@ def BrowseBooks(request):
     context['items'] = book_images
     context['category'] = category
     return render_to_response('tbc/browse-books.html', context)
+
+
+def ConvertNotebook(request, notebook_path=None):
+    path = os.path.abspath(os.path.dirname(__file__))
+    path = path+"/static/uploads/"
+    path = path+notebook_path
+    notebook_name = path.split("/")[-1:]
+    notebook_name = notebook_name[0].split(".")[0]
+    path = path.split("/")[0:-1]
+    path = "/".join(path)+"/"
+    os.chdir(path)
+    try:
+        template = path.split("/")[8:]
+        template = "/".join(template)+notebook_name+".html"
+        print ("try")
+        return render_to_response(template, {})
+    except:
+        os.popen("ipython nbconvert --to html "+path+notebook_name+".ipynb")
+        template = path.split("/")[8:]
+        template = "/".join(template)+notebook_name+".html"
+        print ("except")
+        return render_to_response(template, {})

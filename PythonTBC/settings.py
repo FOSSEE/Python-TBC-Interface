@@ -13,13 +13,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 PROJDIR = abspath(dirname(__file__))
+DATABASE_USER = db_user
 DATABASE_PASSWORD = db_pass
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'pythontbc',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        'USER': 'pythontbc',
+        'USER': DATABASE_USER,
         'PASSWORD': DATABASE_PASSWORD,
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
@@ -118,8 +119,8 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     join(PROJDIR, '../tbc/templates'),
+    join(PROJDIR, '../tbc/static/uploads')
 )
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',

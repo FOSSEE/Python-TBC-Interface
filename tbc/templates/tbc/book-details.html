@@ -14,13 +14,10 @@
 <hr>
 <div id="content-wrap">
 <table class="table table-bordered table-hover">
-<th>#</th>
 <th>Chapters</th>
+<th width=350>Download Links</th>
 {% for chapter in chapters %}
     <tr>
-        <td>
-            {{ forloop.counter }}
-        </td>
         <td>
             <a href="{% url 'tbc:ConvertNotebook' chapter.notebook %}">{{ chapter.name }}</a>
         </td>

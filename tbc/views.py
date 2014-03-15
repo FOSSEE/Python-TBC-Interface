@@ -480,7 +480,7 @@ def BrowseBooks(request):
     category = None
     images = []
     book_images = []
-    books = []
+    books = None
     if request.user.is_anonymous():
         context['anonymous'] = True
     else:
@@ -492,13 +492,18 @@ def BrowseBooks(request):
     books = Book.objects.filter(approved=True)
     if request.method == "POST":
         category = request.POST['category']
-        return HttpResponse(category)
+        if category == "all":
+            books = Book.objects.filter(approved=True)
+        else:
+            books = Book.objects.filter(category=category)
+        return HttpResponse(books)
     else:
-        for book in books:
-            images.append(ScreenShots.objects.filter(book=book)[0])
-        for i in range(len(books)):
-            obj = {'book':books[i], 'image':images[i]}
-            book_images.append(obj)
+        books = Book.objects.filter(approved=True)
+    for book in books:
+       images.append(ScreenShots.objects.filter(book=book)[0])
+    for i in range(len(books)):
+       obj = {'book':books[i], 'image':images[i]}
+       book_images.append(obj)
     context['items'] = book_images
     context['category'] = category
     return render_to_response('tbc/browse-books.html', context)

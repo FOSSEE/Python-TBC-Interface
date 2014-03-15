@@ -488,13 +488,17 @@ def BrowseBooks(request):
             context['reviewer'] = request.user
         else:
             context['user'] = request.user
-    books = Book.objects.filter(approved=True)
-    for book in books:
-        images.append(ScreenShots.objects.filter(book=book)[0])
-    for i in range(len(books)):
-        obj = {'book':books[i], 'image':images[i]}
-        book_images.append(obj)
     context.update(csrf(request))
+    books = Book.objects.filter(approved=True)
+    if request.method == "POST":
+        category = request.POST['category']
+        return HttpResponse(category)
+    else:
+        for book in books:
+            images.append(ScreenShots.objects.filter(book=book)[0])
+        for i in range(len(books)):
+            obj = {'book':books[i], 'image':images[i]}
+            book_images.append(obj)
     context['items'] = book_images
     context['category'] = category
     return render_to_response('tbc/browse-books.html', context)

@@ -495,7 +495,7 @@ def BrowseBooks(request):
         if category == "all":
             books = Book.objects.filter(approved=True)
         else:
-            books = Book.objects.filter(category=category)
+            books = Book.objects.filter(category=category, approved=True)
     else:
         books = Book.objects.filter(approved=True)
     for book in books:

@@ -496,7 +496,6 @@ def BrowseBooks(request):
             books = Book.objects.filter(approved=True)
         else:
             books = Book.objects.filter(category=category)
-        return HttpResponse(books)
     else:
         books = Book.objects.filter(approved=True)
     for book in books:

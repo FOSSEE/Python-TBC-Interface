@@ -488,22 +488,9 @@ def BrowseBooks(request):
             context['reviewer'] = request.user
         else:
             context['user'] = request.user
-    books = Book.objects.all()
+    books = Book.objects.filter(approved=True)
     for book in books:
         images.append(ScreenShots.objects.filter(book=book)[0])
-    """if request.method == 'POST':
-        category = request.POST['category']
-        if category == "all":
-            books = Book.objects.filter(approved=True)
-        else:
-            books = Book.objects.filter(category=category)
-        for book in books:
-            images.append(ScreenShots.objects.filter(book=book)[0])
-    else:
-        books = Book.objects.all()
-        for book in books:
-            images.append(ScreenShots.objects.filter(book=book)[0])
-    context.update(csrf(request))"""
     for i in range(len(books)):
         obj = {'book':books[i], 'image':images[i]}
         book_images.append(obj)

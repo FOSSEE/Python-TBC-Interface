@@ -11,11 +11,11 @@
 {% endfor %}
 </div>
 <hr>
-<ol>
+<ul>
 {% for chapter in chapters %}
     <li><a href="{% url 'tbc:ConvertNotebook' chapter.notebook %}">{{ chapter.name }}</a></li>
 {% endfor %}
-</ol>
+</ul>
 <hr>
 <form action="/approve-book/{{ book.id }}" method="POST">
 {% csrf_token %}

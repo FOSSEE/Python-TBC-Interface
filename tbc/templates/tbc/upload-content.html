@@ -1,21 +1,65 @@
 {% extends 'base.html' %}
+
+{% block script %}
+<script>
+function validate_content()
+{
+    no_notebooks = {{ no_notebooks }}.length;
+    for(i=1;i<=no_notebooks;i++)
+    {
+        name = document.getElementById("chapter"+i).value;
+        extension = document.getElementById("notebook"+i).value;
+        extension = extension.split(".");
+        if (extension == "" || name == "")
+        {
+            alert("Chapter names & file fields cannot be empty !!");
+            return false;
+        }
+        if(extension[1] == "ipynb")
+            continue;
+        else
+            alert("Oops !! You can upload only Ipython Notebooks (.ipynb extension)");    
+            return false;
+    }
+    for(i=1;i<=3;i++)
+    {
+        caption = document.getElementById("caption"+i).value;
+        extension = document.getElementById("image"+i).value;
+        extension = extension.split(".");
+        if (extension == "" || caption == "")
+        {
+            alert("Captions and file fields cannot be empty");
+            return false;
+        }
+
+        if(extension[1] == "png")
+            continue;
+        else
+            alert("Only .png files are allowed for screenshots");    
+            return false;
+    }
+    return true;
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div id="content-wrap" style="max-width:600px;">
     <p>Upload chapters as individual IPython notebooks</p>
     <form action="/upload-content/{{ curr_book.id }}" method=POST enctype="multipart/form-data">
     {% csrf_token %}
     {% for i in no_notebooks %}
-        <input type=text name=chapter{{i}} placeholder="Chapter {{ forloop.counter }} name">
-        <input type=file name=notebook{{i}}>
+        <input type=text id=chapter{{i}} name=chapter{{i}} placeholder="Chapter {{ forloop.counter }} name">
+        <input type=file id=notebook{{i}} name=notebook{{i}}>
     {% endfor %}
     <br>
     <hr>
     <p>Upload screenshots of Plots/Graphs/Charts(if any) "that you have plotted" and not from the textbook itself from any cahpter. If there are no plots/graphs/charts, then upload a screenshot of any chapter. Give proper captions for each of them. Only .png files are acceptable.</p>
     {% for i in no_images %}
-    <input type=text name=caption{{i}} placeholder="Caption {{ forloop.counter }}">
-    <input type=file name=image{{i}}>
+    <input type=text id=caption{{i}} name=caption{{i}} placeholder="Caption {{ forloop.counter }}">
+    <input type=file id=image{{i}} name=image{{i}}>
     {% endfor %}
-    <center><input class="btn btn-primary" type=submit value=submit></center>
+    <center><input class="btn btn-primary" type=submit value=submit onClick="return validate_content();"></center>
     </form>
 </div>
 {% endblock %}

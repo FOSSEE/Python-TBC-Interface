@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id="content-wrap" style="max-width:600px;">
-    <p>Upload chapters as individual IPython notebooks </p>
+    <p>Upload chapters as individual IPython notebooks</p>
     <form action="/upload-content/{{ curr_book.id }}" method=POST enctype="multipart/form-data">
     {% csrf_token %}
     {% for i in no_notebooks %}
@@ -10,7 +10,7 @@
     {% endfor %}
     <br>
     <hr>
-    <p>Upload 3 screenshots from any 3 random chapters and give proper captions</p>
+    <p>Upload screenshots of Plots/Graphs/Charts(if any) "that you have plotted" and not from the textbook itself from any cahpter. If there are no plots/graphs/charts, then upload a screenshot of any chapter. Give proper captions for each of them. Only .png files are acceptable.</p>
     {% for i in no_images %}
     <input type=text name=caption{{i}} placeholder="Caption {{ forloop.counter }}">
     <input type=file name=image{{i}}>

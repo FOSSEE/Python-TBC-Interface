@@ -1,5 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
+
+{% if empty %}
+    <center>
+        <div class="alert" style="width:300px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>Username/Password cannot be empty !</p>
+        </div>
+    </center>
+{% endif %}
+
+{% if invalid %}
+    <center>
+        <div class="alert" style="width:230px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>You entered invalid credentials !</p>
+        </div>
+    </center>
+{% endif %}
+
 {% if signup %}
     <center>
         <div class="alert" style="width:550px;height:23px;">

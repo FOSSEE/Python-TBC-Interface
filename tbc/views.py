@@ -97,14 +97,25 @@ def UserLogin(request):
     if 'require_login' in request.GET:
         context['require_login'] = True
     if request.method == 'POST':
+        form = UserLoginForm(request.POST)
         username = request.POST['username']
         password = request.POST['password']
+        if username == "" or password == "":
+            form = UserLoginForm()
+            context.update(csrf(request))
+            context['form'] = form
+            context['empty'] = True
+            return render_to_response('tbc/login.html', context)
         curr_user = authenticate(username=username, password=password)
-        if curr_user is  not None:
+        if curr_user is not None:
             login(request, curr_user)
         else:
-            return  HttpResponseRedirect('/login')
-        if curr_user.groups.filter(name='reviewer').count() == 1:
+            form = UserLoginForm()
+            context.update(csrf(request))
+            context['form'] = form
+            context['invalid'] = True
+            return render_to_response('tbc/login.html', context)
+        if is_reviewer(user):
             context['reviewer'] = curr_user
             return HttpResponseRedirect("/book-review")
         else:

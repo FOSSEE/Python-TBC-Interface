@@ -10,6 +10,8 @@ import zipfile
 import StringIO
 import smtplib
 import shutil
+import string
+import random
 from email.mime.text import MIMEText
 
 
@@ -94,6 +96,7 @@ def Home(request):
 
 def UserLogin(request):
     context = {}
+    context.update(csrf(request))
     if 'require_login' in request.GET:
         context['require_login'] = True
     if request.method == 'POST':
@@ -102,7 +105,6 @@ def UserLogin(request):
         password = request.POST['password']
         if username == "" or password == "":
             form = UserLoginForm()
-            context.update(csrf(request))
             context['form'] = form
             context['empty'] = True
             return render_to_response('tbc/login.html', context)
@@ -111,11 +113,10 @@ def UserLogin(request):
             login(request, curr_user)
         else:
             form = UserLoginForm()
-            context.update(csrf(request))
             context['form'] = form
             context['invalid'] = True
             return render_to_response('tbc/login.html', context)
-        if is_reviewer(user):
+        if is_reviewer(curr_user):
             context['reviewer'] = curr_user
             return HttpResponseRedirect("/book-review")
         else:
@@ -129,7 +130,6 @@ def UserLogin(request):
         form = UserLoginForm()
         if 'signup' in request.GET:
             context['signup'] = True
-    context.update(csrf(request))
     context['form'] = form
     return render_to_response('tbc/login.html', context)
 
@@ -186,6 +186,79 @@ def UserLogout(request):
     if user.is_authenticated() and user.is_active:
         logout(request)
     return redirect('/?logout=done')
+
+
+def ForgotPassword(request):
+    context = {}
+    user_emails = []
+    context.update(csrf(request))
+    if request.user.is_anonymous():
+        context['anonymous'] = True
+    if request.method == 'POST':
+        email = request.POST['email']
+        profiles = Profile.objects.all()
+        for profile in profiles:
+            user_emails.append(profile.user.email)
+        if email in user_emails:
+            user = User.objects.get(email=email)
+            password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+            print password
+            user.set_password(password)
+            user.save()
+            subject = "PythonTBC: Password Reset"
+            message = "Dear "+user.first_name+",\n"+"We have reset the password\
+            for you. Your credentials are:\n"+"Username: "+user.username+"\n\
+            Password: "+password+"\n\nYou can use this password to login. We \
+            recommend that you update your password through the link given \
+            below, once you have logged in successfully.\
+            Link: http://tbc-python.fossee.in/update-password.\n\nThank You !"
+            #email_send(email, subject, message)
+            form = UserLoginForm()
+            context['form'] = form
+            context['forgot_pass_redirection'] = True
+            return render_to_response("tbc/login.html", context)
+        else:
+            context['invalid_email'] = True
+            return render_to_response("tbc/forgot-password.html", context)    
+    else:
+        return render_to_response("tbc/forgot-password.html", context)
+
+
+def UpdatePassword(request):
+    user = request.user
+    context = {}
+    context.update(csrf(request))
+    if user.is_authenticated():
+        if request.method == 'POST':
+            new_password = request.POST['new_password']
+            confirm = request.POST['confirm_new_password']
+            if new_password == "" or confirm == "":
+                form = PasswordResetForm()
+                context['empty'] = True
+                context['form'] = form
+                return render_to_response("tbc/update-password.html", context)
+            if new_password == confirm:
+                user.set_password(new_password)
+                user.save()
+                form = UserLoginForm()
+                context['password_updated'] = True
+                context['form'] = form
+                logout(request)
+                return render_to_response("tbc/login.html", context)
+            else:
+                form = PasswordResetForm()
+                context['no_match'] = True
+                context['form'] = form
+                return render_to_response("tbc/update-password.html", context)
+        else:
+            form = PasswordResetForm()
+            context['form'] = form
+            return render_to_response("tbc/update-password.html", context)
+    else:
+        form = UserLoginForm()
+        context['form'] = form
+        context['require_login'] = True
+        return render_to_response("tbc/login.html", context)
     
 
 def SubmitBook(request):

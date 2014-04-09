@@ -42,6 +42,16 @@ class UserLoginForm(forms.Form):
                                'placeholder': 'Password'}), label='')
 
 
+class PasswordResetForm(forms.Form):
+    new_password = forms.CharField(widget=forms.PasswordInput(attrs={
+                               'class': 'form-control',
+                               'placeholder': 'New Password'}), label='')
+    confirm_new_password = forms.CharField(widget=forms.PasswordInput(attrs={
+                               'class': 'form-control',
+                               'placeholder': 'Confirm New Password'}), label='')
+                               
+
+
 class BookForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BookForm, self).__init__(*args, **kwargs)

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id="content-wrap" style="max-width:600px;">
+<h3>Registration</h3>
+<hr>
     <form action="/register/" method=POST enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}

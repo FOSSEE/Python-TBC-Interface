@@ -19,18 +19,42 @@
     </center>
 {% endif %}
 
+{% if password_updated %}
+    <center>
+        <div class="alert" style="width:230px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>Password successfully updated !</p>
+        </div>
+    </center>
+{% endif %}
+
+
 {% if signup %}
     <center>
         <div class="alert" style="width:550px;height:23px;">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <p>You have registered successfully, kindly login with your credentials !!</p>
+            <p>You have registered successfully, kindly login with your credentials !</p>
         </div>
     </center>
     <div class="clearfix"></div>
 {% endif %}
 
+{% if forgot_pass_redirection %}
+    <center>
+        <div class="alert" style="width:530px;height:65px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>Details regarding the new credentials for your account have been
+            mailed to you successfully. Kindly check your mailbox for the 
+            instructions. Do not forget to check the spam folder in case you
+            do not find the mail in your inbox.
+            </p>
+        </div>
+    </center>
+{% endif %}
+
 <div id="content-wrap" style="max-width: 400px;">
-<br><br>
+<h3>Login</h3>
+<hr>
     {% if require_login %}
     <p>The requsted page requires login.</p>
     {% endif %}
@@ -38,6 +62,7 @@
     {% csrf_token %}
         {{ form.as_p }}
         <input class="btn btn-primary"type=submit value=Login>
+        <a href="{% url 'tbc:ForgotPassword' %}" class="btn btn-primary">Forgot Password</a>
     </form>
 </div>
 {% endblock %}

@@ -9,6 +9,10 @@ urlpatterns = patterns('',
     url(r'^login/$', 'tbc.views.UserLogin', name='UserLogin'),
     url(r'^logout/$', 'tbc.views.UserLogout', name='UserLogout'),
     url(r'^profile/$', 'tbc.views.UserProfile', name='UserProfile'),
+    url(r'^forgot-password/$', 'tbc.views.ForgotPassword', name='ForgotPassword'),
+    url(r'^update-password/$', 'tbc.views.UpdatePassword', name='UpdatePassword'),
+    
+    
     url(r'^submit-book/$', 'tbc.views.SubmitBook', name='SubmitBook'),
     url(r'^update-book/$', 'tbc.views.UpdateBook', name='UpdateBook'),
     url(r'^upload-content/(?P<book_id>\d+)$', 'tbc.views.ContentUpload', name='ContentUpload'),

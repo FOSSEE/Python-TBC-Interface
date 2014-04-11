@@ -212,7 +212,7 @@ def ForgotPassword(request):
             recommend that you update your password through the link given \
             below, once you have logged in successfully.\
             Link: http://tbc-python.fossee.in/update-password.\n\nThank You !"
-            #email_send(email, subject, message)
+            email_send(email, subject, message)
             form = UserLoginForm()
             context['form'] = form
             context['forgot_pass_redirection'] = True

@@ -202,16 +202,17 @@ def ForgotPassword(request):
         if email in user_emails:
             user = User.objects.get(email=email)
             password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-            print password
             user.set_password(password)
             user.save()
             subject = "PythonTBC: Password Reset"
-            message = "Dear "+user.first_name+",\n"+"We have reset the password\
-            for you. Your credentials are:\n"+"Username: "+user.username+"\n\
-            Password: "+password+"\n\nYou can use this password to login. We \
-            recommend that you update your password through the link given \
-            below, once you have logged in successfully.\
-            Link: http://tbc-python.fossee.in/update-password.\n\nThank You !"
+            message = "Dear "+user.first_name+",\n"+
+            "Your password for PythonTBC interface has been reset."+
+            "Your credentials are:\n"+
+            "Username: "+user.username+
+            "\nPassword: "+password+
+            "\n\nKindly login with the given password and update your password through the below given link."+
+            "\nLink: http://tbc-python.fossee.in/update-password."+
+            "\n\nThank You !"
             email_send(email, subject, message)
             form = UserLoginForm()
             context['form'] = form

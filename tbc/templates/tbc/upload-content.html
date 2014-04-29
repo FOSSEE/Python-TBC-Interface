@@ -45,7 +45,8 @@ function validate_content()
 
 {% block content %}
 <div id="content-wrap" style="max-width:600px;">
-    <p>Upload chapters as individual IPython notebooks</p>
+    <p>Upload chapters as individual IPython notebooks. Please do not use spaces to name your Ipython Notebook files. For ex.
+    use "chapter1.ipynb instead of chapter 1.ipynb"</p>
     <form action="/upload-content/{{ curr_book.id }}" method=POST enctype="multipart/form-data">
     {% csrf_token %}
     {% for i in no_notebooks %}

@@ -38,6 +38,8 @@ ABOUT_PROJ = (("pythontbc website", "Python TBC Website"),
               ("posters in college", "Through Posters in College"),
               ("others", "Others"))
 
+
+
 def get_notebook_dir(instance, filename):
     return '%s/%s/%s' % (instance.book.contributor, instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
 

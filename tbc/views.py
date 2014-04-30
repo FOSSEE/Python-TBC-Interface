@@ -605,11 +605,9 @@ def ConvertNotebook(request, notebook_path=None):
     try:
         template = path.split("/")[8:]
         template = "/".join(template)+notebook_name+".html"
-        print ("try")
         return render_to_response(template, {})
     except:
-        os.popen("ipython nbconvert --to html "+path+notebook_name+".ipynb")
+        os.popen("ipython nbconvert --to html \""+path+notebook_name+".ipynb\"")
         template = path.split("/")[8:]
         template = "/".join(template)+notebook_name+".html"
-        print ("except")
         return render_to_response(template, {})

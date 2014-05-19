@@ -37,7 +37,12 @@ ABOUT_PROJ = (("pythontbc website", "Python TBC Website"),
               ("mailing list", "Through Mailing List"),
               ("posters in college", "Through Posters in College"),
               ("others", "Others"))
-
+              
+PROPOSAL_STATUS = (("pending","Pending"),
+                   ("samples","Samples"),
+                   ("book alloted","Book Alloted"),
+                   ("book completed","Book Completed"),
+                   ("rejected","Rejected"))
 
 
 def get_notebook_dir(instance, filename):
@@ -49,7 +54,6 @@ def get_image_dir(instance, filename):
 
 
 class Profile(models.Model):
-    """Model to store profile of a user."""
     user = models.ForeignKey(User)
     about = models.CharField(max_length=256)
     insti_org = models.CharField(max_length=128)
@@ -72,7 +76,6 @@ class Reviewer(models.Model):
         return '%s'%(name)
 
 class Book(models.Model):
-    """Model to store the book details"""
     title = models.CharField(max_length=500)
     author = models.CharField(max_length=300)
     category = models.CharField(max_length=32, choices=CATEGORY)
@@ -104,3 +107,28 @@ class ScreenShots(models.Model):
     def __unicode__(self):
         name = self.caption or 'ScreenShots'
         return '%s'%(name)
+        
+
+class TempBook(models.Model):
+    title = models.CharField(max_length=500)
+    author = models.CharField(max_length=300)
+    category = models.CharField(max_length=32, choices=CATEGORY)
+    publisher_place = models.CharField(max_length=150)
+    isbn = models.CharField(max_length=50)
+    edition = models.CharField(max_length=15)
+    year_of_pub = models.CharField(max_length=4)
+    no_chapters = models.IntegerField(max_length=2)
+    def __unicode__(self):
+        name = self.title or 'Book'
+        return '%s'%(name)
+        
+
+class Proposal(models.Model):
+    user = models.ForeignKey(Profile)
+    textbooks = models.ManyToManyField(TempBook, related_name="proposed_textbooks")
+    accepted = models.ForeignKey(Book, related_name="approved_textbook", blank=True,null=True)
+    status = models.CharField(max_length=20, default="Pending", choices=PROPOSAL_STATUS)
+    remarks = models.CharField(max_length=1000)
+    def __unicode__(self):
+        user = self.user.user.username or 'User'
+        return '%s'%(user)

@@ -82,6 +82,8 @@ def Home(request):
         context['update_book'] = True
     if 'not_found' in request.GET:
         context['not_found'] = True
+    if 'proposal' in request.GET:
+        context['proposal_submitted'] = True
     books = Book.objects.filter(approved=True).order_by("-id")[0:6]
     for book in books:
         images.append(ScreenShots.objects.filter(book=book)[0])
@@ -288,7 +290,54 @@ def SubmitBook(request):
     context['form'] = form
     context['user'] = curr_user
     return render_to_response('tbc/submit-book.html', context)
-    
+
+
+def SubmitProposal(request):
+    curr_user = request.user
+    user_profile = Profile.objects.get(user=curr_user.id)
+    context = {}
+    context.update(csrf(request))
+    context['user'] = curr_user
+    if request.method == 'POST':
+        user_proposals = Proposal.objects.filter(user=user_profile)
+        return HttpResponse(user_proposals)
+        for proposal in user_proposals:
+            if proposal.status == "pending":
+                can_submit_new = False
+            
+        book_titles = request.POST.getlist('title')
+        book_authors = request.POST.getlist('author')
+        book_categories = request.POST.getlist('category')
+        book_pubs = request.POST.getlist('publisher_place')
+        book_isbns = request.POST.getlist('isbn')
+        book_editions = request.POST.getlist('edition')
+        book_years = request.POST.getlist('year_of_pub')
+        book_chapters = request.POST.getlist('no_chapters')
+        for item in range(3):
+            tempbook = TempBook()
+            tempbook.title = book_titles[item]
+            tempbook.author = book_authors[item]
+            tempbook.category = book_categories[item]
+            tempbook.publisher_place = book_pubs[item]
+            tempbook.isbn = book_isbns[item]
+            tempbook.edition = book_editions[item]
+            tempbook.year_of_pub = book_years[item]
+            tempbook.no_chapters = book_chapters[item]
+            tempbook.save()
+        proposal = Proposal()
+        proposal.user = user_profile
+        proposal.save()
+        for book in list(TempBook.objects.all())[-3:]:
+            proposal.textbooks.add(book)
+        return HttpResponseRedirect('/?proposal=submitted')
+    else:
+        book_forms = []
+        for i in range(3):
+            form = BookForm()
+            book_forms.append(form)
+        context['book_forms'] = book_forms
+        return render_to_response('tbc/submit-proposal.html', context)
+
 
 def UpdateBook(request):
     current_user = request.user

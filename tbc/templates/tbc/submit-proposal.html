@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="content-wrap" style="max-width:600px;">
+    <form action="/submit-proposal/" method=POST enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for form in book_forms %}
+            <h4>Book Preference {{ forloop.counter }}</h4>
+            {{ form.as_p }}
+        {% endfor %}
+        <hr>
+        <input class="btn btn-primary" type=submit value=submit>
+    </form>
+</div>
+{% endblock %}

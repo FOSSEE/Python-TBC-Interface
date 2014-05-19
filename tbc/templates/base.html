@@ -94,6 +94,7 @@
                  <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
+                      <li><a href="{% url 'tbc:SubmitProposal' %}">Submit Proposal</a></li>
                       <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book</a></li>
                       <li><a href="{% url 'tbc:UpdateBook' %}">Update Submission</a></li>
                       <li><a href="{% url 'tbc:UpdatePassword' %}">Update Password</a></li>
@@ -165,6 +166,15 @@
             <div class="alert" style="width:650px;height:23px;">
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
                 <p>It seems that currently there is no book that you can update ! Please submit one.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    {% if proposal_submitted %}
+        <center>
+            <div class="alert" style="width:650px;height:40px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>Thank you for showing interest in contributing to Python TBC. <br>We have recevied your proposal. Please be patient we will get back to you within few days.</p>
             </div>
         </center>
         <div class="clearfix"></div>

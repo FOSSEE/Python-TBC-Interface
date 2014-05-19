@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^update-password/$', 'tbc.views.UpdatePassword', name='UpdatePassword'),
     
     
+    url(r'^submit-proposal/$', 'tbc.views.SubmitProposal', name='SubmitProposal'),
     url(r'^submit-book/$', 'tbc.views.SubmitBook', name='SubmitBook'),
     url(r'^update-book/$', 'tbc.views.UpdateBook', name='UpdateBook'),
     url(r'^upload-content/(?P<book_id>\d+)$', 'tbc.views.ContentUpload', name='ContentUpload'),

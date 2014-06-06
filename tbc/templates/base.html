@@ -179,7 +179,16 @@
         </center>
         <div class="clearfix"></div>
     {% endif %}
-	<div class="row-fluid">
+    {% if proposal_pending %}
+        <center>
+            <div class="alert" style="width:650px;height:40px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>You either have a proposal pending or you are already working on a book. You cannot submit a proposal at this moment.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    <div class="row-fluid">
         <center><h3>Recent Submissions</h3></center>
         {% for item in items %}
             <div class ="module-list">
@@ -196,7 +205,7 @@
     <!-- 
         <input type=text> <input type=submit value=Search>
     -->
-	{% endblock %}
+    {% endblock %}
       <hr>
       
       <footer>

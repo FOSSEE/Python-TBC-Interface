@@ -16,17 +16,17 @@ from email.mime.text import MIMEText
 
 
 def email_send(to,subject,msg):
-	try:
-		smtpObj = smtplib.SMTP('localhost')
-		mail_from = "textbook@fosse.in"
-		message = MIMEText(msg)
-		message['Subject'] = subject
-		message['From'] = mail_from
-		message['to'] = to
-		smtpObj.sendmail(mail_from, to, message.as_string())         
-	except SMTPException:
-		return HttpResponse("Error:unable to send email")
-		
+    try:
+        smtpObj = smtplib.SMTP('localhost')
+        mail_from = "textbook@fosse.in"
+        message = MIMEText(msg)
+        message['Subject'] = subject
+        message['From'] = mail_from
+        message['to'] = to
+        smtpObj.sendmail(mail_from, to, message.as_string())
+    except SMTPException:
+        return HttpResponse("Error:unable to send email")
+
 
 def is_reviewer(user):
     if user.groups.filter(name='reviewer').count() == 1:
@@ -59,7 +59,6 @@ def AboutPytbc(request):
     return render_to_response('tbc/about-pytbc.html', context)
 
 
-
 def Home(request):
     context = {}
     images = []
@@ -84,6 +83,8 @@ def Home(request):
         context['not_found'] = True
     if 'proposal' in request.GET:
         context['proposal_submitted'] = True
+    if 'proposal_pending' in request.GET:
+        context['proposal_pending'] = True
     books = Book.objects.filter(approved=True).order_by("-id")[0:6]
     for book in books:
         images.append(ScreenShots.objects.filter(book=book)[0])
@@ -94,7 +95,7 @@ def Home(request):
         book_images.append(obj)
     context['items'] = book_images
     return render_to_response('base.html', context)
-    
+
 
 def UserLogin(request):
     context = {}
@@ -181,7 +182,7 @@ def UserProfile(request):
         return render_to_response('tbc/profile.html', context)
     else:
         return HttpResponseRedirect('/login/?require_login=True')
-        
+
 
 def UserLogout(request):
     user = request.user
@@ -262,7 +263,7 @@ def UpdatePassword(request):
         context['form'] = form
         context['require_login'] = True
         return render_to_response("tbc/login.html", context)
-    
+
 
 def SubmitBook(request):
     curr_user = request.user
@@ -298,45 +299,47 @@ def SubmitProposal(request):
     context = {}
     context.update(csrf(request))
     context['user'] = curr_user
-    if request.method == 'POST':
-        user_proposals = Proposal.objects.filter(user=user_profile)
-        return HttpResponse(user_proposals)
-        for proposal in user_proposals:
-            if proposal.status == "pending":
-                can_submit_new = False
-            
-        book_titles = request.POST.getlist('title')
-        book_authors = request.POST.getlist('author')
-        book_categories = request.POST.getlist('category')
-        book_pubs = request.POST.getlist('publisher_place')
-        book_isbns = request.POST.getlist('isbn')
-        book_editions = request.POST.getlist('edition')
-        book_years = request.POST.getlist('year_of_pub')
-        book_chapters = request.POST.getlist('no_chapters')
-        for item in range(3):
-            tempbook = TempBook()
-            tempbook.title = book_titles[item]
-            tempbook.author = book_authors[item]
-            tempbook.category = book_categories[item]
-            tempbook.publisher_place = book_pubs[item]
-            tempbook.isbn = book_isbns[item]
-            tempbook.edition = book_editions[item]
-            tempbook.year_of_pub = book_years[item]
-            tempbook.no_chapters = book_chapters[item]
-            tempbook.save()
-        proposal = Proposal()
-        proposal.user = user_profile
-        proposal.save()
-        for book in list(TempBook.objects.all())[-3:]:
-            proposal.textbooks.add(book)
-        return HttpResponseRedirect('/?proposal=submitted')
+    user_proposals = Proposal.objects.filter(user=user_profile)
+    can_submit_new = True
+    for proposal in user_proposals:
+        if proposal.status is not "book completed":
+            can_submit_new = False
+    if can_submit_new:
+        if request.method == 'POST':
+            book_titles = request.POST.getlist('title')
+            book_authors = request.POST.getlist('author')
+            book_categories = request.POST.getlist('category')
+            book_pubs = request.POST.getlist('publisher_place')
+            book_isbns = request.POST.getlist('isbn')
+            book_editions = request.POST.getlist('edition')
+            book_years = request.POST.getlist('year_of_pub')
+            book_chapters = request.POST.getlist('no_chapters')
+            for item in range(3):
+                tempbook = TempBook()
+                tempbook.title = book_titles[item]
+                tempbook.author = book_authors[item]
+                tempbook.category = book_categories[item]
+                tempbook.publisher_place = book_pubs[item]
+                tempbook.isbn = book_isbns[item]
+                tempbook.edition = book_editions[item]
+                tempbook.year_of_pub = book_years[item]
+                tempbook.no_chapters = book_chapters[item]
+                tempbook.save()
+            proposal = Proposal()
+            proposal.user = user_profile
+            proposal.save()
+            for book in list(TempBook.objects.all())[-3:]:
+                proposal.textbooks.add(book)
+            return HttpResponseRedirect('/?proposal=submitted')
+        else:
+            book_forms = []
+            for i in range(3):
+                form = BookForm()
+                book_forms.append(form)
+            context['book_forms'] = book_forms
+            return render_to_response('tbc/submit-proposal.html', context)
     else:
-        book_forms = []
-        for i in range(3):
-            form = BookForm()
-            book_forms.append(form)
-        context['book_forms'] = book_forms
-        return render_to_response('tbc/submit-proposal.html', context)
+        return HttpResponseRedirect('/?proposal_pending=True')
 
 
 def UpdateBook(request):
@@ -378,7 +381,7 @@ def UpdateBook(request):
         context.update(csrf(request))
         context['form'] = book_form
         return render_to_response('tbc/update-book.html', context)
-    
+
 
 def ContentUpload(request, book_id=None):
     user = request.user
@@ -504,7 +507,7 @@ def BookDetails(request, book_id=None):
     context['images'] = images
     context['book'] = book
     return render_to_response('tbc/book-details.html', context)
-    
+
 
 def BookReview(request, book_id=None):
     context = {}
@@ -583,7 +586,7 @@ def ApproveBook(request, book_id=None):
             return HttpResponseRedirect("/book-review/"+book_id)
     else:
         return render_to_response('tbc/forbidden.html')
-        
+
 
 def NotifyChanges(request, book_id=None):
     context = {}

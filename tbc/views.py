@@ -59,6 +59,10 @@ def AboutPytbc(request):
     return render_to_response('tbc/about-pytbc.html', context)
 
 
+def TemporarilyUnavailable(request):
+	context = {}
+	return render_to_response('tbc/unavailable.html', context)
+
 
 def Home(request):
     context = {}

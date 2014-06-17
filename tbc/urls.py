@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 
 
 urlpatterns = patterns('',
-    url(r'^$', 'tbc.views.TemporarilyUnavailable', name='TemporarilyUnavailable'),
+    url(r'^$', 'tbc.views.Home', name='Home'),
     url(r'^internship-forms/$', 'tbc.views.InternshipForms', name='InternshipForms'),
     url(r'^about-pythontbc/$', 'tbc.views.AboutPytbc', name='AboutPytbc'),
     url(r'^register/$', 'tbc.views.UserRegister', name='UserRegister'),

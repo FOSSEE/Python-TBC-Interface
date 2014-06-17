@@ -2,10 +2,20 @@
 {% load static %}
 {% block content %}
 {% if book_review %}
-<p>Book has been approved !</p>
+<center>
+        <div class="alert" style="width:230px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>Book has been approved !</p>
+        </div>
+    </center>
 {% endif %}
 {% if mail_notify %}
-<p>Successfully notified the required changes !</p>
+<center>
+        <div class="alert" style="width:230px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>Successfully notified the required changes !</p>
+        </div>
+    </center>
 {% endif %}
 <center><h3>Books to be reviewed</h3></center>
 <ol>

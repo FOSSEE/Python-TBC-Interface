@@ -141,10 +141,7 @@ def UserLogin(request):
 
 def UserRegister(request):
     context = {}
-<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
-=======
->>>>>>> temporary_master
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -239,11 +236,8 @@ def ForgotPassword(request):
 
 def UpdatePassword(request):
     context = {}
-<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
-=======
     user = request.user
->>>>>>> temporary_master
     context.update(csrf(request))
     if user.is_authenticated():
         if request.method == 'POST':
@@ -280,11 +274,8 @@ def UpdatePassword(request):
 
 def SubmitBook(request):
     context = {}
-<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
-=======
     curr_user = request.user
->>>>>>> temporary_master
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
@@ -312,10 +303,7 @@ def SubmitBook(request):
 
 def UpdateBook(request):
     context = {}
-<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
-=======
->>>>>>> temporary_master
     current_user = request.user
     user_profile = Profile.objects.get(user=current_user)
     try:
@@ -357,10 +345,7 @@ def UpdateBook(request):
 
 def ContentUpload(request, book_id=None):
     context = {}
-<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
-=======
->>>>>>> temporary_master
     user = request.user
     curr_book = Book.objects.get(id=book_id)
     if request.method == 'POST':
@@ -400,10 +385,7 @@ def ContentUpload(request, book_id=None):
 
 def UpdateContent(request, book_id=None):
     context = {}
-<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
-=======
->>>>>>> temporary_master
     user = request.user
     current_book = Book.objects.get(id=book_id)
     chapters_to_update = Chapters.objects.filter(book=current_book)

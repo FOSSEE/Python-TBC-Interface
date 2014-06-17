@@ -517,7 +517,7 @@ def ApproveBook(request, book_id=None):
             fp.write("Isbn: "+book.isbn+"\n")
             fp.write("Edition: "+book.edition)
             fp.close()
-            x = shutil.copytree(book_title, copy_path+book_title)
+            os.popen("cp -r '"+book_title+"' '"+copy_path+"'")
             subject = "Python-TBC: Book Completion"
             message = "Hi "+book.contributor.user.first_name+",\n"+\
             "Congratulations !\n"+\

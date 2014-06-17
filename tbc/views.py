@@ -65,7 +65,6 @@ def TemporarilyUnavailable(request):
 
 def Home(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     images = []
     if request.user.is_anonymous():
         context['anonymous'] = True
@@ -140,7 +139,6 @@ def UserLogin(request):
 
 def UserRegister(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -161,8 +159,6 @@ def UserRegister(request):
 def UserProfile(request):
     context = {}
     user = request.user
-    context = {}
-    return render_to_response('tbc/unavailable.html', context)
     if user.is_authenticated():
         if request.method == 'POST':
             form = UserProfileForm(request.POST)
@@ -197,7 +193,6 @@ def UserLogout(request):
 
 def ForgotPassword(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     user_emails = []
     context.update(csrf(request))
     if request.user.is_anonymous():
@@ -235,7 +230,6 @@ def ForgotPassword(request):
 
 def UpdatePassword(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     user = request.user
     context.update(csrf(request))
     if user.is_authenticated():
@@ -273,7 +267,6 @@ def UpdatePassword(request):
 
 def SubmitBook(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     curr_user = request.user
     if request.method == 'POST':
         form = BookForm(request.POST)
@@ -302,7 +295,6 @@ def SubmitBook(request):
 
 def UpdateBook(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     current_user = request.user
     user_profile = Profile.objects.get(user=current_user)
     try:
@@ -344,7 +336,6 @@ def UpdateBook(request):
 
 def ContentUpload(request, book_id=None):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     user = request.user
     curr_book = Book.objects.get(id=book_id)
     if request.method == 'POST':
@@ -384,7 +375,6 @@ def ContentUpload(request, book_id=None):
 
 def UpdateContent(request, book_id=None):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     user = request.user
     current_book = Book.objects.get(id=book_id)
     chapters_to_update = Chapters.objects.filter(book=current_book)
@@ -454,7 +444,6 @@ def GetZip(request, book_id=None):
 
 def BookDetails(request, book_id=None):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     if request.user.is_anonymous():
         context['anonymous'] = True
     else:
@@ -473,7 +462,6 @@ def BookDetails(request, book_id=None):
 
 def BookReview(request, book_id=None):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     if is_reviewer(request.user):
         if book_id:
             book = Book.objects.get(id=book_id)
@@ -554,7 +542,6 @@ def ApproveBook(request, book_id=None):
 
 def NotifyChanges(request, book_id=None):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     if is_reviewer(request.user):
         book = Book.objects.get(id=book_id)
         if request.method == 'POST':
@@ -579,7 +566,6 @@ def NotifyChanges(request, book_id=None):
 
 def BrowseBooks(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     category = None
     images = []
     book_images = []
@@ -613,7 +599,6 @@ def BrowseBooks(request):
 
 def ConvertNotebook(request, notebook_path=None):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     path = os.path.abspath(os.path.dirname(__file__))
     path = path+"/static/uploads/"
     path = path+notebook_path
@@ -635,7 +620,6 @@ def ConvertNotebook(request, notebook_path=None):
 
 def CompletedBooks(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     images = []
     if request.user.is_anonymous():
         context['anonymous'] = True
@@ -649,7 +633,6 @@ def CompletedBooks(request):
 
 def BooksUnderProgress(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     images = []
     if request.user.is_anonymous():
         context['anonymous'] = True

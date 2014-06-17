@@ -100,7 +100,6 @@ def Home(request):
 
 def UserLogin(request):
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
     context.update(csrf(request))
     if 'require_login' in request.GET:
         context['require_login'] = True

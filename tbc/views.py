@@ -15,16 +15,16 @@ from email.mime.text import MIMEText
 
 
 def email_send(to,subject,msg):
-	try:
-		smtpObj = smtplib.SMTP('localhost')
-		mail_from = "textbook@fosse.in"
-		message = MIMEText(msg)
-		message['Subject'] = subject
-		message['From'] = mail_from
-		message['to'] = to
-		smtpObj.sendmail(mail_from, to, message.as_string())         
-	except SMTPException:
-		return HttpResponse("Error:unable to send email")
+    try:
+        smtpObj = smtplib.SMTP('localhost')
+        mail_from = "textbook@fosse.in"
+        message = MIMEText(msg)
+        message['Subject'] = subject
+        message['From'] = mail_from
+        message['to'] = to
+        smtpObj.sendmail(mail_from, to, message.as_string())
+    except SMTPException:
+        return HttpResponse("Error:unable to send email")
 		
 
 def is_reviewer(user):
@@ -59,8 +59,8 @@ def AboutPytbc(request):
 
 
 def TemporarilyUnavailable(request):
-	context = {}
-	return render_to_response('tbc/unavailable.html', context)
+    context = {}
+    return render_to_response('tbc/unavailable.html', context)
 
 
 def Home(request):

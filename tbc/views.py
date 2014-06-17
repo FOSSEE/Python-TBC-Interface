@@ -141,7 +141,10 @@ def UserLogin(request):
 
 def UserRegister(request):
     context = {}
+<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
+=======
+>>>>>>> temporary_master
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -160,6 +163,7 @@ def UserRegister(request):
 
 
 def UserProfile(request):
+    context = {}
     user = request.user
     context = {}
     return render_to_response('tbc/unavailable.html', context)
@@ -188,6 +192,7 @@ def UserProfile(request):
         
 
 def UserLogout(request):
+    context = {}
     user = request.user
     if user.is_authenticated() and user.is_active:
         logout(request)
@@ -233,9 +238,12 @@ def ForgotPassword(request):
 
 
 def UpdatePassword(request):
-    user = request.user
     context = {}
+<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
+=======
+    user = request.user
+>>>>>>> temporary_master
     context.update(csrf(request))
     if user.is_authenticated():
         if request.method == 'POST':
@@ -271,9 +279,12 @@ def UpdatePassword(request):
     
 
 def SubmitBook(request):
-    curr_user = request.user
     context = {}
+<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
+=======
+    curr_user = request.user
+>>>>>>> temporary_master
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
@@ -301,7 +312,10 @@ def SubmitBook(request):
 
 def UpdateBook(request):
     context = {}
+<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
+=======
+>>>>>>> temporary_master
     current_user = request.user
     user_profile = Profile.objects.get(user=current_user)
     try:
@@ -343,7 +357,10 @@ def UpdateBook(request):
 
 def ContentUpload(request, book_id=None):
     context = {}
+<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
+=======
+>>>>>>> temporary_master
     user = request.user
     curr_book = Book.objects.get(id=book_id)
     if request.method == 'POST':
@@ -383,7 +400,10 @@ def ContentUpload(request, book_id=None):
 
 def UpdateContent(request, book_id=None):
     context = {}
+<<<<<<< HEAD
     return render_to_response('tbc/unavailable.html', context)
+=======
+>>>>>>> temporary_master
     user = request.user
     current_book = Book.objects.get(id=book_id)
     chapters_to_update = Chapters.objects.filter(book=current_book)
@@ -499,22 +519,22 @@ def BookReview(request, book_id=None):
 
 
 def ApproveBook(request, book_id=None):
-    user = request.user
     context = {}
-    return render_to_response('tbc/unavailable.html', context)
+    user = request.user
     if is_reviewer(request.user):
         if request.method == 'POST' and request.POST['approve_notify'] == "approve":
             book = Book.objects.get(id=book_id)
             book.approved = True
             book.save()
             file_path = os.path.abspath(os.path.dirname(__file__))
-            zip_path = "/".join(file_path.split("/")[1:-2])
-            zip_path = "/"+zip_path+"/Python-Textbook-Companions/"
+            copy_path = "/".join(file_path.split("/")[1:-2])
+            copy_path = "/"+copy_path+"/Python-Textbook-Companions/"
             file_path = file_path+"/static/uploads/"
             directory = file_path+book.contributor.user.first_name
             os.chmod(directory, 0777)
             os.chdir(directory)
-            fp = open(book.title+"/README.txt", 'w')
+            book_title = book.title.replace(" ", "_")
+            fp = open(book_title+"/README.txt", 'w')
             fp.write("Contributed By: "+book.contributor.user.first_name+" "+book.contributor.user.last_name+"\n")
             fp.write("Course: "+book.contributor.course+"\n")
             fp.write("College/Institute/Organization: "+book.contributor.insti_org+"\n")
@@ -526,7 +546,7 @@ def ApproveBook(request, book_id=None):
             fp.write("Isbn: "+book.isbn+"\n")
             fp.write("Edition: "+book.edition)
             fp.close()
-            x = shutil.copytree(book.title, zip_path+book.title)
+            os.popen("cp -r '"+book_title+"' '"+copy_path+"'")
             subject = "Python-TBC: Book Completion"
             message = "Hi "+book.contributor.user.first_name+",\n"+\
             "Congratulations !\n"+\

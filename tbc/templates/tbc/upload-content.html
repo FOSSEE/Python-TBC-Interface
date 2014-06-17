@@ -47,7 +47,7 @@ function validate_content()
 <div id="content-wrap" style="max-width:600px;">
     <p>Upload chapters as individual IPython notebooks. Please do not use spaces to name your Ipython Notebook files. For ex.
     use "chapter1.ipynb instead of chapter 1.ipynb"</p>
-    <form action="/upload-content/{{ curr_book.id }}" method=POST enctype="multipart/form-data">
+    <form action="/upload-content/{{ curr_book.id }}" method=POST enctype="multipart/form-data" onSubmit="return validate_content();">
     {% csrf_token %}
     {% for i in no_notebooks %}
         <input type=text id=chapter{{i}} name=chapter{{i}} placeholder="Chapter {{ forloop.counter }} name">
@@ -60,7 +60,7 @@ function validate_content()
     <input type=text id=caption{{i}} name=caption{{i}} placeholder="Caption {{ forloop.counter }}">
     <input type=file id=image{{i}} name=image{{i}}>
     {% endfor %}
-    <center><input class="btn btn-primary" type=submit value=submit onClick="return validate_content();"></center>
+    <center><input class="btn btn-primary" type=submit value=submit></center>
     </form>
 </div>
 {% endblock %}

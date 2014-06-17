@@ -184,8 +184,6 @@ def UserProfile(request):
         
 
 def UserLogout(request):
-    context = {}
-    return render_to_response('tbc/unavailable.html', context)
     user = request.user
     if user.is_authenticated() and user.is_active:
         logout(request)

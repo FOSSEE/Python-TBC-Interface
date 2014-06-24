@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^convert-notebook/(?P<notebook_path>.+)$', 'tbc.views.ConvertNotebook', name='ConvertNotebook'),
     url(r'^book-details/(?P<book_id>\d+)/$', 'tbc.views.BookDetails', name='BookDetails'),
 	url(r'^completed-books/$', 'tbc.views.CompletedBooks', name='CompletedBooks'),
+	url(r'^completed-books/(?P<category>.+)$', 'tbc.views.CompletedBooks', name='CompletedBooks'),
 	url(r'^books-under-progress/$', 'tbc.views.BooksUnderProgress', name='BooksUnderProgress'),
     
     

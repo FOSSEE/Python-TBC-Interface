@@ -619,7 +619,7 @@ def ConvertNotebook(request, notebook_path=None):
 
 def CompletedBooks(request):
     context = {}
-    images = []
+    category = "All"
     if request.user.is_anonymous():
         context['anonymous'] = True
     else:
@@ -627,7 +627,15 @@ def CompletedBooks(request):
             context['reviewer'] = request.user
         else:
             context['user'] = request.user
-    completed_books = Book.objects.filter(approved=True)
+    if request.method == "POST":
+        category = request.POST['category']
+        if category == "all":
+            completed_books = Book.objects.filter(approved=True)
+        else:
+            completed_books = Book.objects.filter(category=category, approved=True)
+    else:
+        completed_books = Book.objects.filter(approved=True)
+    context['category'] = category
     context['completed_books'] = completed_books
     return render_to_response('tbc/completed_books.html', context)
     

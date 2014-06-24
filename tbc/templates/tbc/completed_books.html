@@ -5,6 +5,7 @@
 <script type="text/javascript">
 function submitCategory()
 {
+    alert("submited");
     document.forms.browseBooks.submit();
 }
 </script>
@@ -12,9 +13,30 @@ function submitCategory()
 
 {% block content %}
     <center><h2> Completed Text Books </h2></center><br/>
+    <center><h4>Select a Category</h4></center>
+    <form name="completedbooks" action="/completed-books/" method=POST enctype="multipart/form-data">
+    {% csrf_token %}
+    <center><select name="category" id="category" onchange="submitCategory();">
+      <option value="all">All</option>
+      <option value="fluid mechanics">Fluid Mechanics</option>
+      <option value="control systems">Control Theory & Control Systems</option>
+      <option value="chemical engineering">Chemical Engineering</option>
+      <option value="thermodynamics">Thermodynamics</option>
+      <option value="mechanical engineering">Mechanical Engineering</option>
+      <option value="signal processing">Signal Processing</option>
+      <option value="digital communications">Digital Communications</option>
+      <option value="electrical technology">Electrical Technology</option>
+      <option value="maths & science">Mathematics & Pure Science</option>
+      <option value="analog electronics">Analog Electronics</option>
+      <option value="digital electronics">Digital Electronics</option>
+      <option value="computer programming">Computer Programming</option>
+      <option value="others">Others</option>
+    </select>
+    </center>
+    </div>
     <ol>
         {% for book in completed_books %}
-            <li><a href="{% url 'tbc:BookDetails' book.id %}">{{ book.title }}</a></li>
+            <li><a href="{% url 'tbc:BookDetails' book.id %}">{{ book.title }} by {{ book.author }}</a></li>
         {% endfor %}
     </ol>
 
@@ -49,4 +71,7 @@ function submitCategory()
         <li>C++ for dummies by Stephen Randy Davis(5th Edition)
         <li>C by dissection: The essentials of C programming by Al Kelly & Ira Pohl(1st Edition)
     </ol>
+<script>
+    document.getElementById('category').value = "{{ category }}";
+</script>
 {% endblock %}

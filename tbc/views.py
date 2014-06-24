@@ -627,8 +627,10 @@ def CompletedBooks(request):
             context['reviewer'] = request.user
         else:
             context['user'] = request.user
-    return render_to_response('tbc/converted_textbooks.html', context)
-
+    completed_books = Book.objects.filter(approved=True)
+    context['completed_books'] = completed_books
+    return render_to_response('tbc/completed_books.html', context)
+    
 
 def BooksUnderProgress(request):
     context = {}

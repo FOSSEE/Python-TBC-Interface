@@ -5,8 +5,7 @@
 <script type="text/javascript">
 function submitCategory()
 {
-    alert("submited");
-    document.forms.browseBooks.submit();
+    document.forms.completedbooks.submit();
 }
 </script>
 {% endblock %}
@@ -33,7 +32,6 @@ function submitCategory()
       <option value="others">Others</option>
     </select>
     </center>
-    </div>
     <ol>
         {% for book in completed_books %}
             <li><a href="{% url 'tbc:BookDetails' book.id %}">{{ book.title }} by {{ book.author }}</a></li>

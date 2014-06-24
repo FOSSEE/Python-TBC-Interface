@@ -619,6 +619,7 @@ def ConvertNotebook(request, notebook_path=None):
 
 def CompletedBooks(request):
     context = {}
+    context.update(csrf(request))
     category = "All"
     if request.user.is_anonymous():
         context['anonymous'] = True

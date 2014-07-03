@@ -15,7 +15,7 @@ function validate_content()
             alert("Chapter names & file fields cannot be empty !!");
             return false;
         }
-        if(extension[1] == "ipynb")
+        if(extension.slice(Math.max(extension.length - 1, 1)) == "ipynb")
             continue;
         else
             alert("Oops !! You can upload only Ipython Notebooks (.ipynb extension)");    
@@ -32,7 +32,7 @@ function validate_content()
             return false;
         }
 
-        if(extension[1] == "png")
+        if(extension.slice(Math.max(extension.length - 1, 1)) == "png")
             continue;
         else
             alert("Only .png files are allowed for screenshots");    

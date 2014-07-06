@@ -1,0 +1,13 @@
+{% extends 'comments/comment_base.html' %}
+{% block content %}
+<div id="new-reply-form">
+    <h5><u>New reply form</u></h5>
+    <form action="/comments/new-reply/" method="POST" accept-charset="utf-8"> {% csrf_token %}
+        {{ form.errors }}
+        {{ form.comment_id }}
+        {{ form.body }} <br>
+        <input class="btn btn-primary" type="submit" value="Submit">
+        <a class="btn btn-default" href="/comments/get/?book={{ comment.book }}&chapter={{ comment.chapter }}&example={{ comment.example }}&page={{ comment.page }}">Cancel</a>
+    </form>
+</div> <!-- /#new-comment-form -->
+{% endblock %}

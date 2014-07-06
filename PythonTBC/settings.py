@@ -119,7 +119,8 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     join(PROJDIR, '../tbc/templates'),
-    join(PROJDIR, '../tbc/static/uploads')
+    join(PROJDIR, '../tbc/static/uploads'),
+    join(PROJDIR, '../comments/templates')
 )
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -133,6 +134,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'tbc',
+    'comments',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

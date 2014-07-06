@@ -1,0 +1,24 @@
+#content-wrapper {
+    max-width: 97%;
+}
+.accordion-inner {
+    background: #f5f5f5;
+}
+#new-comment-form input[type=text],
+#new-comment-form textarea,
+#new-reply-form textarea {
+    width: 80%;
+}
+#new-comment-form textarea,
+#new-reply-form textarea {
+    height: 100px;
+}
+.replies {
+    margin-left: 15px;
+}
+.replies .reply {
+    padding: 3px;
+    margin: 5px 0;
+    background: #ffffff;
+    border-left: 2px solid #1dccaa;
+}

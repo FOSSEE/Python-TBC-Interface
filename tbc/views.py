@@ -652,3 +652,12 @@ def BooksUnderProgress(request):
         else:
             context['user'] = request.user
     return render_to_response('tbc/books_under_progress.html', context)
+    
+
+def RedirectToIpynb(request, notebook_path=None):
+    context = {}
+    notebook = notebook_path.split("/")
+    notebook[0] = "notebooks"
+    notebook = "/".join(notebook)
+    redirect_url = "https://ipynb.fossee.in/"+notebook
+    return redirect(redirect_url)

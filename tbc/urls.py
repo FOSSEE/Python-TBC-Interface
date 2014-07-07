@@ -25,6 +25,7 @@ urlpatterns = patterns('',
 	url(r'^completed-books/$', 'tbc.views.CompletedBooks', name='CompletedBooks'),
 	url(r'^completed-books/(?P<category>.+)$', 'tbc.views.CompletedBooks', name='CompletedBooks'),
 	url(r'^books-under-progress/$', 'tbc.views.BooksUnderProgress', name='BooksUnderProgress'),
+	url(r'^redirect-ipynb/(?P<notebook_path>.+)$', 'tbc.views.RedirectToIpynb', name='RedirectToIpynb'),
     
     
     url(r'^book-review/$', 'tbc.views.BookReview', name='BookReview'),

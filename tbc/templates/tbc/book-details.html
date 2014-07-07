@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block script %}
+<script>
+function redirectToIpynb(notebook)
+{
+    alert(notebook);
+    notebook = notebook.split("/")
+    alert("http://ipynb.fossee.in/notebooks/"+notebook[1]+"/"+notebook[2]);
+    url = "http://ipynb.fossee.in/notebooks/"+notebook[1]+"/"+notebook[2]
+    window.location.replace(url)
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <center><h3>{{ book.title }}</h3></center>
 <div class="row-fluid">
@@ -23,6 +36,9 @@
         </td>
         <td>
             <a href="{% static 'uploads/' %}{{ chapter.notebook }}">Download</a>
+        </td>
+        <td>
+            <a href="{% url 'tbc:RedirectToIpynb' chapter.notebook %}">Edit examples of this chapter</a>
         </td>
     </tr>
 {% endfor %}

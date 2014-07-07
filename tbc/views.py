@@ -4,7 +4,6 @@ from django.core.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from models import *
 from tbc.forms import *
-from local import *
 import os
 import zipfile
 import StringIO

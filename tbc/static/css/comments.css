@@ -1,8 +1,15 @@
+#comments-container {
+    width: 1100px;
+}
 #content-wrapper {
     max-width: 97%;
 }
 .accordion-inner {
     background: #f5f5f5;
+}
+#new-comment-form,
+#recent-comments-wrapper {
+    min-height: 300px;
 }
 #new-comment-form input[type=text],
 #new-comment-form textarea,

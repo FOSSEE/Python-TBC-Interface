@@ -2,6 +2,7 @@
 {% block content %}
 <div id="new-comment-form">
     <h5><u>New comment form</u></h5>
+    <h4>Book: <em>{{ book }}</em> / Chapter: <em>{{ chapter }}</em> / Example: <em>{{ example }}</em> / Page: <em>{{ page }}</em></h4>
     <form action="/comments/new/" method="POST" accept-charset="utf-8"> {% csrf_token %}
         {{ form.errors }}
         {{ form.book }}

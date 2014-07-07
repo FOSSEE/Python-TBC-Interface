@@ -108,4 +108,3 @@ def new_reply(request):
         'comment': comment
     }
     return render(request, 'comments/new_reply.html', context)
-

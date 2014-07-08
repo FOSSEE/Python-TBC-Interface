@@ -348,8 +348,6 @@ def ContentUpload(request, book_id=None):
             screenshot = ScreenShots()
             screenshot.caption = request.POST['caption'+str(i)]
             screenshot.image = request.FILES['image'+str(i)]
-            chapter = Chapters.objects.get(name=request.POST['caption'+str(i)], book=curr_book)
-            screenshot.chapter = chapter
             screenshot.book = curr_book
             screenshot.save()
         book = Book.objects.order_by("-id")[0]

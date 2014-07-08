@@ -101,7 +101,6 @@ class ScreenShots(models.Model):
     caption = models.CharField(max_length=128)
     image = models.FileField(upload_to=get_image_dir)
     book = models.ForeignKey(Book)
-    chapter = models.ForeignKey(Chapters)
     def __unicode__(self):
         name = self.caption or 'ScreenShots'
         return '%s'%(name)

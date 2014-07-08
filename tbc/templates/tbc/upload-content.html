@@ -55,7 +55,7 @@ function validate_content()
     {% endfor %}
     <br>
     <hr>
-    <p>Upload screenshots of Plots/Graphs/Charts(if any) "that you have plotted" and not from the textbook itself from any cahpter. If there are no plots/graphs/charts, then upload a screenshot of any chapter. Give proper captions for each of them. Only .png files are acceptable.</p>
+    <p>Upload screenshots of Plots/Graphs/Charts(if any) "that you have plotted" and not from the textbook itself from any cahpter. If there are no plots/graphs/charts, then upload a screenshot of any chapter. Also give the name of the chapter the screen shot is taken from. The name of the chapter you give should match the name of the chapter given above for its .ipynb file. Only .png files are acceptable.</p>
     {% for i in no_images %}
     <input type=text id=caption{{i}} name=caption{{i}} placeholder="Caption {{ forloop.counter }}">
     <input type=file id=image{{i}} name=image{{i}}>

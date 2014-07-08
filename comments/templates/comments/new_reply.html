@@ -5,6 +5,7 @@
     <div class="well" style="width: 78%">
         <blockquote>
             {{ comment.body }}
+            <small>{{ comment.email }}</small>
         </blockquote>
         <div class="replies">
             {% if comment.reply_set.all %}
@@ -13,6 +14,7 @@
             {% for reply in comment.reply_set.all %}
             <div class="reply">
                 <p>{{ reply.body }}</p>
+                <small> - {{ reply.email }}</small>
             </div>
             {% endfor %}
         </div>
@@ -23,6 +25,8 @@
         {{ form.comment_id }}
         <label>Description:</label>
         {{ form.body }} <br>
+        <label>Email:</label>
+        {{ form.email }} <br>
         <input class="btn btn-primary" type="submit" value="Submit">
         <a class="btn btn-default" href="/comments/get/?book={{ comment.book }}&chapter={{ comment.chapter }}&example={{ comment.example }}&page={{ comment.page }}">Cancel</a>
     </form>

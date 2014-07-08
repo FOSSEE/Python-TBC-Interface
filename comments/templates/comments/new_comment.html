@@ -9,8 +9,12 @@
         {{ form.chapter }}
         {{ form.example }}
         {{ form.page }}
+        <label>Comment Title:</label>
         {{ form.title }}<br>
+        <label>Comment Description:</label>
         {{ form.body }} <br>
+        <label>Email:</label>
+        {{ form.email }} <br>
         <input class="btn btn-primary" type="submit" value="Submit">
         <a class="btn btn-default" href="/comments/get/?book={{ book }}&chapter={{ chapter }}&example={{ example }}&page={{ page }}">Cancel</a>
     </form>

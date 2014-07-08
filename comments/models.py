@@ -7,12 +7,14 @@ class Comment(models.Model):
     chapter = models.CharField(max_length=10)
     example = models.CharField(max_length=10)
     page = models.CharField(max_length=10)
+    email = models.CharField(max_length=100)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
 class Reply(models.Model):
     comment = models.ForeignKey(Comment)
     body = models.CharField(max_length=200)
+    email = models.CharField(max_length=100)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 

@@ -36,6 +36,7 @@ def new_comment(request):
             comment.page = form.cleaned_data.get("page")
             comment.title = form.cleaned_data.get("title")
             comment.body = form.cleaned_data.get("body")
+            comment.email = form.cleaned_data.get("email")
             comment.save()
             return HttpResponseRedirect(
                 '/comments/get/?book={0}&chapter={1}&example={2}&page={3}'.format(
@@ -84,6 +85,7 @@ def new_reply(request):
             reply = Reply()
             reply.comment = comment
             reply.body = form.cleaned_data.get('body')
+            reply.email = form.cleaned_data.get('email')
             reply.save()
             return HttpResponseRedirect(
                 '/comments/get/?book={0}&chapter={1}&example={2}&page={3}'.format(

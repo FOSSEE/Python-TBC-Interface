@@ -12,6 +12,7 @@
     min-height: 300px;
 }
 #new-comment-form input[type=text],
+#new-reply-form input[type=text],
 #new-comment-form textarea,
 #new-reply-form textarea {
     width: 80%;
@@ -28,4 +29,12 @@
     margin: 5px 0;
     background: #ffffff;
     border-left: 2px solid #1dccaa;
+}
+.replies .reply small {
+    display: block;
+    line-height: 20px;
+    color: #b4bcc2;
+}
+.replies .reply p {
+    margin-bottom: .6em;
 }

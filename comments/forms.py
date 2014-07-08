@@ -7,6 +7,7 @@ class CommentForm(forms.Form):
     page = forms.CharField(widget=forms.HiddenInput())
     title = forms.CharField()
     body = forms.CharField(widget=forms.Textarea)
+    email = forms.CharField()
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -19,6 +20,7 @@ class CommentForm(forms.Form):
 class ReplyForm(forms.Form):
     comment_id = forms.CharField(widget=forms.HiddenInput())
     body = forms.CharField(widget=forms.Textarea)
+    email = forms.CharField()
 
     def clean(self):
         return self.cleaned_data

@@ -22,6 +22,7 @@
                         <div class="accordion-inner">
                             <blockquote>
                                 {{ comment.body }}
+                                <small>{{ comment.email }}</small>
                             </blockquote>
                             <div class="replies">
                                 {% if comment.reply_set.all %}
@@ -30,6 +31,7 @@
                                 {% for reply in comment.reply_set.all %}
                                 <div class="reply">
                                     <p>{{ reply.body }}</p>
+                                    <small> - {{ comment.email }}</small>
                                 </div>
                                 {% endfor %}
                                 <a class="btn btn-success btn-small" href="/comments/new-reply/?comment_id={{ comment.id }}">+ Reply</a>
@@ -41,8 +43,11 @@
             </div> <!-- /.accordion -->
             {% else %}
             <center>
-                <p> No comments for this example... </p>
-                <a class="btn btn-primary" href="/comments/new/?book={{ book }}&chapter={{ chapter }}&example={{ example }}&page={{ page }}">Create a new comment</a>
+                <div class="well">
+                    <h5>Book: {{ book }} / Chapter: {{ chapter }} / Example: {{ example }}</h5>
+                <p> <em>Be the first one to create a comment for this example.</em> </p>
+                <a class="btn btn-primary" href="/comments/new/?book={{ book }}&chapter={{ chapter }}&example={{ example }}&page={{ page }}">+ Create a new comment</a>
+            </div>
             </center>
             {% endif %}
         </div> <!-- /#recent-comments-form -->

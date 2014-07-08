@@ -19,7 +19,7 @@ function redirectToIpynb(notebook)
 <div class="row-fluid">
 {% for image in images %}
     <div class ="module-list">
-        <img src="{% static 'uploads/' %}{{ image.image }}">
+        <a href="{% url 'tbc:ConvertNotebook' image.chapter.notebook %}"><img src="{% static 'uploads/' %}{{ image.image }}"></a>
         <center><p style="margin-top:30px;">{{ image.caption }}</p></center>
     </div>
 {% endfor %}

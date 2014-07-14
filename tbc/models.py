@@ -44,6 +44,10 @@ PROPOSAL_STATUS = (("pending","Pending"),
                    ("book completed","Book Completed"),
                    ("rejected","Rejected"))
 
+BOOK_PREFERENCE = (("book1","1st Book"),
+                   ("book2","2nd Book"),
+                   ("book3","3rd Book"))
+
 
 def get_notebook_dir(instance, filename):
     return '%s/%s/%s' % (instance.book.contributor, instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
@@ -52,6 +56,10 @@ def get_notebook_dir(instance, filename):
 def get_image_dir(instance, filename):
     return '%s/%s/screenshots/%s' % (instance.book.contributor, instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
 
+
+def get_sample_dir(instance, filename):
+    user_name = instance.user.user.first_name+instance.user.user.last_name
+    return 'sample_notebooks/%s/%s' % (user_name, filename.replace(' ', '_'))
 
 class Profile(models.Model):
     user = models.ForeignKey(User)
@@ -132,3 +140,9 @@ class Proposal(models.Model):
     def __unicode__(self):
         user = self.user.user.username or 'User'
         return '%s'%(user)
+
+
+class SampleNotebook(models.Model):
+    proposal = models.ForeignKey(Proposal)
+    notebook = models.FileField(upload_to=get_sample_dir)
+    book_preference = models.CharField(max_length=30, choices=BOOK_PREFERENCE)

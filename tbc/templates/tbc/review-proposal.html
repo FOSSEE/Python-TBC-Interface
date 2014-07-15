@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <center><h3>Proposals to be reviewed</h3></center>
+    <ol>
+    {% for proposal in proposals %}
+        <li><h5>Propsal from {{ proposal.user.user.first_name }} {{ proposal.user.user.last_name }}</h5></li>
+            <div class="accordion" id="accordion2">
+                {% for textbook in proposal.textbooks.all %}
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">
+                                {{ textbook.title }} - Book Preference {{ forloop.counter }}
+                            </a>
+                        </div>
+                        <div id="collapse{{forloop.counter}}" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Author: {{ textbook.author}}<br>
+                                Edition: {{ textbook.edition }}<br>
+                                Publisher: {{ textbook.publisher_place }}<br>
+                                ISBN: {{ textbook.isbn }}<br>
+                                Year of Pub.: {{ textbook.year_of_pub }}<br>
+                                Category: {{ textbook.category }}<br>
+                                <a class="btn btn-primary btn-mini" href="{% url 'tbc:ReviewProposals' proposal.id textbook.id %}">Approve & Alot Book</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <h5>Status: {{ proposal.status }}</h5>
+                
+            </div>
+    {% endfor %}
+    </ol>
+{% endblock %}
+
+

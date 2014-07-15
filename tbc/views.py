@@ -341,6 +341,33 @@ def SubmitProposal(request):
         return HttpResponseRedirect('/?proposal_pending=True')
 
 
+def ReviewProposals(request, proposal_id=None, textbook_id=None):
+    context = {}
+    if is_reviewer(request.user):
+        if proposal_id:
+            proposal = Proposal.objects.get(id=proposal_id)
+            accepted_book = TempBook.objects.get(id=textbook_id)
+            new_book = Book()
+            new_book.title = accepted_book.title
+            new_book.author = accepted_book.author
+            new_book.category = accepted_book.category
+            new_book.publisher_place = accepted_book.publisher_place
+            new_book.isbn = accepted_book.isbn
+            new_book.edition = accepted_book.edition
+            new_book.year_of_pub = accepted_book.year_of_pub
+            new_book.no_chapters = accepted_book.no_chapters
+            new_book.contributor = proposal.user
+            new_book.reviewer = Reviewer.objects.get(pk=1)
+            new_book.save()
+            proposal.status = "book alloted"
+            proposal.save()
+            return HttpResponse("Approved")
+        else:
+            new_proposals = Proposal.objects.filter(status="pending")
+            context['proposals'] = new_proposals
+            return render_to_response('tbc/review-proposal.html', context)
+
+
 def UpdateBook(request):
     current_user = request.user
     user_profile = Profile.objects.get(user=current_user)

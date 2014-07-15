@@ -26,6 +26,8 @@ urlpatterns = patterns('',
     
     
     url(r'^book-review/$', 'tbc.views.BookReview', name='BookReview'),
+    url(r'^proposal-review/$', 'tbc.views.ReviewProposals', name='ReviewProposals'),
+    url(r'^proposal-review/(?P<proposal_id>\d+)/(?P<textbook_id>\d+)$', 'tbc.views.ReviewProposals', name='ReviewProposals'),
     url(r'^book-review/(?P<book_id>\d+)$', 'tbc.views.BookReview', name='BookReview'),
     url(r'^approve-book/(?P<book_id>\d+)$', 'tbc.views.ApproveBook', name='ApproveBook'),
     url(r'^notify-changes/(?P<book_id>\d+)$', 'tbc.views.NotifyChanges', name='NotifyChanges'),

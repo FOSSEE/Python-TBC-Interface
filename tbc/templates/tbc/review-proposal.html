@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <center><h3>Proposals to be reviewed</h3></center>
+    <center><h3>New Proposals</h3></center>
     <ol>
     {% for proposal in proposals %}
         <li><h5>Propsal from {{ proposal.user.user.first_name }} {{ proposal.user.user.last_name }}</h5></li>
@@ -21,13 +21,56 @@
                                 ISBN: {{ textbook.isbn }}<br>
                                 Year of Pub.: {{ textbook.year_of_pub }}<br>
                                 Category: {{ textbook.category }}<br>
-                                <a class="btn btn-primary btn-mini" href="{% url 'tbc:ReviewProposals' proposal.id textbook.id %}">Approve & Alot Book</a>
+                                <a class="btn btn-primary btn-mini" href="{% url 'tbc:ReviewProposals' proposal.id textbook.id %}">Approve & Ask for Samples</a>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-                <h5>Status: {{ proposal.status }}</h5>
-                
+                <h5><b>Status:</b> You are yet to review this proposal</h5>
+                <a class="btn btn-primary" href="{% url 'tbc:RejectProposal' proposal.id %}">Reject</a>
+            </div>
+    {% endfor %}
+    </ol>
+    <hr>
+    <center><h3>Old Proposals</h3></center>
+    <ol>
+    {% for proposal in old_proposals %}
+        <li><h5>Propsal from {{ proposal.user.user.first_name }} {{ proposal.user.user.last_name }}</h5></li>
+            <div class="accordion" id="accordion2">
+                {% for textbook in proposal.textbooks.all %}
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">
+                                {{ textbook.title }} - Book Preference {{ forloop.counter }}
+                            </a>
+                        </div>
+                        <div id="collapse{{forloop.counter}}" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Author: {{ textbook.author}}<br>
+                                Edition: {{ textbook.edition }}<br>
+                                Publisher: {{ textbook.publisher_place }}<br>
+                                ISBN: {{ textbook.isbn }}<br>
+                                Year of Pub.: {{ textbook.year_of_pub }}<br>
+                                Category: {{ textbook.category }}<br>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <h5>
+                    <b>Status:</b> 
+                    {% ifequal proposal.status "samples" %}
+                        Contributor is required to submit sample notebook
+                    {% endifequal %}
+                    {% ifequal proposal.status "book alloted" %}
+                        Book has been alloted. Contributor is required to submmit the codes for entire book.
+                    {% endifequal %}
+                </h5>
+                <h5><b>Book Accepted/Alloted:</b> {{ proposal.accepted.title }}</h5>
+                {% ifequal proposal.status "samples" %}
+                    <h5><a href="#">sample notebook</a><br></h5>
+                    <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.id %}">Disapprove Samples</a>
+                    <a class="btn btn-primary" href="{% url 'tbc:RejectProposal' proposal.id %}">Alot Book</a>
+                {% endifequal %}
             </div>
     {% endfor %}
     </ol>

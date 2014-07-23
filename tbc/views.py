@@ -359,13 +359,30 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             new_book.contributor = proposal.user
             new_book.reviewer = Reviewer.objects.get(pk=1)
             new_book.save()
-            proposal.status = "book alloted"
+            proposal.status = "samples"
+            proposal.accepted = new_book
             proposal.save()
             return HttpResponse("Approved")
         else:
             new_proposals = Proposal.objects.filter(status="pending")
+            other_status = ['samples', 'book alloted']
+            old_proposals = Proposal.objects.filter(status__in=other_status)
             context['proposals'] = new_proposals
+            context['old_proposals'] = old_proposals
             return render_to_response('tbc/review-proposal.html', context)
+
+
+def DisapproveProposal(request, proposal_id=None):
+    if request.method == "POST":
+        return HttpResponse("Dispproved")
+    else:
+        return HttpResponse("no post")
+
+def RejectProposal(request, proposal_id=None):
+    if request.method == "POST":
+        return HttpResponse("Rejected")
+    else:
+        return HttpResponse("no post")
 
 
 def UpdateBook(request):

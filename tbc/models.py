@@ -144,5 +144,4 @@ class Proposal(models.Model):
 
 class SampleNotebook(models.Model):
     proposal = models.ForeignKey(Proposal)
-    notebook = models.FileField(upload_to=get_sample_dir)
     book_preference = models.CharField(max_length=30, choices=BOOK_PREFERENCE)

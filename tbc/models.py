@@ -140,8 +140,9 @@ class Proposal(models.Model):
     def __unicode__(self):
         user = self.user.user.username or 'User'
         return '%s'%(user)
-
-
+        
+        
 class SampleNotebook(models.Model):
     proposal = models.ForeignKey(Proposal)
-    book_preference = models.CharField(max_length=30, choices=BOOK_PREFERENCE)
+    name = models.CharField(max_length=40)
+    sample_notebook = models.FileField(upload_to=get_sample_dir)

@@ -383,6 +383,14 @@ def RejectProposal(request, proposal_id=None):
         return HttpResponse("Rejected")
     else:
         return HttpResponse("no post")
+        
+
+def SubmitSample(request, proposal_id=None):
+    if request.method == "POST":
+        return HttpResponse("POST")
+    else:
+        books = Book.objects.filter(approved=True)
+        return HttpResponse(books)
 
 
 def UpdateBook(request):

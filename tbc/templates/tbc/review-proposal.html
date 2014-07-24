@@ -67,7 +67,7 @@
                 </h5>
                 <h5><b>Book Accepted/Alloted:</b> {{ proposal.accepted.title }}</h5>
                 {% ifequal proposal.status "samples" %}
-                    <h5><a href="#">sample notebook</a><br></h5>
+                    <h5><a href="{% static 'uploads/' %}{{ chapter.notebook }}">sample notebook</a><br></h5>
                     <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.id %}">Disapprove Samples</a>
                     <a class="btn btn-primary" href="{% url 'tbc:RejectProposal' proposal.id %}">Alot Book</a>
                 {% endifequal %}

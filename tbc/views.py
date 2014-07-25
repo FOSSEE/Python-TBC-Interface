@@ -366,18 +366,38 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
         else:
             new_proposals = Proposal.objects.filter(status="pending")
             other_status = ['samples', 'book alloted']
-            old_proposals = Proposal.objects.filter(status__in=other_status)
+            old_proposals = []
+            sample_notebook = ''
+            proposals = Proposal.objects.filter(status__in=other_status)
+            for proposal in proposals:
+                try:
+                    sample_notebook = SampleNotebook.objects.get(proposal=proposal)
+                except:
+                    sample_notebook = None
+                obj = {'proposal':proposal, 'sample':sample_notebook}
+                old_proposals.append(obj)
             context['proposals'] = new_proposals
             context['old_proposals'] = old_proposals
             return render_to_response('tbc/review-proposal.html', context)
 
 
 def DisapproveProposal(request, proposal_id=None):
-    if request.method == "POST":
-        return HttpResponse("Dispproved")
+    context = {}
+    context.update(csrf(request))
+    proposal = Proposal.objects.get(id=proposal_id)
+    if request.method == 'POST':
+        changes_required = request.POST['changes_required']
+        subject = "Python-TBC: Corrections Required in the sample notebook"
+        message = "Hi, "+proposal.user.user.first_name+",\n"+\
+        "Sample notebook for the book titled, "+proposal.accepted.title+"\
+        requires following changes: \n"+\
+        changes_required
+        context.update(csrf(request))
+        return HttpResponseRedirect("/book-review/?mail_notify=done")
     else:
-        return HttpResponse("no post")
-
+        context['proposal'] = proposal
+        return render_to_response('tbc/disapprove-sample.html', context)
+    
 def RejectProposal(request, proposal_id=None):
     if request.method == "POST":
         return HttpResponse("Rejected")
@@ -386,11 +406,21 @@ def RejectProposal(request, proposal_id=None):
         
 
 def SubmitSample(request, proposal_id=None):
+    context = {}
+    context.update(csrf(request))
     if request.method == "POST":
-        return HttpResponse("POST")
+        curr_proposal = Proposal.objects.get(id=proposal_id)
+        sample_notebook = SampleNotebook()
+        sample_notebook.proposal = curr_proposal
+        sample_notebook.name = request.POST.get('ch_name')
+        sample_notebook.sample_notebook = request.FILES['sample_notebook']
+        sample_notebook.save()
+        return HttpResponse("done")
     else:
-        books = Book.objects.filter(approved=True)
-        return HttpResponse(books)
+        profile = Profile.objects.get(user=request.user)
+        proposal = Proposal.objects.get(user=profile, status='samples')
+        context['proposal'] = proposal
+        return render_to_response('tbc/submit-sample.html', context)
 
 
 def UpdateBook(request):

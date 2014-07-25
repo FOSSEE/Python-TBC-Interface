@@ -24,7 +24,7 @@ function validate_content()
 
 {% block content %}
 <div id="content-wrap" style="max-width:600px;">
-    <p>You are uploading sample notebook for the book {{ proposal.accepted.title }} by {{ proposal.accepted.author }}</p>
+    <h5>You are uploading sample notebook for the book {{ proposal.accepted }} by {{ proposal.accepted.author }}</h5>
     <p>Only .ipynb files are acceptable</p>
     <form action="/submit-sample/{{ proposal.id }}" method=POST enctype="multipart/form-data" onSubmit="return validate_content();">
     {% csrf_token %}

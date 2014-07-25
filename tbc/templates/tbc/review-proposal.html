@@ -35,9 +35,9 @@
     <center><h3>Old Proposals</h3></center>
     <ol>
     {% for proposal in old_proposals %}
-        <li><h5>Propsal from {{ proposal.user.user.first_name }} {{ proposal.user.user.last_name }}</h5></li>
+        <li><h5>Propsal from {{ proposal.proposal.user.user.first_name }} {{ proposal.proposal.user.user.last_name }}</h5></li>
             <div class="accordion" id="accordion2">
-                {% for textbook in proposal.textbooks.all %}
+                {% for textbook in proposal.proposal.textbooks.all %}
                     <div class="accordion-group">
                         <div class="accordion-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">
@@ -58,18 +58,22 @@
                 {% endfor %}
                 <h5>
                     <b>Status:</b> 
-                    {% ifequal proposal.status "samples" %}
-                        Contributor is required to submit sample notebook
+                    {% ifequal proposal.proposal.status "samples" %}
+                        Sample notebook phase
                     {% endifequal %}
-                    {% ifequal proposal.status "book alloted" %}
+                    {% ifequal proposal.proposal.status "book alloted" %}
                         Book has been alloted. Contributor is required to submmit the codes for entire book.
                     {% endifequal %}
                 </h5>
-                <h5><b>Book Accepted/Alloted:</b> {{ proposal.accepted.title }}</h5>
-                {% ifequal proposal.status "samples" %}
-                    <h5><a href="{% static 'uploads/' %}{{ chapter.notebook }}">sample notebook</a><br></h5>
-                    <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.id %}">Disapprove Samples</a>
-                    <a class="btn btn-primary" href="{% url 'tbc:RejectProposal' proposal.id %}">Alot Book</a>
+                <h5><b>Book Accepted/Alloted:</b> {{ proposal.proposal.accepted.title }}</h5>
+                {% ifequal proposal.proposal.status "samples" %}
+                    {% if proposal.sample.sample_notebook %}
+                        <h5><a href="{% static 'uploads/' %}{{ proposal.sample.sample_notebook }}">sample notebook</a><br></h5>
+                    {% else %}
+                        <h5>Contributor has not submitted sample notebook yet.</h5>
+                    {% endif %}
+                    <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.proposal.id %}">Disapprove Samples</a>
+                    <a class="btn btn-primary" href="{% url 'tbc:RejectProposal' proposal.proposal.id %}">Alot Book</a>
                 {% endifequal %}
             </div>
     {% endfor %}

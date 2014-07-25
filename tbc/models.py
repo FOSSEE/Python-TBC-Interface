@@ -58,7 +58,7 @@ def get_image_dir(instance, filename):
 
 
 def get_sample_dir(instance, filename):
-    user_name = instance.user.user.first_name+instance.user.user.last_name
+    user_name = instance.proposal.user.user.first_name+instance.proposal.user.user.last_name
     return 'sample_notebooks/%s/%s' % (user_name, filename.replace(' ', '_'))
 
 class Profile(models.Model):

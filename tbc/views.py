@@ -300,6 +300,7 @@ def SubmitProposal(request):
     context['user'] = curr_user
     user_proposals = Proposal.objects.filter(user=user_profile)
     can_submit_new = True
+    matching_books = []
     for proposal in user_proposals:
         if proposal.status is not "book completed":
             can_submit_new = False
@@ -313,6 +314,12 @@ def SubmitProposal(request):
             book_editions = request.POST.getlist('edition')
             book_years = request.POST.getlist('year_of_pub')
             book_chapters = request.POST.getlist('no_chapters')
+            """for title in book_titles:
+                temp_books = Book.objects.filter(title__icontains=title)
+                for book in temp_books:
+                    matching_books.append(book)
+            matching_books = set(matching_books)
+            return HttpResponse(matching_books)"""
             for item in range(3):
                 tempbook = TempBook()
                 tempbook.title = book_titles[item]
@@ -365,10 +372,8 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             return HttpResponse("Approved")
         else:
             new_proposals = Proposal.objects.filter(status="pending")
-            other_status = ['samples', 'book alloted']
             old_proposals = []
-            sample_notebook = ''
-            proposals = Proposal.objects.filter(status__in=other_status)
+            proposals = Proposal.objects.filter(status='samples')
             for proposal in proposals:
                 try:
                     sample_notebook = SampleNotebook.objects.get(proposal=proposal)
@@ -376,6 +381,11 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
                     sample_notebook = None
                 obj = {'proposal':proposal, 'sample':sample_notebook}
                 old_proposals.append(obj)
+            if new_proposals.count() > 0:
+                no_new_proposal = False
+            else:
+                no_new_proposal = True
+            context['no_new_proposal'] = no_new_proposal
             context['proposals'] = new_proposals
             context['old_proposals'] = old_proposals
             return render_to_response('tbc/review-proposal.html', context)
@@ -392,17 +402,39 @@ def DisapproveProposal(request, proposal_id=None):
         "Sample notebook for the book titled, "+proposal.accepted.title+"\
         requires following changes: \n"+\
         changes_required
+        email_send(proposal.user.user.email, subject, message)
         context.update(csrf(request))
         return HttpResponseRedirect("/book-review/?mail_notify=done")
     else:
         context['proposal'] = proposal
         return render_to_response('tbc/disapprove-sample.html', context)
+
+
+def AllotBook(requrest, proposal_id=None):
+    context = {}
+    proposal = Proposal.objects.get(id=proposal_id)
+    proposal.status = "book alloted"
+    proposal.save()
+    return HttpResponseRedirect("/book-review/?book_alloted=done") 
+
     
 def RejectProposal(request, proposal_id=None):
-    if request.method == "POST":
-        return HttpResponse("Rejected")
+    context = {}
+    context.update(csrf(request))
+    proposal = Proposal.objects.get(id=proposal_id)
+    if request.method == 'POST':
+        proposal.status = 'rejected'
+        proposal.save()
+        remarks = request.POST['remarks']
+        subject = "Python-TBC: Rejection of Proposal"
+        message = "Dear "+proposal.user.user.first_name+"\nYour proposal has been\
+        rejected. "+request.POST.get('remarks')
+        email_send(proposal.user.user.email, subject, message)
+        context.update(csrf(request))
+        return HttpResponseRedirect("/book-review/?reject-proposal=done")
     else:
-        return HttpResponse("no post")
+        context['proposal'] = proposal
+        return render_to_response('tbc/reject-proposal.html', context)
         
 
 def SubmitSample(request, proposal_id=None):

@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <center><h3>New Proposals</h3></center>
+    <center><h2>New Proposals</h2></center>
+    <hr>
+    {% if no_new_proposal %}
+        <center><h4>There are no new proposals</h4></center>
+    {% endif %}
     <ol>
     {% for proposal in proposals %}
-        <li><h5>Propsal from {{ proposal.user.user.first_name }} {{ proposal.user.user.last_name }}</h5></li>
+        <li><h4>Propsal from {{ proposal.user.user.first_name }} {{ proposal.user.user.last_name }}</h4></li>
             <div class="accordion" id="accordion2">
                 {% for textbook in proposal.textbooks.all %}
                     <div class="accordion-group">
                         <div class="accordion-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">
-                                {{ textbook.title }} - Book Preference {{ forloop.counter }}
+                                Book Preference {{ forloop.counter }} - {{ textbook.title }}
                             </a>
                         </div>
                         <div id="collapse{{forloop.counter}}" class="accordion-body collapse">
@@ -32,16 +36,17 @@
     {% endfor %}
     </ol>
     <hr>
-    <center><h3>Old Proposals</h3></center>
+    <center><h2>Proposals in Sample Notebook phase</h2></center>
+    <hr>
     <ol>
     {% for proposal in old_proposals %}
-        <li><h5>Propsal from {{ proposal.proposal.user.user.first_name }} {{ proposal.proposal.user.user.last_name }}</h5></li>
+        <h4><li>Propsal from {{ proposal.proposal.user.user.first_name }} {{ proposal.proposal.user.user.last_name }}</h4></li>
             <div class="accordion" id="accordion2">
                 {% for textbook in proposal.proposal.textbooks.all %}
                     <div class="accordion-group">
                         <div class="accordion-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">
-                                {{ textbook.title }} - Book Preference {{ forloop.counter }}
+                                Book Preference {{ forloop.counter }} - {{ textbook.title }}
                             </a>
                         </div>
                         <div id="collapse{{forloop.counter}}" class="accordion-body collapse">
@@ -61,9 +66,6 @@
                     {% ifequal proposal.proposal.status "samples" %}
                         Sample notebook phase
                     {% endifequal %}
-                    {% ifequal proposal.proposal.status "book alloted" %}
-                        Book has been alloted. Contributor is required to submmit the codes for entire book.
-                    {% endifequal %}
                 </h5>
                 <h5><b>Book Accepted/Alloted:</b> {{ proposal.proposal.accepted.title }}</h5>
                 {% ifequal proposal.proposal.status "samples" %}
@@ -73,7 +75,7 @@
                         <h5>Contributor has not submitted sample notebook yet.</h5>
                     {% endif %}
                     <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.proposal.id %}">Disapprove Samples</a>
-                    <a class="btn btn-primary" href="{% url 'tbc:RejectProposal' proposal.proposal.id %}">Alot Book</a>
+                    <a class="btn btn-primary" href="{% url 'tbc:AllotBook' proposal.proposal.id %}">Alot Book</a>
                 {% endifequal %}
             </div>
     {% endfor %}

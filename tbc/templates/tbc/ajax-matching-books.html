@@ -1,0 +1,24 @@
+<html>
+<body>
+<div>
+    <span id="flag">{% if flag %}match exists{% endif %}</span>
+    <div id="matches">
+        <center><h5>The books you have proposed may already be <b>under progress</b> or <b>completed</b> by some other contributor. Kindly verify and submit the proposal.</h5></center>
+        <hr>
+        {% for match in matches %}
+            {% if match %}
+                <b><h5>Potential matching books for your book preference {{ forloop.counter }}</h5></b>
+            {% else %}
+                <h5>No matching books found for book preference {{ forloop.counter }}</h5>
+            {% endif %}
+            <ul>
+            {% for book in match %}
+                <li>{{ book.title }} by {{ book.author }}</li>
+            {% endfor %}
+            </ul>
+            <hr>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>

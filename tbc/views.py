@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.core.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from models import *
@@ -11,6 +12,7 @@ import smtplib
 import shutil
 import string
 import random
+import json
 from email.mime.text import MIMEText
 
 
@@ -314,12 +316,6 @@ def SubmitProposal(request):
             book_editions = request.POST.getlist('edition')
             book_years = request.POST.getlist('year_of_pub')
             book_chapters = request.POST.getlist('no_chapters')
-            """for title in book_titles:
-                temp_books = Book.objects.filter(title__icontains=title)
-                for book in temp_books:
-                    matching_books.append(book)
-            matching_books = set(matching_books)
-            return HttpResponse(matching_books)"""
             for item in range(3):
                 tempbook = TempBook()
                 tempbook.title = book_titles[item]
@@ -776,3 +772,26 @@ def ConvertNotebook(request, notebook_path=None):
         template = path.split("/")[8:]
         template = "/".join(template)+notebook_name+".html"
         return render_to_response(template, {})
+
+
+# ajax views
+@csrf_exempt
+def ajax_matching_books(request):
+    titles = request.POST["titles"]
+    titles = json.loads(titles)
+    matches = []
+    i = 1
+    flag = None
+    for title in titles:
+        if title:
+            match = TempBook.objects.filter(title__icontains=title)
+            if match:
+                flag = True
+                matches.append(match)
+            else:
+                matches.append(None)
+    context = {
+        'matches': matches,
+        'flag': flag
+    }
+    return render_to_response('tbc/ajax-matching-books.html', context)

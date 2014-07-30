@@ -1,14 +1,73 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id="content-wrap" style="max-width:600px;">
-    <form action="/submit-proposal/" method=POST enctype="multipart/form-data">
+    <form id="proposal-form" action="/submit-proposal/" method=POST enctype="multipart/form-data">
         {% csrf_token %}
         {% for form in book_forms %}
             <h4>Book Preference {{ forloop.counter }}</h4>
             {{ form.as_p }}
         {% endfor %}
         <hr>
-        <input class="btn btn-primary" type=submit value=submit>
+        <input id="proposal-form-submit" class="btn btn-primary" type=submit value=submit>
     </form>
 </div>
+
+
+<!-- Button to trigger modal -->
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Potential Matching Books</h3>
+    </div>
+    <div class="modal-body">
+        <p>One fine body…</p>
+        </div>
+        <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">Go Back</button>
+        <button id="modal-submit-proposal" class="btn btn-danger">Submit Proposal</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            $("#proposal-form-submit").click(function(e) {
+                var i = 0;
+                var titles = [];
+                $titles = $("input[name='title']");
+                $titles = $("input[name='title']");
+                $titles.each(function(index, value) {
+                    titles[i] = $(this).val();
+                    ++i;
+                });
+                titles = JSON.stringify(titles);
+
+                $.ajax({
+                    url: "/ajax/matching-books/",
+                    type: "POST",
+                    dataType: "html",
+                    data: {
+                        titles: titles
+                    },
+                    success: function(output) {
+                        console.log(output);
+                        var $output = $(output);
+                        if($output.find("#flag").html() == "") {
+                            $("#proposal-form").submit();
+                        } else {
+                            $(".modal-body").html($output.find("#matches").html());
+                            $("#myModal").modal();
+                        }
+                    }   
+                });
+                e.preventDefault();
+            });
+            $("#modal-submit-proposal").click(function(e){
+                $("#proposal-form").submit();
+                e.preventDefault();
+            });
+        });
+    </script>
 {% endblock %}

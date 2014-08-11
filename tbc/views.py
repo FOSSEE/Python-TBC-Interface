@@ -86,6 +86,11 @@ def Home(request):
         context['proposal_submitted'] = True
     if 'proposal_pending' in request.GET:
         context['proposal_pending'] = True
+    if 'no_book_alloted' in request.GET:
+        context['no_book_alloted'] = True
+    if 'sample_notebook' in request.GET:
+        context['sample_notebook'] = True
+
     books = Book.objects.filter(approved=True).order_by("-id")[0:6]
     for book in books:
         images.append(ScreenShots.objects.filter(book=book)[0])
@@ -347,6 +352,7 @@ def SubmitProposal(request):
 def ReviewProposals(request, proposal_id=None, textbook_id=None):
     context = {}
     if is_reviewer(request.user):
+        context['reviewer'] = request.user
         if proposal_id:
             proposal = Proposal.objects.get(id=proposal_id)
             accepted_book = TempBook.objects.get(id=textbook_id)
@@ -385,6 +391,8 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             context['proposals'] = new_proposals
             context['old_proposals'] = old_proposals
             return render_to_response('tbc/review-proposal.html', context)
+    else:
+        return HttpResponse("not allowed")
 
 
 def DisapproveProposal(request, proposal_id=None):
@@ -433,22 +441,32 @@ def RejectProposal(request, proposal_id=None):
         return render_to_response('tbc/reject-proposal.html', context)
         
 
-def SubmitSample(request, proposal_id=None):
+def SubmitSample(request, proposal_id=None, old_notebook_id=None):
     context = {}
     context.update(csrf(request))
     if request.method == "POST":
         curr_proposal = Proposal.objects.get(id=proposal_id)
-        sample_notebook = SampleNotebook()
-        sample_notebook.proposal = curr_proposal
-        sample_notebook.name = request.POST.get('ch_name')
-        sample_notebook.sample_notebook = request.FILES['sample_notebook']
-        sample_notebook.save()
-        return HttpResponse("done")
+        if old_notebook_id:
+            pass                    
+        else:
+            sample_notebook = SampleNotebook()
+            sample_notebook.proposal = curr_proposal
+            sample_notebook.name = request.POST.get('ch_name')
+            sample_notebook.sample_notebook = request.FILES['sample_notebook']
+            sample_notebook.save()
+            return HttpResponseRedirect('/?sample_notebook=done')
     else:
         profile = Profile.objects.get(user=request.user)
         proposal = Proposal.objects.get(user=profile, status='samples')
-        context['proposal'] = proposal
-        return render_to_response('tbc/submit-sample.html', context)
+        try:
+            old_notebook = SampleNotebook.objects.get(proposal=proposal)
+            context['has_old'] = True
+            context['old_notebook'] = old_notebook
+            context['proposal'] = proposal
+            return render_to_response('tbc/submit-sample.html', context)
+        except:
+            context['proposal'] = proposal
+            return render_to_response('tbc/submit-sample.html', context)
 
 
 def UpdateBook(request):
@@ -492,9 +510,14 @@ def UpdateBook(request):
         return render_to_response('tbc/update-book.html', context)
 
 
-def ContentUpload(request, book_id=None):
+def SubmitCode(request):
     user = request.user
-    curr_book = Book.objects.get(id=book_id)
+    curr_profile = Profile.objects.get(user=user)
+    try:
+        curr_proposal = Proposal.objects.get(user=curr_profile, status='book alloted')
+        curr_book = curr_proposal.accepted
+    except:
+        return HttpResponseRedirect('/?no_book_alloted=true')
     if request.method == 'POST':
         for i in range(1, curr_book.no_chapters+1):
             chapter = Chapters()
@@ -522,13 +545,14 @@ def ContentUpload(request, book_id=None):
                   "http://tbc-python.fossee.in/book-review/"+str(curr_book.id)
         email_send(book.reviewer.email, subject, message)
         return HttpResponseRedirect('/?up=done')
-    context = {}
-    context.update(csrf(request))
-    context['user'] = user
-    context['curr_book'] = curr_book
-    context['no_notebooks'] = [i for i in range(1, curr_book.no_chapters+1)]
-    context['no_images'] = [i for i in range(1, 4)]
-    return render_to_response('tbc/upload-content.html', context)
+    else:
+        context = {}
+        context.update(csrf(request))
+        context['user'] = user
+        context['curr_book'] = curr_book
+        context['no_notebooks'] = [i for i in range(1, curr_book.no_chapters+1)]
+        context['no_images'] = [i for i in range(1, 4)]
+        return render_to_response('tbc/upload-content.html', context)
 
 
 def UpdateContent(request, book_id=None):

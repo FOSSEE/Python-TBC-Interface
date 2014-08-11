@@ -9,11 +9,11 @@
     <ol>
     {% for proposal in proposals %}
         <li><h4>Propsal from {{ proposal.user.user.first_name }} {{ proposal.user.user.last_name }}</h4></li>
-            <div class="accordion" id="accordion2">
+            <div class="accordion" id="accordion{{ forloop.counter }}">
                 {% for textbook in proposal.textbooks.all %}
                     <div class="accordion-group">
                         <div class="accordion-heading">
-                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion{{ forloop.counter }}" href="#collapse{{forloop.counter}}">
                                 Book Preference {{ forloop.counter }} - {{ textbook.title }}
                             </a>
                         </div>
@@ -41,11 +41,11 @@
     <ol>
     {% for proposal in old_proposals %}
         <h4><li>Propsal from {{ proposal.proposal.user.user.first_name }} {{ proposal.proposal.user.user.last_name }}</h4></li>
-            <div class="accordion" id="accordion2">
+            <div class="accordion" id="accordion{{ forloop.counter }}">
                 {% for textbook in proposal.proposal.textbooks.all %}
                     <div class="accordion-group">
                         <div class="accordion-heading">
-                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion{{ forloop.counter }}" href="#collapse{{forloop.counter}}">
                                 Book Preference {{ forloop.counter }} - {{ textbook.title }}
                             </a>
                         </div>

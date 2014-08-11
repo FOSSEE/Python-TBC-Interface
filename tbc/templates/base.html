@@ -94,7 +94,7 @@
                     <ul class="dropdown-menu">
                       <li><a href="{% url 'tbc:SubmitProposal' %}">Submit Proposal</a></li>
                       <li><a href="{% url 'tbc:SubmitSample' %}">Submit Sample Notebook</a></li>
-                      <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book</a></li>
+                      <li><a href="{% url 'tbc:SubmitCode' %}">Submit Codes</a></li>
                       <li><a href="{% url 'tbc:UpdateBook' %}">Update Submission</a></li>
                       <li><a href="{% url 'tbc:UpdatePassword' %}">Update Password</a></li>
                       <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
@@ -184,6 +184,24 @@
             <div class="alert" style="width:650px;height:40px;">
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
                 <p>You either have a proposal pending or you are already working on a book. You cannot submit a proposal at this moment.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    {% if no_book_alloted %}
+        <center>
+            <div class="alert" style="width:400px;height:25px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>There is no book alloted to you. You cannot submit codes.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    {% if sample_notebook %}
+        <center>
+            <div class="alert" style="width:550px;height:40px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>Sample notebook has been submitted successfully. Please be patient while the reviewer reviews your codes & get backs to you.</p>
             </div>
         </center>
         <div class="clearfix"></div>

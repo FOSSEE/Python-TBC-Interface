@@ -146,3 +146,6 @@ class SampleNotebook(models.Model):
     proposal = models.ForeignKey(Proposal)
     name = models.CharField(max_length=40)
     sample_notebook = models.FileField(upload_to=get_sample_dir)
+    def __unicode__(self):
+        notebook = self.proposal.accepted.title or 'notebook'
+        return '%s'%(notebook)

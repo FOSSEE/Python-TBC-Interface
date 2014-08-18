@@ -29,7 +29,7 @@ function validate_content()
     {% if has_old %}
         <form action="/submit-sample/{{ proposal.id }}/{{ old_notebook.id }}" name="with-old" method=POST enctype="multipart/form-data" onSubmit="return validate_content();">
         {% csrf_token %}
-            <input type=text id=ch_name_old name=ch_name_old placeholder="{{ old_notebook.title }}">
+            <input type=text id=ch_name_old name=ch_name_old value="{{ old_notebook.name }}">
             <input type=file id=old_notebook name=old_notebook>
         <br>
         <hr>

@@ -90,6 +90,8 @@ def Home(request):
         context['no_book_alloted'] = True
     if 'sample_notebook' in request.GET:
         context['sample_notebook'] = True
+    if 'cannot_submit_sample' in request.GET:
+        context['cannot_submit_sample'] =True
 
     books = Book.objects.filter(approved=True).order_by("-id")[0:6]
     for book in books:
@@ -166,7 +168,11 @@ def UserProfile(request):
     user = request.user
     if user.is_authenticated():
         if request.method == 'POST':
-            form = UserProfileForm(request.POST)
+            user_profile = Profile.objects.filter(user=user)
+            if user_profile.exists():
+                form = UserProfileForm(request.POST, instance=user_profile[0])
+            else:
+                form = UserProfileForm(request.POST)
             if form.is_valid():
                 data = form.save(commit=False)
                 data.user = request.user
@@ -305,12 +311,16 @@ def SubmitProposal(request):
     context = {}
     context.update(csrf(request))
     context['user'] = curr_user
-    user_proposals = Proposal.objects.filter(user=user_profile)
-    can_submit_new = True
+    user_proposals = list(Proposal.objects.filter(user=user_profile))
+    proposal_id = None
+    can_submit_new = False
     matching_books = []
-    for proposal in user_proposals:
-        if proposal.status is not "book completed":
-            can_submit_new = False
+    if user_proposals:
+        if user_proposals[-1].status == 'rejected':
+            can_submit_new = True
+            proposal_id = user_proposals[-1].id
+    else:
+        can_submit_new = True
     if can_submit_new:
         if request.method == 'POST':
             book_titles = request.POST.getlist('title')
@@ -342,6 +352,18 @@ def SubmitProposal(request):
             book_forms = []
             for i in range(3):
                 form = BookForm()
+                if proposal_id:
+                    proposal = Proposal.objects.get(id=proposal_id)
+                    textbooks = proposal.textbooks.all()
+                    form.initial['title'] = textbooks[i].title
+                    form.initial['author'] = textbooks[i].author
+                    form.initial['category'] = textbooks[i].category
+                    form.initial['publisher_place'] = textbooks[i].publisher_place
+                    form.initial['isbn'] = textbooks[i].isbn
+                    form.initial['edition'] = textbooks[i].edition
+                    form.initial['year_of_pub'] = textbooks[i].year_of_pub
+                    form.initial['no_chapters'] = textbooks[i].no_chapters
+
                 book_forms.append(form)
             context['book_forms'] = book_forms
             return render_to_response('tbc/submit-proposal.html', context)
@@ -447,7 +469,12 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
     if request.method == "POST":
         curr_proposal = Proposal.objects.get(id=proposal_id)
         if old_notebook_id:
-            pass                    
+            old_notebook = SampleNotebook.objects.get(id=old_notebook_id)
+            old_notebook.proposal = curr_proposal
+            old_notebook.name = request.POST.get('ch_name_old')
+            old_notebook.sample_notebook = request.FILES['old_notebook']
+            old_notebook.save()
+            return HttpResponseRedirect('/?sample_notebook=done')
         else:
             sample_notebook = SampleNotebook()
             sample_notebook.proposal = curr_proposal
@@ -457,7 +484,10 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
             return HttpResponseRedirect('/?sample_notebook=done')
     else:
         profile = Profile.objects.get(user=request.user)
-        proposal = Proposal.objects.get(user=profile, status='samples')
+        try:
+            proposal = Proposal.objects.get(user=profile, status='samples')
+        except Proposal.DoesNotExist:
+            return HttpResponseRedirect('/?cannot_submit_sample=True')
         try:
             old_notebook = SampleNotebook.objects.get(proposal=proposal)
             context['has_old'] = True

@@ -1,3 +1,6 @@
+from django.utils.encoding import force_text
+from django.contrib.admin.models import LogEntry, CHANGE
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -14,6 +17,18 @@ import string
 import random
 import json
 from email.mime.text import MIMEText
+
+
+def add_log(user, object, flag, message):
+    '''Creates log entry of the user activities.'''
+    LogEntry.objects.log_action(
+        user_id=user.id,
+        content_type_id=ContentType.objects.get_for_model(object).id,
+        object_id=object.id,
+        object_repr=force_text(object),
+        action_flag=flag,
+        change_message=message
+    )
 
 
 def email_send(to,subject,msg):
@@ -122,6 +137,7 @@ def UserLogin(request):
         curr_user = authenticate(username=username, password=password)
         if curr_user is not None:
             login(request, curr_user)
+            add_log(curr_user, curr_user, CHANGE, 'Logged in')
         else:
             form = UserLoginForm()
             context['form'] = form
@@ -149,7 +165,8 @@ def UserRegister(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            add_log(user, user, CHANGE, 'Registered')
             return HttpResponseRedirect('/login/?signup=done')
         else:
             context = {}
@@ -177,6 +194,7 @@ def UserProfile(request):
                 data = form.save(commit=False)
                 data.user = request.user
                 data.save()
+                add_log(user, user, CHANGE,'Profile entry')
                 return HttpResponseRedirect('/')
             else:
                 context = {}
@@ -200,6 +218,7 @@ def UserLogout(request):
     user = request.user
     if user.is_authenticated() and user.is_active:
         logout(request)
+    add_log(user, user, CHANGE, 'Logged out')
     return redirect('/?logout=done')
 
 
@@ -256,6 +275,7 @@ def UpdatePassword(request):
             if new_password == confirm:
                 user.set_password(new_password)
                 user.save()
+                add_log(user, user, CHANGE, 'Password updated')
                 form = UserLoginForm()
                 context['password_updated'] = True
                 context['form'] = form
@@ -291,6 +311,7 @@ def SubmitBook(request):
             context['user'] = curr_user
             curr_book = Book.objects.order_by("-id")[0]
             curr_book_id = curr_book.id
+            add_log(curr_user, curr_book, CHANGE, 'Book submitted')
             return HttpResponseRedirect('/upload-content/'+str(curr_book_id))
         else:
             context.update(csrf(request))
@@ -347,6 +368,7 @@ def SubmitProposal(request):
             proposal.save()
             for book in list(TempBook.objects.all())[-3:]:
                 proposal.textbooks.add(book)
+                add_log(curr_user, proposal, CHANGE, 'Proposed Books')
             return HttpResponseRedirect('/?proposal=submitted')
         else:
             book_forms = []
@@ -393,6 +415,7 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             proposal.status = "samples"
             proposal.accepted = new_book
             proposal.save()
+            add_log(request.user, proposal, CHANGE, 'Proposal accepted')
             return HttpResponse("Approved")
         else:
             new_proposals = Proposal.objects.filter(status="pending")
@@ -422,6 +445,7 @@ def DisapproveProposal(request, proposal_id=None):
     context.update(csrf(request))
     proposal = Proposal.objects.get(id=proposal_id)
     if request.method == 'POST':
+        add_log(request.user, proposal, CHANGE, 'Sample disapproved')
         changes_required = request.POST['changes_required']
         subject = "Python-TBC: Corrections Required in the sample notebook"
         message = "Hi, "+proposal.user.user.first_name+",\n"+\
@@ -436,11 +460,12 @@ def DisapproveProposal(request, proposal_id=None):
         return render_to_response('tbc/disapprove-sample.html', context)
 
 
-def AllotBook(requrest, proposal_id=None):
+def AllotBook(request, proposal_id=None):
     context = {}
     proposal = Proposal.objects.get(id=proposal_id)
     proposal.status = "book alloted"
     proposal.save()
+    add_log(request.user, proposal, CHANGE, 'Book alloted')
     return HttpResponseRedirect("/book-review/?book_alloted=done") 
 
     
@@ -457,6 +482,7 @@ def RejectProposal(request, proposal_id=None):
         rejected. "+request.POST.get('remarks')
         email_send(proposal.user.user.email, subject, message)
         context.update(csrf(request))
+        add_log(request.user, proposal, CHANGE, 'Proposal rejected')
         return HttpResponseRedirect("/book-review/?reject-proposal=done")
     else:
         context['proposal'] = proposal
@@ -468,6 +494,7 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
     context.update(csrf(request))
     if request.method == "POST":
         curr_proposal = Proposal.objects.get(id=proposal_id)
+        add_log(request.user, curr_proposal, CHANGE, 'Sample Submitted')
         if old_notebook_id:
             old_notebook = SampleNotebook.objects.get(id=old_notebook_id)
             old_notebook.proposal = curr_proposal
@@ -523,6 +550,7 @@ def UpdateBook(request):
             data.save()
             context.update(csrf(request))
             context['form'] = book_form
+            add_log(current_user, book_to_update, CHANGE, 'Book updated')
             return HttpResponseRedirect('/update-content/'+str(book_to_update.id))
     else:
         book_form = BookForm()
@@ -562,6 +590,7 @@ def SubmitCode(request):
             screenshot.book = curr_book
             screenshot.save()
         book = Book.objects.order_by("-id")[0]
+        add_log(user, curr_book, CHANGE, 'Chapters and Screenshots added')
         subject = "Python-TBC: Book Submission"
         message = "Hi "+curr_book.reviewer.name+",\n"+\
                   "A book has been submitted on the Python TBC interface.\n"+\
@@ -616,6 +645,7 @@ def UpdateContent(request, book_id=None):
                   "Follow the link to review the book: \n"+\
                   "http://dev.fossee.in/book-review/"+str(current_book.id)
         email_send(current_book.reviewer.email, subject, message)
+        add_log(user, current_book, CHANGE, 'Updated book')
         return HttpResponseRedirect('/?update_book=done')
     else:
         context.update(csrf(request))
@@ -727,6 +757,7 @@ def ApproveBook(request, book_id=None):
             fp.write("Edition: "+book.edition)
             fp.close()
             x = shutil.copytree(book.title, zip_path+book.title)
+            add_log(user, book, CHANGE, 'Book approved')
             subject = "Python-TBC: Book Completion"
             message = "Hi "+book.contributor.user.first_name+",\n"+\
             "Congratulations !\n"+\
@@ -757,6 +788,7 @@ def NotifyChanges(request, book_id=None):
         book = Book.objects.get(id=book_id)
         if request.method == 'POST':
             changes_required = request.POST['changes_required']
+            add_log(request.user, book, CHANGE, 'Changes notification')
             subject = "Python-TBC: Corrections Required"
             message = "Hi, "+book.contributor.user.first_name+",\n"+\
             "Book titled, "+book.title+" requires following changes: \n"+\

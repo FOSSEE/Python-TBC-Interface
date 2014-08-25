@@ -37,9 +37,6 @@ function redirectToIpynb(notebook)
         <td>
             <a href="{% static 'uploads/' %}{{ chapter.notebook }}">Download</a>
         </td>
-        <td>
-            <a href="{% url 'tbc:RedirectToIpynb' chapter.notebook %}">Edit examples of this chapter</a>
-        </td>
     </tr>
 {% endfor %}
 </table>

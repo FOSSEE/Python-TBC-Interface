@@ -37,14 +37,14 @@ function submitCategory()
         <th>Sr #</th>
         <th>Book</th>
         <tr>
+            {% for book in completed_books %}
             <td>
                 {{ forloop.counter }}
             </td>
             <td>
-                {% for book in completed_books %}
                     <a href="{% url 'tbc:BookDetails' book.id %}">{{ book.title }} by {{ book.author }}</a>
-                {% endfor %}
             </td>
+            {% endfor %}
         </tr>
     </table>
 

@@ -33,4 +33,18 @@
 <tr><td>Contributor: &nbsp;&nbsp;<td>{{ book.contributor.user.first_name }} {{ book.contributor.user.last_name }}
 <tr><td>Email: &nbsp;&nbsp;<td>{{ book.contributor.user.email }}<br>
 </table>
+<table class='table'>
+    <tr>
+        <th>User</th>
+        <th>Time</th>
+        <th>Activity</th>
+    </tr>
+{% for log in logs %}
+<tr>
+    <td> {{ log.user }} </td>
+    <td> {{ log.action_time }} </td>
+    <td> {{ log.change_message }} </td>
+</tr>
+{% endfor %}
+<table>
 {% endblock %}

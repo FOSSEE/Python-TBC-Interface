@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PythonTBC import settings
+from django.contrib.admin.models import LogEntry
 
 
 CATEGORY = (("fluid mechanics", "Fluid Mechanics"),
@@ -149,3 +150,9 @@ class SampleNotebook(models.Model):
     def __unicode__(self):
         notebook = self.proposal.accepted.title or 'notebook'
         return '%s'%(notebook)
+
+
+class ActivityLog(LogEntry):
+    proposal_id = models.IntegerField(null=True)
+    def __unicode__(self):
+        return 'Activity log for %d' %(proposal_id)

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <center><h3>List of AICTE Books</h3></center>
+    <hr>
+    <div id="content-wrap">
+        <table class="table table-bordered table-hover">
+            <th>SR #</th>
+            <th>Book (click on the link to propose the book)</th>
+            {% for book in aicte_books %}
+                <tr>
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+                    <td>
+                        <a href="{% url 'tbc:SubmitAICTEProposal' book.id %}">{{ book.title }} by {{ book.author }}, {{ book.edition }} Edition</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

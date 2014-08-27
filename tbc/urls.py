@@ -14,6 +14,8 @@ urlpatterns = patterns('',
     
     
     url(r'^submit-proposal/$', 'tbc.views.SubmitProposal', name='SubmitProposal'),
+    url(r'^submit-aicte-proposal/$', 'tbc.views.ListAICTE', name='ListAICTE'),
+    url(r'^submit-aicte-proposal/(?P<aicte_book_id>\d+)/$', 'tbc.views.SubmitAICTEProposal', name='SubmitAICTEProposal'),
     url(r'^submit-book/$', 'tbc.views.SubmitBook', name='SubmitBook'),
     url(r'^submit-sample/$', 'tbc.views.SubmitSample', name='SubmitSample'),
     url(r'^submit-sample/(?P<proposal_id>\d+)$', 'tbc.views.SubmitSample', name='SubmitSample'),

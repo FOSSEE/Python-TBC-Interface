@@ -156,3 +156,17 @@ class ActivityLog(LogEntry):
     proposal_id = models.IntegerField(null=True)
     def __unicode__(self):
         return 'Activity log for %d' %(proposal_id)
+
+
+class AicteBook(models.Model):
+    title = models.TextField()
+    author = models.CharField(max_length=300L)
+    category = models.CharField(max_length=32L)
+    publisher_place = models.CharField(max_length=200L)
+    isbn = models.CharField(max_length=50L)
+    edition = models.CharField(max_length=15L)
+    year_of_pub = models.CharField(max_length=4L)
+    proposed = models.BooleanField(default=False)
+    def __unicode__(self):
+        notebook = self.title or 'Book'
+        return '%s'%(notebook)

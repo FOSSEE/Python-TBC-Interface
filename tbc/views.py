@@ -401,6 +401,72 @@ def SubmitProposal(request):
             return render_to_response('tbc/submit-proposal.html', context)
     else:
         return HttpResponseRedirect('/?proposal_pending=True')
+        
+
+def ListAICTE(request):
+    curr_user = request.user
+    context = {}
+    context.update(csrf(request))
+    context['user'] = curr_user
+    aicte_books = AicteBook.objects.filter(proposed=0)
+    context['aicte_books'] = aicte_books
+    return render_to_response('tbc/aicte-books.html', context)    
+
+
+def SubmitAICTEProposal(request, aicte_book_id=None):
+    curr_user = request.user
+    user_profile = Profile.objects.get(user=curr_user.id)
+    context = {}
+    context.update(csrf(request))
+    context['user'] = curr_user
+    user_proposals = Proposal.objects.filter(user=user_profile)
+    book_proposed = AicteBook.objects.get(id=aicte_book_id)
+    context['aicte_book'] = book_proposed
+    can_submit_new = True
+    for proposal in user_proposals:
+        if proposal.status is not "book completed":
+            can_submit_new = False
+    if can_submit_new:
+        if request.method == 'POST':
+            tempbook = TempBook()
+            book_proposed.title = request.POST['title']
+            book_proposed.author = request.POST['author']
+            book_proposed.category = request.POST['category']
+            book_proposed.publisher_place = request.POST['publisher_place']
+            book_proposed.isbn = request.POST['isbn']
+            book_proposed.edition = request.POST['edition']
+            book_proposed.year_of_pub = request.POST['year_of_pub']
+            book_proposed.proposed = True
+            book_proposed.save()
+            tempbook.title = book_proposed.title
+            tempbook.author = book_proposed.author
+            tempbook.category = book_proposed.category
+            tempbook.publisher_place = book_proposed.publisher_place
+            tempbook.isbn = book_proposed.isbn
+            tempbook.edition = book_proposed.edition
+            tempbook.year_of_pub = book_proposed.year_of_pub
+            tempbook.no_chapters = request.POST['no_chapters']
+            tempbook.save()
+            proposal = Proposal()
+            proposal.user = user_profile
+            proposal.save()
+            proposal.textbooks.add(tempbook)
+            
+            return HttpResponseRedirect('/?proposal=submitted')
+        else:
+            book_form = BookForm()
+            book_form.initial['title'] = book_proposed.title
+            book_form.initial['author'] = book_proposed.author
+            book_form.initial['publisher_place'] = book_proposed.publisher_place
+            book_form.initial['category'] = book_proposed.category
+            book_form.initial['isbn'] = book_proposed.isbn
+            book_form.initial['edition'] = book_proposed.edition
+            book_form.initial['year_of_pub'] = book_proposed.year_of_pub
+            context['form'] = book_form
+            return render_to_response('tbc/confirm-aicte-details.html', context)
+    else:
+        return HttpResponseRedirect('/?proposal_pending=True')
+    
 
 
 def ReviewProposals(request, proposal_id=None, textbook_id=None):

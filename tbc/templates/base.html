@@ -206,6 +206,15 @@
         </center>
         <div class="clearfix"></div>
     {% endif %}
+    {% if cannot_submit_sample %}
+        <center>
+            <div class="alert" style="width:400px;height:25px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>You have not been permitted to send sample notebook.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
     <div class="row-fluid">
         <center><h3>Recent Submissions</h3></center>
         {% for item in items %}

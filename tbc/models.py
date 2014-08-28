@@ -41,7 +41,10 @@ ABOUT_PROJ = (("pythontbc website", "Python TBC Website"),
               
 PROPOSAL_STATUS = (("pending","Pending"),
                    ("samples","Samples"),
+                   ("sample disapproved", "Sample Disapproved"),
                    ("book alloted","Book Alloted"),
+                   ("codes submitted", "Codes Submitted"),
+                   ("codes disapproved", "Codes Disapproved"),
                    ("book completed","Book Completed"),
                    ("rejected","Rejected"))
 

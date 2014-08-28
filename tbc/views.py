@@ -530,6 +530,7 @@ def DisapproveProposal(request, proposal_id=None):
         changes_required
         email_send(proposal.user.user.email, subject, message)
         context.update(csrf(request))
+        proposal.status = "sample disapproved"
         return HttpResponseRedirect("/book-review/?mail_notify=done")
     else:
         context['proposal'] = proposal
@@ -577,6 +578,7 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
             old_notebook.name = request.POST.get('ch_name_old')
             old_notebook.sample_notebook = request.FILES['old_notebook']
             old_notebook.save()
+            curr_proposal.status = "sample resubmitted"
             return HttpResponseRedirect('/?sample_notebook=done')
         else:
             sample_notebook = SampleNotebook()
@@ -822,6 +824,8 @@ def ApproveBook(request, book_id=None):
             book.approved = True
             book.save()
             proposal = Proposal.objects.get(accepted=book)
+            proposal.status = "book completed"
+            proposal.save()
             add_log(user, book, CHANGE, 'Book approved', proposal.id)
             file_path = os.path.abspath(os.path.dirname(__file__))
             zip_path = "/".join(file_path.split("/")[1:-2])

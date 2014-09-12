@@ -837,7 +837,6 @@ def ApproveBook(request, book_id=None):
             proposal = Proposal.objects.get(accepted=book)
             proposal.status = "book completed"
             proposal.save()
-            add_log(user, book, CHANGE, 'Book approved', proposal.id)
             file_path = os.path.abspath(os.path.dirname(__file__))
             zip_path = "/".join(file_path.split("/")[1:-2])
             zip_path = "/"+zip_path+"/Python-Textbook-Companions/"

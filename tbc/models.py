@@ -154,6 +154,7 @@ class SampleNotebook(models.Model):
 
 class ActivityLog(LogEntry):
     proposal_id = models.IntegerField(null=True)
+    conversation = models.TextField(null=True)
     def __unicode__(self):
         return 'Activity log for %d' %(proposal_id)
 

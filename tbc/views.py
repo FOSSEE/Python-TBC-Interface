@@ -19,7 +19,7 @@ import json
 from email.mime.text import MIMEText
 
 
-def add_log(user, object, flag, message, proposal_id=None):
+def add_log(user, object, flag, message, proposal_id=None, chat='No message'):
     '''Creates log entry of the user activities.'''
     ActivityLog(
         user_id=user.id,
@@ -29,6 +29,7 @@ def add_log(user, object, flag, message, proposal_id=None):
         action_flag=flag,
         change_message=message,
         proposal_id = proposal_id,
+        conversation = chat,
     ).save()
 
 
@@ -362,7 +363,7 @@ def SubmitProposal(request):
             book_years = request.POST.getlist('year_of_pub')
             book_chapters = request.POST.getlist('no_chapters')
             textbooks = proposal.textbooks.all()
-            for item in range(3):
+            for item in range(len(user_proposals)):
                 if textbooks:
                     tempbook = textbooks[item]
                 else:
@@ -378,11 +379,11 @@ def SubmitProposal(request):
                 tempbook.save()
                 if not textbooks:
                     proposal.textbooks.add(tempbook)
-                add_log(curr_user, proposal, CHANGE, 'Proposed Books', proposal.id)
+            add_log(curr_user, proposal, CHANGE, 'Proposed Books', proposal.id)
             return HttpResponseRedirect('/?proposal=submitted')
         else:
             book_forms = []
-            for i in range(3):
+            for i in range(len(user_proposals)):
                 form = BookForm()
                 if proposal_id:
                     proposal = Proposal.objects.get(id=proposal_id)
@@ -451,7 +452,7 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             proposal.user = user_profile
             proposal.save()
             proposal.textbooks.add(tempbook)
-            
+            add_log(curr_user, proposal, CHANGE, 'AICTE proposal' ,proposal.id)
             return HttpResponseRedirect('/?proposal=submitted')
         else:
             book_form = BookForm()
@@ -471,8 +472,9 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
 
 def ReviewProposals(request, proposal_id=None, textbook_id=None):
     context = {}
-    if is_reviewer(request.user):
-        context['reviewer'] = request.user
+    user = request.user
+    if is_reviewer(user):
+        context['reviewer'] = user
         if proposal_id:
             proposal = Proposal.objects.get(id=proposal_id)
             accepted_book = TempBook.objects.get(id=textbook_id)
@@ -491,7 +493,7 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             proposal.status = "samples"
             proposal.accepted = new_book
             proposal.save()
-            add_log(request.user, proposal, CHANGE, 'Proposal accepted', proposal.id)
+            add_log(user, proposal, CHANGE, 'Proposal accepted', proposal.id)
             return HttpResponse("Approved")
         else:
             new_proposals = Proposal.objects.filter(status="pending")
@@ -521,13 +523,14 @@ def DisapproveProposal(request, proposal_id=None):
     context.update(csrf(request))
     proposal = Proposal.objects.get(id=proposal_id)
     if request.method == 'POST':
-        add_log(request.user, proposal, CHANGE, 'Sample disapproved', proposal_id)
         changes_required = request.POST['changes_required']
         subject = "Python-TBC: Corrections Required in the sample notebook"
         message = "Hi, "+proposal.user.user.first_name+",\n"+\
         "Sample notebook for the book titled, "+proposal.accepted.title+"\
         requires following changes: \n"+\
         changes_required
+        add_log(request.user, proposal, CHANGE, 'Sample disapproved',
+                proposal_id, chat=subject + '\n' + changes_required)
         email_send(proposal.user.user.email, subject, message)
         context.update(csrf(request))
         proposal.status = "sample disapproved"
@@ -553,11 +556,12 @@ def RejectProposal(request, proposal_id=None):
     if request.method == 'POST':
         proposal.status = 'rejected'
         proposal.save()
-        add_log(request.user, proposal, CHANGE, 'Proposal rejected', proposal.id)
         remarks = request.POST['remarks']
         subject = "Python-TBC: Rejection of Proposal"
         message = "Dear "+proposal.user.user.first_name+"\nYour proposal has been\
         rejected. "+request.POST.get('remarks')
+        add_log(request.user, proposal, CHANGE, 'Proposal rejected',
+                proposal.id, chat=subject + '\n' + remarks)
         email_send(proposal.user.user.email, subject, message)
         context.update(csrf(request))
         return HttpResponseRedirect("/book-review/?reject-proposal=done")
@@ -568,10 +572,11 @@ def RejectProposal(request, proposal_id=None):
 
 def SubmitSample(request, proposal_id=None, old_notebook_id=None):
     context = {}
+    user = request.user
     context.update(csrf(request))
     if request.method == "POST":
         curr_proposal = Proposal.objects.get(id=proposal_id)
-        add_log(request.user, curr_proposal, CHANGE, 'Sample Submitted', curr_proposal.id)
+        add_log(user, curr_proposal, CHANGE, 'Sample Submitted', curr_proposal.id)
         if old_notebook_id:
             old_notebook = SampleNotebook.objects.get(id=old_notebook_id)
             old_notebook.proposal = curr_proposal
@@ -588,7 +593,7 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
             sample_notebook.save()
             return HttpResponseRedirect('/?sample_notebook=done')
     else:
-        profile = Profile.objects.get(user=request.user)
+        profile = Profile.objects.get(user=user)
         try:
             proposal = Proposal.objects.get(user=profile, status='samples')
         except Proposal.DoesNotExist:
@@ -670,7 +675,6 @@ def SubmitCode(request):
             screenshot.save()
         book = Book.objects.order_by("-id")[0]
         proposal = Proposal.objects.get(accepted=book)
-        add_log(user, curr_book, CHANGE, 'Chapters and Screenshots added', proposal.id)
         subject = "Python-TBC: Book Submission"
         message = "Hi "+curr_book.reviewer.name+",\n"+\
                   "A book has been submitted on the Python TBC interface.\n"+\
@@ -682,6 +686,10 @@ def SubmitCode(request):
                   "ISBN: "+curr_book.isbn+"\n"+\
                   "Follow the link to review the book: \n"+\
                   "http://tbc-python.fossee.in/book-review/"+str(curr_book.id)
+        log_chat = subject + '\n' + 'Book ' + curr_book.title + \
+                ' has been submitted on the Python TBC interface.'
+        add_log(user, curr_book, CHANGE, 'Chapters and Screenshots added',
+                proposal.id, chat=log_chat)
         email_send(book.reviewer.email, subject, message)
         return HttpResponseRedirect('/?up=done')
     else:
@@ -714,7 +722,6 @@ def UpdateContent(request, book_id=None):
             screenshot.book = current_book
             screenshot.save()
         proposal = Proposal.objects.get(accepted=current_book)
-        add_log(user, current_book, CHANGE, 'book updated', proposal.id)
         subject = "Python-TBC: Book Updated"
         message = "Hi "+current_book.reviewer.name+",\n"+\
                   "Submission for a book has been updated on the Python TBC interface.\n"+\
@@ -726,7 +733,11 @@ def UpdateContent(request, book_id=None):
                   "ISBN: "+current_book.isbn+"\n"+\
                   "Follow the link to review the book: \n"+\
                   "http://dev.fossee.in/book-review/"+str(current_book.id)
-        email_send(current_book.reviewer.email, subject, message, current_book.id)
+        log_chat = subject + '\n' + current_book.title +\
+                ' book has been updated on the Python TBC interface.'
+        add_log(user, current_book, CHANGE, 'book updated', proposal.id,
+                chat=log_chat)
+        email_send(current_book.reviewer.email, subject, message)
         return HttpResponseRedirect('/?update_book=done')
     else:
         context.update(csrf(request))
@@ -826,7 +837,6 @@ def ApproveBook(request, book_id=None):
             proposal = Proposal.objects.get(accepted=book)
             proposal.status = "book completed"
             proposal.save()
-            add_log(user, book, CHANGE, 'Book approved', proposal.id)
             file_path = os.path.abspath(os.path.dirname(__file__))
             zip_path = "/".join(file_path.split("/")[1:-2])
             zip_path = "/"+zip_path+"/Python-Textbook-Companions/"
@@ -859,6 +869,8 @@ def ApproveBook(request, book_id=None):
             "IIT Bombay, Powai, Mumbai - 400076\n"+\
             "Kindly, write Python Texbook Companion on top of the envelope.\n\n\n"+\
             "Regards,\n"+"Python TBC,\n"+"FOSSEE, IIT - Bombay"
+            add_log(user, book, CHANGE, 'Book approved', proposal.id,
+                    chat=subject + '\n' + message)
             email_send(book.reviewer.email, subject, message)
             context['user'] = user
             return HttpResponseRedirect("/book-review/?book_review=done")
@@ -878,12 +890,13 @@ def NotifyChanges(request, book_id=None):
         proposal = Proposal.objects.get(accepted=book)
         if request.method == 'POST':
             changes_required = request.POST['changes_required']
-            add_log(request.user, book, CHANGE, 'Changes notification', proposal.id)
             subject = "Python-TBC: Corrections Required"
             message = "Hi, "+book.contributor.user.first_name+",\n"+\
             "Book titled, "+book.title+" requires following changes: \n"+\
             changes_required
             context.update(csrf(request))
+            add_log(request.user, book, CHANGE, 'Changes notification',
+                    proposal.id, chat=subject+'\n'+changes_required)
             email_send(book.contributor.user.email, subject, message)
             return HttpResponseRedirect("/book-review/?mail_notify=done")
         else:

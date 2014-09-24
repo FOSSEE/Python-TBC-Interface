@@ -64,8 +64,6 @@
     </style>
    {% endblock %}
 
-   {% block script %}
-   {% endblock %}
    </head>
 
 <body>
@@ -101,7 +99,9 @@
                  <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                      <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book</a></li>
+                      <li><a href="{% url 'tbc:ListAICTE' %}">Submit Proposal</a></li>
+                      <li><a href="{% url 'tbc:SubmitSample' %}">Submit Sample Notebook</a></li>
+                      <li><a href="{% url 'tbc:SubmitCode' %}">Submit Codes</a></li>
                       <li><a href="{% url 'tbc:UpdateBook' %}">Update Submission</a></li>
                       <li><a href="{% url 'tbc:UpdatePassword' %}">Update Password</a></li>
                       <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
@@ -114,6 +114,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ reviewer.first_name }} {{ reviewer.last_name }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                       <li><a href="{% url 'tbc:BookReview' %}">Review Books</a></li>
+                      <li><a href="{% url 'tbc:ReviewProposals' %}">Review Proposals</a></li>
                       <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
                     </ul>
                  </li>
@@ -176,7 +177,52 @@
         </center>
         <div class="clearfix"></div>
     {% endif %}
-	<div class="row-fluid">
+    {% if proposal_submitted %}
+        <center>
+            <div class="alert" style="width:650px;height:40px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>Thank you for showing interest in contributing to Python TBC. <br>We have recevied your proposal. Please be patient we will get back to you within few days.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    {% if proposal_pending %}
+        <center>
+            <div class="alert" style="width:650px;height:40px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>You either have a proposal pending or you are already working on a book. You cannot submit a proposal at this moment.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    {% if no_book_alloted %}
+        <center>
+            <div class="alert" style="width:400px;height:25px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>There is no book alloted to you. You cannot submit codes.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    {% if sample_notebook %}
+        <center>
+            <div class="alert" style="width:550px;height:40px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>Sample notebook has been submitted successfully. Please be patient while the reviewer reviews your codes & get backs to you.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    {% if cannot_submit_sample %}
+        <center>
+            <div class="alert" style="width:400px;height:25px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>You have not been permitted to send sample notebook.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
+    <div class="row-fluid">
         <center><h3>Recent Submissions</h3></center>
         {% for item in items %}
             <div class ="module-list">
@@ -193,7 +239,7 @@
     <!-- 
         <input type=text> <input type=submit value=Search>
     -->
-	{% endblock %}
+    {% endblock %}
       <hr>
       
       <footer>
@@ -217,6 +263,8 @@
       ga('send', 'pageview');
     </script>
     <!-- / google analytics -->
+   {% block script %}
+   {% endblock %}
   </body>
 </html>
 

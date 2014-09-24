@@ -59,7 +59,7 @@ class BookForm(forms.ModelForm):
         self.fields['isbn'].label = "ISBN No."
         self.fields['edition'].label = "Book Edition"
         self.fields['year_of_pub'].label = "Year of Publication"
-        self.fields['no_chapters'].label = "Number of Chapter"
+        self.fields['no_chapters'].label = "Number of Chapters"
     class Meta:
         model = Book
         exclude = ('contributor', 'approved', 'reviewer')
@@ -70,5 +70,5 @@ class BookForm(forms.ModelForm):
         'isbn':forms.TextInput(attrs={'placeholder':'Valid ISBN no. of the Book'}),
         'edition':forms.TextInput(attrs={'placeholder':'Edition of the Book'}),
         'year_of_pub':forms.TextInput(attrs={'placeholder':'Year when the Book was published'}),
-        'no_chapters':forms.TextInput(attrs={'placeholder':'Total number of chapters in the Book'}),
+        'no_chapters':forms.TextInput(attrs={'placeholder':'Total number of chapters in the Book (only include chapters that have solved examples)'}),
         }

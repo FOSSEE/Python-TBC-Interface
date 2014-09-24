@@ -17,3 +17,13 @@
         </form>
     </div>
 {% endblock %}
+
+{% block script %}
+<script>
+$( document ).ready(function() {
+    title = document.getElementById('id_title').readOnly = true;
+    author = document.getElementById('id_author').readOnly = true;
+    publisher_place = document.getElementById('id_publisher_place').readOnly = true;
+});
+</script>
+{% endblock %}

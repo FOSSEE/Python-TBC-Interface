@@ -256,7 +256,7 @@ def ForgotPassword(request):
             return render_to_response("tbc/login.html", context)
         else:
             context['invalid_email'] = True
-            return render_to_response("tbc/forgot-password.html", context)    
+            return render_to_response("tbc/forgot-password.html", context)
     else:
         return render_to_response("tbc/forgot-password.html", context)
 
@@ -337,14 +337,15 @@ def SubmitProposal(request):
     context['user'] = curr_user
     user_proposals = list(Proposal.objects.filter(user=user_profile))
     proposal_id = None
-    can_submit_new = False
+    can_submit_new = True
     matching_books = []
-    if user_proposals:
-        if user_proposals[-1].status == 'rejected':
+    for proposal in user_proposals:
+        if proposal.status != 'book completed':
+            can_submit_new = False
+        if proposal.status == 'rejected':
             can_submit_new = True
-            proposal_id = user_proposals[-1].id
-    else:
-        can_submit_new = True
+            proposal_id = proposal.id
+
     if can_submit_new:
         if request.method == 'POST':
             try:
@@ -363,11 +364,9 @@ def SubmitProposal(request):
             book_years = request.POST.getlist('year_of_pub')
             book_chapters = request.POST.getlist('no_chapters')
             textbooks = proposal.textbooks.all()
-            for item in range(len(user_proposals)):
-                if textbooks:
-                    tempbook = textbooks[item]
-                else:
-                    tempbook = TempBook()
+            textbooks.delete()
+            for item in range(3):
+                tempbook = TempBook()
                 tempbook.title = book_titles[item]
                 tempbook.author = book_authors[item]
                 tempbook.category = book_categories[item]
@@ -377,41 +376,43 @@ def SubmitProposal(request):
                 tempbook.year_of_pub = book_years[item]
                 tempbook.no_chapters = book_chapters[item]
                 tempbook.save()
-                if not textbooks:
-                    proposal.textbooks.add(tempbook)
+                proposal.textbooks.add(tempbook)
             add_log(curr_user, proposal, CHANGE, 'Proposed Books', proposal.id)
             return HttpResponseRedirect('/?proposal=submitted')
         else:
             book_forms = []
-            for i in range(len(user_proposals)):
+            for i in range(3):
                 form = BookForm()
                 if proposal_id:
                     proposal = Proposal.objects.get(id=proposal_id)
                     textbooks = proposal.textbooks.all()
-                    form.initial['title'] = textbooks[i].title
-                    form.initial['author'] = textbooks[i].author
-                    form.initial['category'] = textbooks[i].category
-                    form.initial['publisher_place'] = textbooks[i].publisher_place
-                    form.initial['isbn'] = textbooks[i].isbn
-                    form.initial['edition'] = textbooks[i].edition
-                    form.initial['year_of_pub'] = textbooks[i].year_of_pub
-                    form.initial['no_chapters'] = textbooks[i].no_chapters
+                    if len(textbooks) == 3:
+                        form.initial['title'] = textbooks[i].title
+                        form.initial['author'] = textbooks[i].author
+                        form.initial['category'] = textbooks[i].category
+                        form.initial['publisher_place'] = textbooks[i].publisher_place
+                        form.initial['isbn'] = textbooks[i].isbn
+                        form.initial['edition'] = textbooks[i].edition
+                        form.initial['year_of_pub'] = textbooks[i].year_of_pub
+                        form.initial['no_chapters'] = textbooks[i].no_chapters
 
                 book_forms.append(form)
             context['book_forms'] = book_forms
             return render_to_response('tbc/submit-proposal.html', context)
     else:
         return HttpResponseRedirect('/?proposal_pending=True')
-        
+
 
 def ListAICTE(request):
     curr_user = request.user
+    user_profile = Profile.objects.get(user=curr_user.id)
+    user_proposals = Proposal.objects.filter(user=user_profile)
     context = {}
     context.update(csrf(request))
     context['user'] = curr_user
     aicte_books = AicteBook.objects.filter(proposed=0)
     context['aicte_books'] = aicte_books
-    return render_to_response('tbc/aicte-books.html', context)    
+    return render_to_response('tbc/aicte-books.html', context)
 
 
 def SubmitAICTEProposal(request, aicte_book_id=None):
@@ -424,12 +425,15 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
     book_proposed = AicteBook.objects.get(id=aicte_book_id)
     context['aicte_book'] = book_proposed
     can_submit_new = True
+    proposal_id = None
     for proposal in user_proposals:
-        if proposal.status is not "book completed":
+        if proposal.status != "book completed":
             can_submit_new = False
+        if proposal.status == 'rejected':
+            can_submit_new = True
+            proposal_id = proposal.id
     if can_submit_new:
         if request.method == 'POST':
-            tempbook = TempBook()
             book_proposed.title = request.POST['title']
             book_proposed.author = request.POST['author']
             book_proposed.category = request.POST['category']
@@ -439,6 +443,17 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             book_proposed.year_of_pub = request.POST['year_of_pub']
             book_proposed.proposed = True
             book_proposed.save()
+            try:
+                proposal = Proposal.objects.get(id=proposal_id)
+            except:
+                proposal = Proposal()
+            proposal.user = user_profile
+            proposal.status = 'Pending'
+            proposal.save()
+            textbooks = proposal.textbooks.all()
+            if textbooks:
+                textbooks.delete()
+            tempbook = TempBook()
             tempbook.title = book_proposed.title
             tempbook.author = book_proposed.author
             tempbook.category = book_proposed.category
@@ -448,9 +463,6 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             tempbook.year_of_pub = book_proposed.year_of_pub
             tempbook.no_chapters = request.POST['no_chapters']
             tempbook.save()
-            proposal = Proposal()
-            proposal.user = user_profile
-            proposal.save()
             proposal.textbooks.add(tempbook)
             add_log(curr_user, proposal, CHANGE, 'AICTE proposal' ,proposal.id)
             return HttpResponseRedirect('/?proposal=submitted')
@@ -467,7 +479,6 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             return render_to_response('tbc/confirm-aicte-details.html', context)
     else:
         return HttpResponseRedirect('/?proposal_pending=True')
-    
 
 
 def ReviewProposals(request, proposal_id=None, textbook_id=None):
@@ -546,9 +557,9 @@ def AllotBook(request, proposal_id=None):
     proposal.status = "book alloted"
     proposal.save()
     add_log(request.user, proposal, CHANGE, 'Book alloted', proposal_id)
-    return HttpResponseRedirect("/book-review/?book_alloted=done") 
+    return HttpResponseRedirect("/book-review/?book_alloted=done")
 
-    
+
 def RejectProposal(request, proposal_id=None):
     context = {}
     context.update(csrf(request))
@@ -568,7 +579,7 @@ def RejectProposal(request, proposal_id=None):
     else:
         context['proposal'] = proposal
         return render_to_response('tbc/reject-proposal.html', context)
-        
+
 
 def SubmitSample(request, proposal_id=None, old_notebook_id=None):
     context = {}

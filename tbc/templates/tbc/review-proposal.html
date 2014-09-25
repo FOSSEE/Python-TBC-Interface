@@ -71,11 +71,14 @@
                 {% ifequal proposal.proposal.status "samples" %}
                     {% if proposal.sample.sample_notebook %}
                         <h5><a href="{% static 'uploads/' %}{{ proposal.sample.sample_notebook }}">sample notebook</a><br></h5>
+                        <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.proposal.id %}">Disapprove Samples</a>
+                        <a class="btn btn-primary" href="{% url 'tbc:AllotBook' proposal.proposal.id %}">Alot Book</a>
                     {% else %}
                         <h5>Contributor has not submitted sample notebook yet.</h5>
                     {% endif %}
-                    <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.proposal.id %}">Disapprove Samples</a>
-                    <a class="btn btn-primary" href="{% url 'tbc:AllotBook' proposal.proposal.id %}">Alot Book</a>
+                {% endifequal %}
+                {% ifequal proposal.proposal.status "sample disapproved" %}
+                    <h5>Samples have been disapproved. Contributor has not resubmitted sample notebook yet.</h5>
                 {% endifequal %}
             </div>
     {% endfor %}

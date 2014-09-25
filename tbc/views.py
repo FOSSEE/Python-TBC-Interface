@@ -463,6 +463,7 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             tempbook.no_chapters = request.POST['no_chapters']
             tempbook.save()
             proposal.textbooks.add(tempbook)
+            print proposal.textbooks.all()
             add_log(curr_user, proposal, CHANGE, 'AICTE proposal' ,proposal.id)
             return HttpResponseRedirect('/?proposal=submitted')
         else:
@@ -508,7 +509,7 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
         else:
             new_proposals = Proposal.objects.filter(status="pending")
             old_proposals = []
-            proposals = Proposal.objects.filter(status='samples')
+            proposals = Proposal.objects.filter(status__in=['samples', 'sample disapproved'])
             for proposal in proposals:
                 try:
                     sample_notebook = SampleNotebook.objects.get(proposal=proposal)
@@ -541,9 +542,10 @@ def DisapproveProposal(request, proposal_id=None):
         changes_required
         add_log(request.user, proposal, CHANGE, 'Sample disapproved',
                 proposal_id, chat=subject + '\n' + changes_required)
-        email_send(proposal.user.user.email, subject, message)
         context.update(csrf(request))
         proposal.status = "sample disapproved"
+        proposal.save()
+        email_send(proposal.user.user.email, subject, message)
         return HttpResponseRedirect("/book-review/?mail_notify=done")
     else:
         context['proposal'] = proposal
@@ -593,7 +595,8 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
             old_notebook.name = request.POST.get('ch_name_old')
             old_notebook.sample_notebook = request.FILES['old_notebook']
             old_notebook.save()
-            curr_proposal.status = "sample resubmitted"
+            curr_proposal.status = "samples"
+            curr_proposal.save()
             return HttpResponseRedirect('/?sample_notebook=done')
         else:
             sample_notebook = SampleNotebook()
@@ -605,7 +608,7 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
     else:
         profile = Profile.objects.get(user=user)
         try:
-            proposal = Proposal.objects.get(user=profile, status='samples')
+            proposal = Proposal.objects.get(user=profile, status__in=['samples','sample disapproved'])
         except Proposal.DoesNotExist:
             return HttpResponseRedirect('/?cannot_submit_sample=True')
         try:

@@ -451,7 +451,7 @@ def BookDetails(request, book_id=None):
         else:
             context['user'] = request.user
     book = Book.objects.get(id=book_id)
-    chapters = Chapters.objects.filter(book=book).order_by('id')
+    chapters = Chapters.objects.filter(book=book).order_by('name','pk')
     images = ScreenShots.objects.filter(book=book)
     context['chapters'] = chapters
     context['images'] = images

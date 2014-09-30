@@ -451,8 +451,7 @@ def BookDetails(request, book_id=None):
         else:
             context['user'] = request.user
     book = Book.objects.get(id=book_id)
-    query = 'SELECT * from tbc_chapters where book_id = (SELECT id from tbc_book where id='+book_id+') ORDER BY LENGTH(name), name;'
-    chapters = Chapters.objects.raw(query)
+    chapters = Chapters.objects.filter(book=book).order_by('name')
     images = ScreenShots.objects.filter(book=book)
     context['chapters'] = chapters
     context['images'] = images
@@ -465,8 +464,7 @@ def BookReview(request, book_id=None):
     if is_reviewer(request.user):
         if book_id:
             book = Book.objects.get(id=book_id)
-            query = 'SELECT * from tbc_chapters where book_id = (SELECT id from tbc_book where id='+book_id+') ORDER BY LENGTH(name), name;'
-            chapters = Chapters.objects.raw(query)
+            chapters = Chapters.objects.filter(book=book).order_by('name')
             images = ScreenShots.objects.filter(book=book)
             context['chapters'] = chapters
             context['images'] = images

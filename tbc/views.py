@@ -451,7 +451,7 @@ def BookDetails(request, book_id=None):
         else:
             context['user'] = request.user
     book = Book.objects.get(id=book_id)
-    chapters = Chapters.objects.filter(book=book).order_by('name')
+    chapters = Chapters.objects.filter(book=book).order_by('id')
     images = ScreenShots.objects.filter(book=book)
     context['chapters'] = chapters
     context['images'] = images
@@ -464,7 +464,7 @@ def BookReview(request, book_id=None):
     if is_reviewer(request.user):
         if book_id:
             book = Book.objects.get(id=book_id)
-            chapters = Chapters.objects.filter(book=book).order_by('name')
+            chapters = Chapters.objects.filter(book=book).order_by('id')
             images = ScreenShots.objects.filter(book=book)
             context['chapters'] = chapters
             context['images'] = images

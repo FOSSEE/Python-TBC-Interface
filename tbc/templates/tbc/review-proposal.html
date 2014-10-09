@@ -62,9 +62,9 @@
                     </div>
                 {% endfor %}
                 <h5>
-                    <b>Status:</b> 
+                     
                     {% ifequal proposal.proposal.status "samples" %}
-                        Sample notebook phase
+                        <b>Status:</b> Sample notebook phase
                     {% endifequal %}
                 </h5>
                 <h5><b>Book Accepted/Alloted:</b> {{ proposal.proposal.accepted.title }}</h5>
@@ -78,7 +78,7 @@
                     {% endif %}
                 {% endifequal %}
                 {% ifequal proposal.proposal.status "sample disapproved" %}
-                    <h5>Samples have been disapproved. Contributor has not resubmitted sample notebook yet.</h5>
+                    <b>Status:</b> Samples have been disapproved. Contributor has not resubmitted sample notebook yet.
                 {% endifequal %}
             </div>
     {% endfor %}

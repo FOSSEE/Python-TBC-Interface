@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id="content-wrap" style="max-width:600px;">
-    <form action="/confirm-book-deetails/" method=POST enctype="multipart/form-data">
+    <form action="/confirm-book-details/" method=POST enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_table }}
         <br>

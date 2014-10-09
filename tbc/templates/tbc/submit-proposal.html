@@ -5,6 +5,7 @@
         {% csrf_token %}
         {% for form in book_forms %}
             <h4>Book Preference {{ forloop.counter }}</h4>
+            {{ form.errors }}
             {{ form.as_p }}
         {% endfor %}
         <hr>
@@ -69,5 +70,10 @@
                 e.preventDefault();
             });
         });
+        $( document ).ready(function() {
+            $('input[id="id_no_chapters"]').hide();
+            $('label[for="id_no_chapters"]').hide();
+        });
+
     </script>
 {% endblock %}

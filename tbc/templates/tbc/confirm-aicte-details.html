@@ -24,6 +24,8 @@ $( document ).ready(function() {
     title = document.getElementById('id_title').readOnly = true;
     author = document.getElementById('id_author').readOnly = true;
     publisher_place = document.getElementById('id_publisher_place').readOnly = true;
+    $('#id_no_chapters').hide();
+    $('label[for="id_no_chapters"]').hide();
 });
 </script>
 {% endblock %}

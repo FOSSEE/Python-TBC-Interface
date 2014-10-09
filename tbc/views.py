@@ -365,7 +365,7 @@ def SubmitProposal(request):
             textbooks = proposal.textbooks.all()
             textbooks.delete()
             for item in range(3):
-                tempbook = TempBook()
+                tempbook = TempBook(no_chapters=0)
                 tempbook.title = book_titles[item]
                 tempbook.author = book_authors[item]
                 tempbook.category = book_categories[item]
@@ -373,7 +373,6 @@ def SubmitProposal(request):
                 tempbook.isbn = book_isbns[item]
                 tempbook.edition = book_editions[item]
                 tempbook.year_of_pub = book_years[item]
-                tempbook.no_chapters = book_chapters[item]
                 tempbook.save()
                 proposal.textbooks.add(tempbook)
             add_log(curr_user, proposal, CHANGE, 'Proposed Books', proposal.id)
@@ -452,7 +451,7 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             textbooks = proposal.textbooks.all()
             if textbooks:
                 textbooks.delete()
-            tempbook = TempBook()
+            tempbook = TempBook(no_chapters=0)
             tempbook.title = book_proposed.title
             tempbook.author = book_proposed.author
             tempbook.category = book_proposed.category
@@ -460,7 +459,6 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             tempbook.isbn = book_proposed.isbn
             tempbook.edition = book_proposed.edition
             tempbook.year_of_pub = book_proposed.year_of_pub
-            tempbook.no_chapters = request.POST['no_chapters']
             tempbook.save()
             proposal.textbooks.add(tempbook)
             print proposal.textbooks.all()
@@ -566,6 +564,11 @@ def RejectProposal(request, proposal_id=None):
     context.update(csrf(request))
     proposal = Proposal.objects.get(id=proposal_id)
     if request.method == 'POST':
+        books = proposal.textbooks.all() 
+        if len(books) == 1:
+            aicte_book = AicteBook.objects.get(isbn=books[0].isbn)
+            aicte_book.proposed = False
+            aicte_book.save()
         proposal.status = 'rejected'
         proposal.save()
         remarks = request.POST['remarks']
@@ -622,33 +625,22 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
             return render_to_response('tbc/submit-sample.html', context)
 
 
-def UpdateBook(request):
+def ConfirmBookDetails(request):
     context = {}
     current_user = request.user
     user_profile = Profile.objects.get(user=current_user)
-    try:
-        book_to_update = Book.objects.get(contributor=user_profile, approved=False) or None
-    except:
-        return HttpResponseRedirect("/?not_found=True")
-    title = book_to_update.title
-    chapters = Chapters.objects.filter(book=book_to_update)
-    screenshots = ScreenShots.objects.filter(book=book_to_update)
+    proposal = Proposal.objects.get(user=user_profile, status="book alloted")
+    book_to_update = Book.objects.get(id=proposal.accepted.id)
     if request.method == 'POST':
         book_form = BookForm(request.POST, instance=book_to_update)
         if book_form.is_valid():
-            file_path = os.path.abspath(os.path.dirname(__file__))
-            file_path = file_path+"/static/uploads/"
-            directory = file_path+book_to_update.contributor.user.first_name
-            os.chdir(directory)
-            os.popen("mv '"+title+"' '"+book_to_update.title+"'")
             data = book_form.save(commit=False)
             data.contributor = user_profile
             data.save()
             context.update(csrf(request))
             context['form'] = book_form
-            proposal = Proposal.objects.get(accepted=book_to_update)
             add_log(current_user, book_to_update, CHANGE, 'Book updated', proposal.id)
-            return HttpResponseRedirect('/update-content/'+str(book_to_update.id))
+            return HttpResponseRedirect('/submit-code/')
     else:
         book_form = BookForm()
         book_form.initial['title'] = book_to_update.title
@@ -662,7 +654,7 @@ def UpdateBook(request):
         book_form.initial['reviewer'] = book_to_update.reviewer
         context.update(csrf(request))
         context['form'] = book_form
-        return render_to_response('tbc/update-book.html', context)
+        return render_to_response('tbc/confirm-details.html', context)
 
 
 def SubmitCode(request):

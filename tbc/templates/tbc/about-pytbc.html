@@ -4,62 +4,67 @@
 {% block script %}
     <script src="http://code.jquery.com/jquery-1.4.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-		$(document).ready(function(){
-		   $("#who").click(function(){
-		   	$('#details').load('{% static "templates/who.html" %}');
-		   });
-		   
-		   $("#how").click(function(){
-		   	$('#details').load('{% static "templates/how.html" %}');
-		   }); 
-		   
-		   $("#guidelines").click(function(){
-		   	$('#details').load('{% static "templates/guidelines.html" %}');
-		   }); 
-		    
-		   $("#goodies").click(function(){
-		   	$('#details').load('{% static "templates/goodie.html" %}');
-		   });
-		   
-  		   $("#disclaimer").click(function(){
-		   	$('#details').load('{% static "templates/disclaimer.html" %}');
-		   }); 
- 
-		   $("#faqs").click(function(){
-		   	$('#details').load('{% static "templates/faq.html" %}');
-		   });
+        $(document).ready(function(){
+            
+            $("#objective").click(function(){
+            $('#details').load('{% static "templates/objectives.html" %}');
+            });
 
-		   $("#contact").click(function(){
-		   	$('#details').load('{% static "templates/contactus.html" %}');
-		   });
-		 });
-	</script>
+        
+            $("#who").click(function(){
+            $('#details').load('{% static "templates/who.html" %}');
+            });
+
+            $("#how").click(function(){
+            $('#details').load('{% static "templates/how.html" %}');
+            });
+
+            $("#guidelines").click(function(){
+            $('#details').load('{% static "templates/guidelines.html" %}');
+            });
+
+            $("#goodies").click(function(){
+            $('#details').load('{% static "templates/goodie.html" %}');
+            });
+
+            $("#disclaimer").click(function(){
+            $('#details').load('{% static "templates/disclaimer.html" %}');
+            });
+
+            $("#faqs").click(function(){
+            $('#details').load('{% static "templates/faq.html" %}');
+            });
+
+            $("#contact").click(function(){
+            $('#details').load('{% static "templates/contactus.html" %}');
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
-<div class="well span3" style="width:18%;margin-left:5px;">
-    <div class="nav nav-list">
-        <ul>
-            <li><a id="who" href="#"><strong>Who can contribute ?</strong></a></li>
-            <li><a id="how" href="#"><strong>How to contribute ?</strong></a></li>
-            <li><a id="guidelines" href="#"><strong>Guidelines for Coding</strong></a></li>
-            <li><a id="goodies" href="#"><strong>Goodies</strong></a></li>
-            <li><a id="disclaimer" href="#"><strong>Disclaimer</strong></a></li>
-            <li><a id="faqs" href="#"><strong>FAQs</strong></a></li>
-            <li><a id="contact" href="#"><strong>Contact</strong></a></li>
+    <div class="well span3" style="width:18%;margin-left:5px;">
+        <div class="nav nav-list">
+            <ul>
+                <li><a id="objective" href="#"><strong>Objective</strong></a></li>
+                <li><a id="who" href="#"><strong>Who can contribute ?</strong></a></li>
+                <li><a id="how" href="#"><strong>How to contribute ?</strong></a></li>
+                <li><a id="guidelines" href="#"><strong>Guidelines for Coding</strong></a></li>
+                <li><a id="goodies" href="#"><strong>Goodies</strong></a></li>
+                <li><a id="disclaimer" href="#"><strong>Disclaimer</strong></a></li>
+                <li><a id="faqs" href="#"><strong>FAQs</strong></a></li>
+                <li><a id="contact" href="#"><strong>Contact</strong></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="well span9" id="details" style="float:right;width:74%;margin-left:5px;min-height:150px;">
+        <p>The Textbook Companion activity aims to create a repository of reference material for Python by coding solved examples of standard engineering textbooks using Python. This activity intends to,</p>
+         <ul>
+             <li>Make individuals learn Python through a practical approach</li>
+             <li>Provide a huge database of Companions as a learning resource</li>
+             <li>To make it easy for users of such textbooks to start using Python.</li>
+             <li>To improve the documentation available for Python</li>
         </ul>
     </div>
-</div>
-<div class="well span9" id="details" style="float:right;width:74%;margin-left:5px;min-height:150px;">
-    <h4>Python Textbook Companion Activity</h4>
-    <p>
-        The Textbook Companion activity aims to create a repository of reference material for Python by coding solved examples of standard engineering textbooks using Python.
-        This activity intends to -
-        <ol>
-            <li>Make individuals learn Python through a practical approach</li>
-            <li>Provide a huge database of Companions as a learning resource</li>
-        </ol>
-    </p>
-</div>
 </div>
 {% endblock %}

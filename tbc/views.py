@@ -45,6 +45,10 @@ def InternshipForms(request):
     return render_to_response('tbc/internship-forms.html', context)
 
 
+def SampleIpynb(request):
+    return render_to_response('tbc/sample.html')
+
+
 def AboutPytbc(request):
     context = {}
     images = []

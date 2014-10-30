@@ -105,6 +105,7 @@
                  <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
+                      <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book (OLD)</a></li>
                       <li><a href="{% url 'tbc:ListAICTE' %}">Submit Proposal</a></li>
                       <li><a href="{% url 'tbc:SubmitSample' %}">Submit Sample Notebook</a></li>
                       <li><a href="{% url 'tbc:ConfirmBookDetails' %}">Submit Codes</a></li>

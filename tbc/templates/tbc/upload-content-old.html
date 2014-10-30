@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script>
+function validate_content()
+{
+    no_notebooks = {{ no_notebooks }}.length;
+    for(i=1;i<=no_notebooks;i++)
+    {
+        name = document.getElementById("chapter"+i).value;
+        extension = document.getElementById("notebook"+i).value;
+        extension = extension.split(".");
+        if (extension == "" || name == "")
+        {
+            alert("Chapter names & file fields cannot be empty !!");
+            return false;
+        }
+        if(extension.slice(Math.max(extension.length - 1, 1)) == "ipynb")
+            continue;
+        else
+            alert("Oops !! You can upload only Ipython Notebooks (.ipynb extension)");    
+            return false;
+    }
+    for(i=1;i<=3;i++)
+    {
+        caption = document.getElementById("caption"+i).value;
+        extension = document.getElementById("image"+i).value;
+        extension = extension.split(".");
+        if (extension == "" || caption == "")
+        {
+            alert("Captions and file fields cannot be empty");
+            return false;
+        }
+
+        if(extension.slice(Math.max(extension.length - 1, 1)) == "png")
+            continue;
+        else
+            alert("Only .png files are allowed for screenshots");    
+            return false;
+    }
+    return true;
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<center>
+    <h4>Submitting code for the book </h4>
+    <h4> {{ curr_book.title }} by {{ curr_book.author }}</h4>
+</center>
+<hr>
+<div id="content-wrap" style="max-width:600px;">
+    <p>Upload chapters as individual IPython notebooks. Please do not use spaces to name your Ipython Notebook files. For ex.
+    use "chapter1.ipynb instead of chapter 1.ipynb"</p>
+    <form action="/submit-code-old/{{ curr_book.id }}" method=POST enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for i in no_notebooks %}
+            <input type=text id=chapter{{i}} name=chapter{{i}} placeholder="Chapter {{ forloop.counter }} name">
+            <input type=file id=notebook{{i}} name=notebook{{i}}>
+        {% endfor %}
+        <br>
+        <hr>
+        <p>Upload screenshots of Plots/Graphs/Charts(if any) "that you have plotted" and not from the textbook itself from any cahpter. If there are no plots/graphs/charts, then upload a screenshot of any chapter. Give proper caption for the screen shots. Only .png files are acceptable.</p>
+        {% for i in no_images %}
+            <input type=text id=caption{{i}} name=caption{{i}} placeholder="Caption {{ forloop.counter }}">
+            <input type=file id=image{{i}} name=image{{i}}>
+        {% endfor %}
+        <br><br>
+        <center><input class="btn btn-primary" type=submit value=submit onClick="return validate_content();"></center>
+    </form>
+</div>
+{% endblock %}

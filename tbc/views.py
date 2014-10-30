@@ -316,9 +316,7 @@ def SubmitBook(request):
             context['user'] = curr_user
             curr_book = Book.objects.order_by("-id")[0]
             curr_book_id = curr_book.id
-            proposal_id = Proposal.objects.get(accepted=curr_book)
-            add_log(curr_user, curr_book, CHANGE, 'Book submitted', proposal_id)
-            return HttpResponseRedirect('/upload-content/'+str(curr_book_id))
+            return HttpResponseRedirect('/submit-code-old/'+str(curr_book_id))
         else:
             context.update(csrf(request))
             context['form'] = form
@@ -330,6 +328,46 @@ def SubmitBook(request):
     context['form'] = form
     context['user'] = curr_user
     return render_to_response('tbc/submit-book.html', context)
+
+
+def SubmitCodeOld(request, book_id=None):
+    user = request.user
+    curr_profile = Profile.objects.get(user=user)
+    context = {}
+    curr_book = Book.objects.get(id=book_id)
+    if request.method == 'POST':
+        for i in range(1, curr_book.no_chapters+1):
+            chapter = Chapters()
+            chapter.name = request.POST['chapter'+str(i)]
+            chapter.notebook = request.FILES['notebook'+str(i)]
+            chapter.book = curr_book
+            chapter.save()
+        for i in range(1, 4):
+            screenshot = ScreenShots()
+            screenshot.caption = request.POST['caption'+str(i)]
+            screenshot.image = request.FILES['image'+str(i)]
+            screenshot.book = curr_book
+            screenshot.save()
+        subject = "Python-TBC: Book Submission"
+        message = "Hi "+curr_book.reviewer.name+",\n"+\
+                  "A book has been submitted on the Python TBC interface.\n"+\
+                  "Details of the Book & Contributor:\n"+\
+                  "Contributor: "+curr_book.contributor.user.first_name+" "+curr_book.contributor.user.last_name+"\n"+\
+                  "Book Title: "+curr_book.title+"\n"+\
+                  "Author: "+curr_book.author+"\n"+\
+                  "Publisher: "+curr_book.publisher_place+"\n"+\
+                  "ISBN: "+curr_book.isbn+"\n"+\
+                  "Follow the link to review the book: \n"+\
+                  "http://tbc-python.fossee.in/book-review/"+str(curr_book.id)
+        email_send(curr_book.reviewer.email, subject, message)
+        return HttpResponseRedirect('/?up=done')
+    else:
+        context.update(csrf(request))
+        context['user'] = user
+        context['curr_book'] = curr_book
+        context['no_notebooks'] = [i for i in range(1, curr_book.no_chapters+1)]
+        context['no_images'] = [i for i in range(1, 4)]
+        return render_to_response('tbc/upload-content-old.html', context)
 
 
 def SubmitProposal(request):
@@ -852,13 +890,17 @@ def BookReview(request, book_id=None):
             book = Book.objects.get(id=book_id)
             chapters = Chapters.objects.filter(book=book).order_by('name')
             images = ScreenShots.objects.filter(book=book)
-            proposal = Proposal.objects.get(accepted=book)
-            logs = ActivityLog.objects.filter(proposal_id=proposal.id)
-            context['logs'] = logs
+            #for old books (before automated proposal)
+            try:
+                proposal = Proposal.objects.get(accepted=book)
+                logs = ActivityLog.objects.filter(proposal_id=proposal.id)
+                context['logs'] = logs
+                context['proposal'] = proposal
+            except:
+                pass
             context['chapters'] = chapters
             context['images'] = images
             context['book'] = book
-            context['proposal'] = proposal
             context['reviewer'] = request.user
             context.update(csrf(request))
             return render_to_response('tbc/book-review-details.html', context)

@@ -31,6 +31,9 @@
         </select>
         <input type=submit value=GO>
     </form>
+    {% ifequal proposal.status 'codes disapproved' %}
+        <p>The required corrections have already been notified to the user. Kindly check the Activity Log for more details</p>
+    {% endifequal %}
 {% endif %}
 <table>
 <tr><td>Author: &nbsp;&nbsp;<td>{{ book.author }}

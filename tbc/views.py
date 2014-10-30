@@ -503,11 +503,12 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             proposal.accepted = new_book
             proposal.save()
             add_log(user, proposal, CHANGE, 'Proposal accepted', proposal.id)
-            return HttpResponse("Approved")
+            return HttpResponseRedirect("/proposal-review")
         else:
             new_proposals = Proposal.objects.filter(status="pending")
             old_proposals = []
-            proposals = Proposal.objects.filter(status__in=['samples', 'sample disapproved'])
+            old_proposal_status = ['samples', 'sample disapproved', 'sample resubmitted', 'sample submitted']
+            proposals = Proposal.objects.filter(status__in=old_proposal_status)
             for proposal in proposals:
                 try:
                     sample_notebook = SampleNotebook.objects.get(proposal=proposal)
@@ -555,7 +556,11 @@ def AllotBook(request, proposal_id=None):
     proposal = Proposal.objects.get(id=proposal_id)
     proposal.status = "book alloted"
     proposal.save()
+    subject = "Python-TBC: Book Alloted"
+    message = "Hi "+proposal.user.user.first_name+",\n"+\
+              "The book has been alloted to you."
     add_log(request.user, proposal, CHANGE, 'Book alloted', proposal_id)
+    email_send(proposal.user.user.email, subject, message)
     return HttpResponseRedirect("/book-review/?book_alloted=done")
 
 
@@ -598,7 +603,7 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
             old_notebook.name = request.POST.get('ch_name_old')
             old_notebook.sample_notebook = request.FILES['old_notebook']
             old_notebook.save()
-            curr_proposal.status = "samples"
+            curr_proposal.status = "sample resubmitted"
             curr_proposal.save()
             return HttpResponseRedirect('/?sample_notebook=done')
         else:
@@ -607,6 +612,8 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
             sample_notebook.name = request.POST.get('ch_name')
             sample_notebook.sample_notebook = request.FILES['sample_notebook']
             sample_notebook.save()
+            curr_proposal.status = "sample submitted"
+            curr_proposal.save()
             return HttpResponseRedirect('/?sample_notebook=done')
     else:
         profile = Profile.objects.get(user=user)
@@ -629,8 +636,19 @@ def ConfirmBookDetails(request):
     context = {}
     current_user = request.user
     user_profile = Profile.objects.get(user=current_user)
-    proposal = Proposal.objects.get(user=user_profile, status="book alloted")
+    try:
+        proposal = Proposal.objects.get(user=user_profile, status__in=["book alloted", "codes disapproved"])
+    except:
+        return HttpResponseRedirect('/?no_book_alloted=true')
     book_to_update = Book.objects.get(id=proposal.accepted.id)
+    if proposal.status == "codes disapproved":
+        chapters = Chapters.objects.filter(book=book_to_update)
+        screen_shots = ScreenShots.objects.filter(book=book_to_update)
+        context.update(csrf(request))
+        context['book'] = book_to_update
+        context['chapters'] = chapters
+        context['screenshots'] = screen_shots
+        return render_to_response('tbc/update-code.html', context)
     if request.method == 'POST':
         book_form = BookForm(request.POST, instance=book_to_update)
         if book_form.is_valid():
@@ -654,17 +672,40 @@ def ConfirmBookDetails(request):
         book_form.initial['reviewer'] = book_to_update.reviewer
         context.update(csrf(request))
         context['form'] = book_form
+        context['book'] = book_to_update
         return render_to_response('tbc/confirm-details.html', context)
 
 
 def SubmitCode(request):
     user = request.user
     curr_profile = Profile.objects.get(user=user)
+    context = {}
     try:
-        curr_proposal = Proposal.objects.get(user=curr_profile, status='book alloted')
+        curr_proposal = Proposal.objects.get(user=curr_profile, status__in=['book alloted', 'codes disapproved'])
         curr_book = curr_proposal.accepted
     except:
         return HttpResponseRedirect('/?no_book_alloted=true')
+    if curr_proposal.status == "codes disapproved":
+        if request.method == 'POST':
+            chapters = Chapters.objects.filter(book=curr_book)
+            screen_shots = ScreenShots.objects.filter(book=curr_book)
+            counter = 1
+            for chapter in chapters:
+                chapter.name = request.POST['chapter'+str(counter)]
+                chapter.notebook = request.FILES['notebook'+str(counter)]
+                chapter.save()
+                counter += 1
+            counter = 1
+            for screenshot in screen_shots:
+                screenshot.caption = request.POST['caption'+str(counter)]
+                screenshot.image = request.FILES['image'+str(counter)]
+                screenshot.save()
+                counter += 1
+            curr_proposal.status = "codes submitted"
+            curr_proposal.save()
+            add_log(user, curr_book, CHANGE, 'Codes & Screenshots Resubmitted',
+                curr_proposal.id)
+            return HttpResponseRedirect('/')
     if request.method == 'POST':
         for i in range(1, curr_book.no_chapters+1):
             chapter = Chapters()
@@ -680,6 +721,8 @@ def SubmitCode(request):
             screenshot.save()
         book = Book.objects.order_by("-id")[0]
         proposal = Proposal.objects.get(accepted=book)
+        proposal.status = "codes submitted"
+        proposal.save()
         subject = "Python-TBC: Book Submission"
         message = "Hi "+curr_book.reviewer.name+",\n"+\
                   "A book has been submitted on the Python TBC interface.\n"+\
@@ -698,7 +741,6 @@ def SubmitCode(request):
         email_send(book.reviewer.email, subject, message)
         return HttpResponseRedirect('/?up=done')
     else:
-        context = {}
         context.update(csrf(request))
         context['user'] = user
         context['curr_book'] = curr_book
@@ -812,6 +854,7 @@ def BookReview(request, book_id=None):
             context['chapters'] = chapters
             context['images'] = images
             context['book'] = book
+            context['proposal'] = proposal
             context['reviewer'] = request.user
             context.update(csrf(request))
             return render_to_response('tbc/book-review-details.html', context)
@@ -895,6 +938,8 @@ def NotifyChanges(request, book_id=None):
         book = Book.objects.get(id=book_id)
         proposal = Proposal.objects.get(accepted=book)
         if request.method == 'POST':
+            proposal.status = "codes disapproved"
+            proposal.save()
             changes_required = request.POST['changes_required']
             subject = "Python-TBC: Corrections Required"
             message = "Hi, "+book.contributor.user.first_name+",\n"+\

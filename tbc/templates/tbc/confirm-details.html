@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="content-wrap" style="max-width:600px;">
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Verify Details</h3>
+        </div>
+        <div class="modal-body">
+            <p>You are submitting codes for the book <br> <b>{{ book.title }} by {{ book.author }}</b>.
+            <br>Kindly verify the book details &amp; <b>enter the number of chapters</b> you will submit the codes for.</p>
+            <p>Note: Consider only those chapters which have solved examples</p></p>
+        </div>
+            <div class="modal-footer">
+            <button class="btn btn-primary" data-dismiss="modal">Ok</button>
+        </div>
+    </div>
+    <div id="chapterModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Invalid number of chapters</h3>
+        </div>
+        <div class="modal-body">
+            <p>No of chapters cannot be less than 0 or greater than 100</p>
+            <p>However, if the textbook has more than 100 chapters kindly contact the reviewer.</p>
+        </div>
+            <div class="modal-footer">
+            <button class="btn btn-primary" data-dismiss="modal">Ok</button>
+        </div>
+    </div>
+    <form action="/confirm-book-details/" method=POST enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <br>
+        <input class="btn btn-primary" type=submit onclick="return validateChapters();" value="Update Details">
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function() {
+                            $("#myModal").modal();
+                });
+                
+        function validateChapters()
+        {
+            no_chapters = document.getElementById("id_no_chapters").value
+            if (no_chapters <= 0 || no_chapters > 100)
+            {
+                $("#chapterModal").modal();
+                return false;
+            }
+            return true;
+        }
+    </script>
+{% endblock %}

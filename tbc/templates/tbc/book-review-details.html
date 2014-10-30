@@ -11,21 +11,30 @@
 {% endfor %}
 </div>
 <hr>
-<ul>
-{% for chapter in chapters %}
-    <li><a href="{% url 'tbc:ConvertNotebook' chapter.notebook %}">{{ chapter.name }}</a></li>
-{% endfor %}
-</ul>
+<table class="table table-bordered table-hover">
+    {% for chapter in chapters %}
+        <tr>
+            <td><a href="{% url 'tbc:ConvertNotebook' chapter.notebook %}">{{ chapter.name }}</a></td>
+        </tr>
+    {% endfor %}
+</table>
 <hr>
-<form action="/approve-book/{{ book.id }}" method="POST">
-{% csrf_token %}
-<select name=approve_notify>
-    <option value=none>Select an Action</option>
-    <option value="approve">Approve</option>
-    <option value="notify">Notify Changes</option>
-</select>
-<input type=submit value=GO>
-</form>
+{% if book.approved %}
+<h3>Book has been completed & approved</h3>
+{% else %}
+    <form action="/approve-book/{{ book.id }}" method="POST">
+        {% csrf_token %}
+        <select name=approve_notify>
+            <option value=none>Select an Action</option>
+            <option value="approve">Approve</option>
+            <option value="notify">Notify Changes</option>
+        </select>
+        <input type=submit value=GO>
+    </form>
+    {% ifequal proposal.status 'codes disapproved' %}
+        <p>The required corrections have already been notified to the user. Kindly check the Activity Log for more details</p>
+    {% endifequal %}
+{% endif %}
 <table>
 <tr><td>Author: &nbsp;&nbsp;<td>{{ book.author }}
 <tr><td>Publisher: &nbsp;&nbsp;<td>{{ book.publisher_place }}
@@ -33,4 +42,21 @@
 <tr><td>Contributor: &nbsp;&nbsp;<td>{{ book.contributor.user.first_name }} {{ book.contributor.user.last_name }}
 <tr><td>Email: &nbsp;&nbsp;<td>{{ book.contributor.user.email }}<br>
 </table>
+<hr>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>User</th>
+        <th>Time</th>
+        <th>Activity</th>
+        <th class="span6">Conversation</th>
+    </tr>
+{% for log in logs %}
+<tr>
+    <td> {{ log.user }} </td>
+    <td> {{ log.action_time }} </td>
+    <td> {{ log.change_message }} </td>
+    <td> {{ log.conversation|linebreaksbr }} </td>
+</tr>
+{% endfor %}
+<table>
 {% endblock %}

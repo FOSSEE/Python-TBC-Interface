@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PythonTBC import settings
+from django.contrib.admin.models import LogEntry
 
 
 CATEGORY = (("fluid mechanics", "Fluid Mechanics"),
@@ -37,7 +38,21 @@ ABOUT_PROJ = (("pythontbc website", "Python TBC Website"),
               ("mailing list", "Through Mailing List"),
               ("posters in college", "Through Posters in College"),
               ("others", "Others"))
+              
+PROPOSAL_STATUS = (("pending","Pending"),
+                   ("samples","Samples"),
+                   ("sample submitted", "Sample Submitted"),
+                   ("sample disapproved", "Sample Disapproved"),
+                   ("sample resubmitted", "Sample Resubmitted"),
+                   ("book alloted","Book Alloted"),
+                   ("codes submitted", "Codes Submitted"),
+                   ("codes disapproved", "Codes Disapproved"),
+                   ("book completed","Book Completed"),
+                   ("rejected","Rejected"))
 
+BOOK_PREFERENCE = (("book1","1st Book"),
+                   ("book2","2nd Book"),
+                   ("book3","3rd Book"))
 
 
 def get_notebook_dir(instance, filename):
@@ -48,8 +63,11 @@ def get_image_dir(instance, filename):
     return '%s/%s/screenshots/%s' % (instance.book.contributor, instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
 
 
+def get_sample_dir(instance, filename):
+    user_name = instance.proposal.user.user.first_name+instance.proposal.user.user.last_name
+    return 'sample_notebooks/%s/%s' % (user_name, filename.replace(' ', '_'))
+
 class Profile(models.Model):
-    """Model to store profile of a user."""
     user = models.ForeignKey(User)
     about = models.CharField(max_length=256)
     insti_org = models.CharField(max_length=128)
@@ -72,7 +90,6 @@ class Reviewer(models.Model):
         return '%s'%(name)
 
 class Book(models.Model):
-    """Model to store the book details"""
     title = models.CharField(max_length=500)
     author = models.CharField(max_length=300)
     category = models.CharField(max_length=32, choices=CATEGORY)
@@ -104,3 +121,58 @@ class ScreenShots(models.Model):
     def __unicode__(self):
         name = self.caption or 'ScreenShots'
         return '%s'%(name)
+        
+
+class TempBook(models.Model):
+    title = models.CharField(max_length=500)
+    author = models.CharField(max_length=300)
+    category = models.CharField(max_length=32, choices=CATEGORY)
+    publisher_place = models.CharField(max_length=150)
+    isbn = models.CharField(max_length=50)
+    edition = models.CharField(max_length=15)
+    year_of_pub = models.CharField(max_length=4)
+    no_chapters = models.IntegerField(max_length=2)
+    def __unicode__(self):
+        name = self.title or 'Book'
+        return '%s'%(name)
+        
+
+class Proposal(models.Model):
+    user = models.ForeignKey(Profile)
+    textbooks = models.ManyToManyField(TempBook, related_name="proposed_textbooks")
+    accepted = models.ForeignKey(Book, related_name="approved_textbook", blank=True,null=True)
+    status = models.CharField(max_length=20, default="Pending", choices=PROPOSAL_STATUS)
+    remarks = models.CharField(max_length=1000)
+    def __unicode__(self):
+        user = self.user.user.username or 'User'
+        return '%s'%(user)
+        
+        
+class SampleNotebook(models.Model):
+    proposal = models.ForeignKey(Proposal)
+    name = models.CharField(max_length=40)
+    sample_notebook = models.FileField(upload_to=get_sample_dir)
+    def __unicode__(self):
+        notebook = self.proposal.accepted.title or 'notebook'
+        return '%s'%(notebook)
+
+
+class ActivityLog(LogEntry):
+    proposal_id = models.IntegerField(null=True)
+    conversation = models.TextField(null=True)
+    def __unicode__(self):
+        return 'Activity log for %d' %(proposal_id)
+
+
+class AicteBook(models.Model):
+    title = models.TextField()
+    author = models.CharField(max_length=300L)
+    category = models.CharField(max_length=32L)
+    publisher_place = models.CharField(max_length=200L)
+    isbn = models.CharField(max_length=50L)
+    edition = models.CharField(max_length=15L)
+    year_of_pub = models.CharField(max_length=4L)
+    proposed = models.BooleanField(default=False)
+    def __unicode__(self):
+        notebook = self.title or 'Book'
+        return '%s'%(notebook)

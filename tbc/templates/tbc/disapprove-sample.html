@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<center><h3>Diapprove Sample Notebook</h3>
+<hr>
+<h4>Notifing Chages for book {{ proposal.accepted.title }} to {{ proposal.user.user.first_name }} {{ proposal.user.user.last_name }}</h4></center>
+<form action="/disapprove-sample-notebook/{{ proposal.id }}" method=POST enctype="multipart/form-data">
+{% csrf_token %}
+    <table>
+        <tr><td>To</td></tr>
+        <tr><td><input type="text" value="{{ proposal.user.user.email }}" readonly></td></tr>
+        <tr><td>Changes Required</td></tr>
+        <tr><td><textarea rows="15" cols="100" name="changes_required" style="width:100%;"></textarea></td></tr>
+        <tr><td><input class="btn btn-primary" type="submit" value="Send"></td></tr>
+    </table>
+</form>
+{% endblock %}

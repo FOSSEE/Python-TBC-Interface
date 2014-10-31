@@ -450,8 +450,19 @@ def ListAICTE(request):
     context = {}
     context.update(csrf(request))
     context['user'] = curr_user
-    aicte_books = AicteBook.objects.filter(proposed=0)
-    context['aicte_books'] = aicte_books
+    if request.method == "POST":
+        category = request.POST['category']
+        return HttpResponse(category)
+        context['category'] = category
+        if category == "all":
+            aicte_books = AicteBook.objects.filter(proposed=0)
+        else:
+            aicte_books = AicteBook.objects.filter(category=category, proposed=0)
+        if len(aicte_books) == 0:
+            context['no_books'] = True
+    else:
+        aicte_books = AicteBook.objects.filter(proposed=0)
+        context['aicte_books'] = aicte_books
     return render_to_response('tbc/aicte-books.html', context)
 
 

@@ -109,6 +109,7 @@ class Chapters(models.Model):
     name = models.CharField(max_length=200)
     notebook = models.FileField(upload_to=get_notebook_dir)
     book = models.ForeignKey(Book)
+    screen_shots = models.ManyToManyField('ScreenShots')
     def __unicode__(self):
         name = self.name or 'Chapter'
         return '%s'%(name)

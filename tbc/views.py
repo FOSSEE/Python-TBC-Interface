@@ -738,6 +738,7 @@ def SubmitCode(request):
         curr_book = curr_proposal.accepted
     except:
         return HttpResponseRedirect('/?no_book_alloted=true')
+    dict = {}
     if curr_proposal.status == "codes disapproved":
         if request.method == 'POST':
             chapters = Chapters.objects.filter(book=curr_book)
@@ -746,6 +747,8 @@ def SubmitCode(request):
             for chapter in chapters:
                 chapter.name = request.POST['chapter'+str(counter)]
                 chapter.notebook = request.FILES['notebook'+str(counter)]
+                dict['chapter'+str(counter)] = chapter.name
+                chapter.screen_shots.clear()
                 chapter.save()
                 counter += 1
             counter = 1
@@ -753,6 +756,12 @@ def SubmitCode(request):
                 screenshot.caption = request.POST['caption'+str(counter)]
                 screenshot.image = request.FILES['image'+str(counter)]
                 screenshot.save()
+                chapter_image = request.POST['chapter_image'+str(counter)]
+                # if chapter name is unique then no need to convert the query
+                # set to list. Instead of filter get can be used then.
+                chapter = list(Chapters.objects.filter(name=dict[chapter_image]))[-1]
+                chapter.screen_shots.add(screenshot)
+                chapter.save()
                 counter += 1
             curr_proposal.status = "codes submitted"
             curr_proposal.save()
@@ -763,6 +772,7 @@ def SubmitCode(request):
         for i in range(1, curr_book.no_chapters+1):
             chapter = Chapters()
             chapter.name = request.POST['chapter'+str(i)]
+            dict['chapter'+str(i)] = chapter.name
             chapter.notebook = request.FILES['notebook'+str(i)]
             chapter.book = curr_book
             chapter.save()
@@ -772,6 +782,10 @@ def SubmitCode(request):
             screenshot.image = request.FILES['image'+str(i)]
             screenshot.book = curr_book
             screenshot.save()
+            chapter_image = request.POST['chapter_image'+str(i)]
+            chapter = list(Chapters.objects.filter(name=dict[chapter_image]))[-1]
+            chapter.screen_shots.add(screenshot)
+            chapter.save()
         book = Book.objects.order_by("-id")[0]
         proposal = Proposal.objects.get(accepted=book)
         proposal.status = "codes submitted"

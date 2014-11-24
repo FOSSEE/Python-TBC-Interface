@@ -20,13 +20,14 @@
                 </td>
             </tr>
         {% endfor %}
+        {% if error %}
+        <div class="alert alert-danger" role="alert"><h4>Sorry could not process your certificate. Kindly contact the FOSSEE team.</h4></div>
+        {% endif %}
     </table>
 {% endblock %}
 
 
 
-        
         {% for book in completed_books %}
-        
         {% endfor %}
     </table>

@@ -16,15 +16,7 @@ import shutil
 import string
 import random
 import json
-import reportlab
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter, landscape, A4, cm
-from reportlab.lib.units import inch
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
-from reportlab.lib import colors
-from reportlab.pdfgen import canvas
-from reportlab.platypus import Paragraph, Table, TableStyle
+import subprocess
 from email.mime.text import MIMEText
 
 
@@ -1139,12 +1131,61 @@ def GetCertificate(request, book_id=None):
     context = {}
     context['user'] = user
     context['books'] = books
+    error = False
     if book_id:
-        book = Book.objects.get(id=book_id)
-        #replace this with the code for certificate.
-        return HttpResponse(book.title)
-    return render_to_response('tbc/get-certificate.html', context)
+        try:
+            book = Book.objects.get(id=book_id)
+            proposal_id = Proposal.objects.get(accepted=book_id).id
+            title = book.title
+            edition = book.edition
+            course = user_profile.course
+            department = user_profile.dept_desg
+            institute = user_profile.insti_org
+            full_name = '%s %s' %(user.first_name, user.last_name)
+            user_details = '%s, %s at %s' % (course, department, institute)
+            book_details = '%s, %s' % (title, edition)
+            template_file = open('tbc/certificate/template_certificate', 'r')
+            content = string.Template(template_file.read())
+            template_file.close()
+            content_tex = content.safe_substitute(name=full_name,
+                    details=user_details, book=book_details)
+            create_tex = open('tbc/certificate/tbc_certificate.tex', 'w')
+            create_tex.write(content_tex)
+            create_tex.close()
+            return_value = _make_tbc_certificate()
+            if return_value == 0:
+                file_name = 'tbc_certificate.pdf'
+                pdf = open('tbc/certificate/%s' % (file_name), 'r')
+                response = HttpResponse(content_type='application/pdf')
+                response['Content-Disposition'] = 'attachment; \
+                        filename=%s' % (file_name)
+                response.write(pdf.read())
+                _clean_tbc_certificate()
+                add_log(user, book, CHANGE, 'Certificate Downloaded'
+                        ,proposal_id)
+                return response
+            else:
+                error = True
+        except Exception, e:
+            error = True
     
+    if error:
+        _clean_tbc_certificate()
+        context['error'] = error
+        add_log(user, book, CHANGE, 'Certificate Download Error' ,proposal_id)
+        return render_to_response('tbc/get-certificate.html', context)
+    return render_to_response('tbc/get-certificate.html', context)
+
+def _clean_tbc_certificate():
+    clean_process = subprocess.Popen('make -C tbc/certificate/ clean',
+            shell=True)
+    clean_process.wait()
+
+def _make_tbc_certificate():
+    process = subprocess.Popen('timeout 15 make -C tbc/certificate/ tbc',
+            shell = True)
+    process.wait()
+    return process.returncode
 
 def RedirectToIpynb(request, notebook_path=None):
     context = {}

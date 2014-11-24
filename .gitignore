@@ -4,3 +4,4 @@ local.py
 uploads/
 *.swp
 *.swo
+*.bak

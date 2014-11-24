@@ -3,12 +3,12 @@
 ** Usage
    - To generate a PDF file type,
      #+BEGIN_SRC sh
-       make tbc  
+       make tbc
      #+END_SRC sh
 
-   - To clean the project 
+   - To clean the project
      #+BEGIN_SRC sh
-       make clean   
+       make clean
      #+END_SRC sh
 
 ** License

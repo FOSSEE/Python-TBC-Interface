@@ -25,7 +25,7 @@ tbc:	tbc_certificate.pdf
 tbc_certificate.pdf: tbc_certificate.tex fossee.png bashful.sty
 	pdflatex -shell-escape tbc_certificate.tex
 
-clean:	
+clean:
 	@echo "removing all tmp+pdf files"
 	-rm -rvf *.pdf *~ *.aux *.log *.vrb *.out *.toc *.nav *.snm
 	-rm -rvf *.std* *.sh

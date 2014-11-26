@@ -1135,7 +1135,10 @@ def GetCertificate(request, book_id=None):
     if book_id:
         try:
             book = Book.objects.get(id=book_id)
-            proposal_id = Proposal.objects.get(accepted=book_id).id
+            try:
+                proposal_id = Proposal.objects.get(accepted=book_id).id
+            except DoesNotExist:
+                proposal_id = None
             title = book.title
             edition = book.edition
             course = user_profile.course

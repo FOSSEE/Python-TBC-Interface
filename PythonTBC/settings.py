@@ -135,6 +135,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'tbc',
     'comments',
+    'south',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

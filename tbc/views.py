@@ -1229,4 +1229,3 @@ def ajax_matching_books(request):
         'matches': matches,
         'flag': flag
     }
-    return render_to_response('tbc/ajax-matching-books.html', context)

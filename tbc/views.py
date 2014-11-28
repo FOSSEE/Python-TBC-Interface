@@ -1132,60 +1132,73 @@ def GetCertificate(request, book_id=None):
     context['user'] = user
     context['books'] = books
     error = False
+    cur_path = os.path.dirname(os.path.realpath(__file__))
+    certificate_path = '{0}/certificate/'.format(cur_path)
     if book_id:
+        book = Book.objects.get(id=book_id)
         try:
-            book = Book.objects.get(id=book_id)
             proposal_id = Proposal.objects.get(accepted=book_id).id
-            title = book.title
-            edition = book.edition
-            course = user_profile.course
-            department = user_profile.dept_desg
-            institute = user_profile.insti_org
-            full_name = '%s %s' %(user.first_name, user.last_name)
-            user_details = '%s, %s at %s' % (course, department, institute)
-            book_details = '%s, %s' % (title, edition)
-            template_file = open('tbc/certificate/template_certificate', 'r')
+        except Proposal.DoesNotExist:
+            proposal_id = None
+        title = book.title
+        edition = book.edition
+        course = user_profile.course
+        department = user_profile.dept_desg
+        institute = user_profile.insti_org
+        gender = user_profile.gender
+        if gender == 'female':
+            pronoun = 'She'
+        else:
+            pronoun = 'He'
+        full_name = '%s %s' %(user.first_name, user.last_name)
+        user_details = '%s, %s at %s' % (course, department, institute)
+        book_details = '%s, %s' % (title, edition)
+        try:
+            template_file = open('{0}template_certificate'.format\
+                    (certificate_path), 'r')
             content = string.Template(template_file.read())
             template_file.close()
             content_tex = content.safe_substitute(name=full_name,
-                    details=user_details, book=book_details)
-            create_tex = open('tbc/certificate/tbc_certificate.tex', 'w')
+                    pronoun=pronoun, details=user_details, book=book_details)
+            create_tex = open('{0}tbc_certificate.tex'.format\
+                    (certificate_path), 'w')
             create_tex.write(content_tex)
             create_tex.close()
-            return_value = _make_tbc_certificate()
+            return_value, err = _make_tbc_certificate(certificate_path)
             if return_value == 0:
                 file_name = 'tbc_certificate.pdf'
-                pdf = open('tbc/certificate/%s' % (file_name), 'r')
+                pdf = open('{0}{1}'.format(certificate_path, file_name) , 'r')
                 response = HttpResponse(content_type='application/pdf')
                 response['Content-Disposition'] = 'attachment; \
                         filename=%s' % (file_name)
                 response.write(pdf.read())
-                _clean_tbc_certificate()
+                _clean_tbc_certificate(certificate_path)
                 add_log(user, book, CHANGE, 'Certificate Downloaded'
                         ,proposal_id)
                 return response
             else:
                 error = True
+                add_log(user, book, CHANGE, err, proposal_id)
         except Exception, e:
             error = True
+            add_log(user, book, CHANGE, e, proposal_id)
     
     if error:
-        _clean_tbc_certificate()
+        _clean_tbc_certificate(cur_path)
         context['error'] = error
-        add_log(user, book, CHANGE, 'Certificate Download Error' ,proposal_id)
         return render_to_response('tbc/get-certificate.html', context)
     return render_to_response('tbc/get-certificate.html', context)
 
-def _clean_tbc_certificate():
-    clean_process = subprocess.Popen('make -C tbc/certificate/ clean',
+def _clean_tbc_certificate(path):
+    clean_process = subprocess.Popen('make -C {0} clean'.format(path),
             shell=True)
     clean_process.wait()
 
-def _make_tbc_certificate():
-    process = subprocess.Popen('timeout 15 make -C tbc/certificate/ tbc',
-            shell = True)
-    process.wait()
-    return process.returncode
+def _make_tbc_certificate(path):
+    process = subprocess.Popen('timeout 15 make -C {0} tbc'.format(path),
+            stderr = subprocess.PIPE, shell = True)
+    err = process.communicate()[1]
+    return process.returncode, err
 
 def RedirectToIpynb(request, notebook_path=None):
     context = {}

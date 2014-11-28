@@ -9,6 +9,9 @@
 # target is not a real file
 .PHONY: help tbc clean
 
+# following line is because on server texlive is not installed system-wide
+export PATH := /usr/local/texlive/2014/bin/x86_64-linux:$(PATH)
+
 # default help
 help:
 	@echo "current make version is: "$(MAKE_VERSION)

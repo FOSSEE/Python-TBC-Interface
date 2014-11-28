@@ -1184,7 +1184,7 @@ def GetCertificate(request, book_id=None):
             add_log(user, book, CHANGE, e, proposal_id)
     
     if error:
-        _clean_tbc_certificate(cur_path)
+        _clean_tbc_certificate(certificate_path)
         context['error'] = error
         return render_to_response('tbc/get-certificate.html', context)
     return render_to_response('tbc/get-certificate.html', context)

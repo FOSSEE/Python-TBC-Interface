@@ -1212,6 +1212,7 @@ def RedirectToIpynb(request, notebook_path=None):
 # ajax views
 @csrf_exempt
 def ajax_matching_books(request):
+    print "here"
     titles = request.POST["titles"]
     titles = json.loads(titles)
     matches = []
@@ -1229,3 +1230,4 @@ def ajax_matching_books(request):
         'matches': matches,
         'flag': flag
     }
+    return render_to_response('tbc/ajax-matching-books.html', context)

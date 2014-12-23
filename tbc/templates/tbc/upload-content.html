@@ -67,7 +67,7 @@ function validate_content()
     {% endfor %}
     <br>
     <hr>
-    <p>Upload screenshots of Plots/Graphs/Charts(if any) "that you have plotted" and not from the textbook itself from any cahpter. If there are no plots/graphs/charts, then upload a screenshot of any chapter. Give proper caption for the screen shots. Only .png files are acceptable.</p>
+    <p>Upload screenshots of Plots/Graphs/Charts(if any) "that you have plotted" and not from the textbook itself from any chapter. If there are no plots/graphs/charts, then upload a screenshot of any chapter. Give proper caption for the screen shots. Only .png files are acceptable.</p>
     {% for i in no_images %}
     <input type=text id=caption{{i}} name=caption{{i}} placeholder="Caption {{ forloop.counter }}">
     <label class="label label-info" for="chapter_image{{i}}">Select Chapter: </label><select id=chapter_image{{i}} name=chapter_image{{i}}>

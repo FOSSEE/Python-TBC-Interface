@@ -41,6 +41,14 @@ function validate_content()
     return true;
 }
 </script>
+<script>
+$(document).ready(function() {
+    $(".chapters").on('change', function() {
+        var str =  "option[id='image_"+$(this).attr('id')+"']";
+        $(str).text($(this).val());
+        });
+});
+</script>
 {% endblock %}
 
 {% block content %}
@@ -55,16 +63,21 @@ function validate_content()
     <form action="/submit-code-old/{{ curr_book.id }}" method=POST enctype="multipart/form-data">
         {% csrf_token %}
         {% for i in no_notebooks %}
-            <input type=text id=chapter{{i}} name=chapter{{i}} placeholder="Chapter {{ forloop.counter }} name">
+            <input class="chapters" type=text id=chapter{{i}} name=chapter{{i}} placeholder="Chapter {{ forloop.counter }} name">
             <input type=file id=notebook{{i}} name=notebook{{i}}>
         {% endfor %}
         <br>
         <hr>
-        <p>Upload screenshots of Plots/Graphs/Charts(if any) "that you have plotted" and not from the textbook itself from any cahpter. If there are no plots/graphs/charts, then upload a screenshot of any chapter. Give proper caption for the screen shots. Only .png files are acceptable.</p>
-        {% for i in no_images %}
-            <input type=text id=caption{{i}} name=caption{{i}} placeholder="Caption {{ forloop.counter }}">
-            <input type=file id=image{{i}} name=image{{i}}>
+        <p>Upload screenshots of Plots/Graphs/Charts(if any) "that you have plotted" and not from the textbook itself from any chapter. If there are no plots/graphs/charts, then upload a screenshot of any chapter. Give proper caption for the screen shots. Only .png files are acceptable.</p>
+    {% for i in no_images %}
+    <input type=text id=caption{{i}} name=caption{{i}} placeholder="Caption {{ forloop.counter }}">
+    <label class="label label-info" for="chapter_image{{i}}">Select Chapter: </label><select id=chapter_image{{i}} name=chapter_image{{i}}>
+        {% for i in no_notebooks %}
+        <option name=image_chapter{{i}}  id=image_chapter{{i}} value = chapter{{i}}>chapter {{i}}</option>
         {% endfor %}
+    </select>
+    <input type=file id=image{{i}} name=image{{i}}>
+    {% endfor %}
         <br><br>
         <center><input class="btn btn-primary" type=submit value=submit onClick="return validate_content();"></center>
     </form>

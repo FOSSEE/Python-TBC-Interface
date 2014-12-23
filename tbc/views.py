@@ -335,11 +335,13 @@ def SubmitCodeOld(request, book_id=None):
     user = request.user
     curr_profile = Profile.objects.get(user=user)
     context = {}
+    dict = {}
     curr_book = Book.objects.get(id=book_id)
     if request.method == 'POST':
         for i in range(1, curr_book.no_chapters+1):
             chapter = Chapters()
             chapter.name = request.POST['chapter'+str(i)]
+            dict['chapter'+str(i)] = chapter.name
             chapter.notebook = request.FILES['notebook'+str(i)]
             chapter.book = curr_book
             chapter.save()
@@ -349,6 +351,10 @@ def SubmitCodeOld(request, book_id=None):
             screenshot.image = request.FILES['image'+str(i)]
             screenshot.book = curr_book
             screenshot.save()
+            chapter_image = request.POST['chapter_image'+str(i)]
+            chapter = list(Chapters.objects.filter(name=dict[chapter_image]))[-1]
+            chapter.screen_shots.add(screenshot)
+            chapter.save()
         subject = "Python-TBC: Book Submission"
         message = "Hi "+curr_book.reviewer.name+",\n"+\
                   "A book has been submitted on the Python TBC interface.\n"+\
@@ -954,9 +960,18 @@ def ApproveBook(request, book_id=None):
             book = Book.objects.get(id=book_id)
             book.approved = True
             book.save()
-            proposal = Proposal.objects.get(accepted=book)
-            proposal.status = "book completed"
-            proposal.save()
+            try:
+                proposal = Proposal.objects.get(accepted=book)
+                proposal.status = "book completed"
+                proposal.save()
+                msg = "Book Approved"
+            except Proposal.DoesNotExist:
+                proposal = Proposal()
+                proposal.user = book.contributor
+                proposal.accepted = book
+                proposal.status = "book completed"
+                proposal.save()
+                msg = "Old Book Approved"
             file_path = os.path.abspath(os.path.dirname(__file__))
             copy_path = "/".join(file_path.split("/")[1:-2])
             copy_path = "/"+copy_path+"/Python-Textbook-Companions/"
@@ -990,7 +1005,7 @@ def ApproveBook(request, book_id=None):
             "IIT Bombay, Powai, Mumbai - 400076\n"+\
             "Kindly, write Python Texbook Companion on top of the envelope.\n\n\n"+\
             "Regards,\n"+"Python TBC,\n"+"FOSSEE, IIT - Bombay"
-            add_log(user, book, CHANGE, 'Book approved', proposal.id,
+            add_log(user, book, CHANGE, msg, proposal.id,
                     chat=subject + '\n' + message)
             email_send(book.reviewer.email, subject, message)
             context['user'] = user

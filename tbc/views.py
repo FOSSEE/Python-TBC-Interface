@@ -127,6 +127,10 @@ def Home(request):
     return render_to_response('base.html', context)
 
 
+def _checkProfile(user):
+    return Profile.objects.filter(user=user).exists()
+
+
 def UserLogin(request):
     context = {}
     context.update(csrf(request))
@@ -306,6 +310,9 @@ def UpdatePassword(request):
 def SubmitBook(request):
     context = {}
     curr_user = request.user
+    if not _checkProfile(curr_user):
+        return HttpResponseRedirect("/profile/?update=profile")
+
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
@@ -333,6 +340,8 @@ def SubmitBook(request):
 
 def SubmitCodeOld(request, book_id=None):
     user = request.user
+    if not _checkProfile(user):
+        return HttpResponseRedirect("/profile/?update=profile")
     curr_profile = Profile.objects.get(user=user)
     context = {}
     dict = {}
@@ -379,6 +388,8 @@ def SubmitCodeOld(request, book_id=None):
 
 def SubmitProposal(request):
     curr_user = request.user
+    if not _checkProfile(curr_user):
+        return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=curr_user.id)
     context = {}
     context.update(csrf(request))
@@ -452,6 +463,8 @@ def SubmitProposal(request):
 
 def ListAICTE(request):
     curr_user = request.user
+    if not _checkProfile(curr_user):
+        return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=curr_user.id)
     user_proposals = Proposal.objects.filter(user=user_profile)
     context = {}
@@ -475,6 +488,8 @@ def ListAICTE(request):
 
 def SubmitAICTEProposal(request, aicte_book_id=None):
     curr_user = request.user
+    if not _checkProfile(curr_user):
+        return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=curr_user.id)
     context = {}
     context.update(csrf(request))
@@ -653,6 +668,8 @@ def RejectProposal(request, proposal_id=None):
 def SubmitSample(request, proposal_id=None, old_notebook_id=None):
     context = {}
     user = request.user
+    if not _checkProfile(user):
+        return HttpResponseRedirect("/profile/?update=profile")
     context.update(csrf(request))
     if request.method == "POST":
         curr_proposal = Proposal.objects.get(id=proposal_id)
@@ -695,6 +712,8 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
 def ConfirmBookDetails(request):
     context = {}
     current_user = request.user
+    if not _checkProfile(current_user):
+        return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=current_user)
     try:
         proposal = Proposal.objects.get(user=user_profile, status__in=["book alloted", "codes disapproved"])
@@ -738,6 +757,8 @@ def ConfirmBookDetails(request):
 
 def SubmitCode(request):
     user = request.user
+    if not _checkProfile(user):
+        return HttpResponseRedirect("/profile/?update=profile")
     curr_profile = Profile.objects.get(user=user)
     context = {}
     try:

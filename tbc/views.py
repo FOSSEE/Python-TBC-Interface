@@ -585,8 +585,8 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             message = """ Dear """+proposal.user.user.first_name+""",\n
             "Your proposal has been reviewed and the book titled """
             proposal.accepted.title+""" by """+proposal.accepted.author+""" has
-             been approved. You may now submit the sample notebook through the
-             link given below. Once the sample notebook is approved, the book
+             been approved. You may now submit the sample notebook on the
+             interface. Once the sample notebook is approved, the book
              will be alloted to you."""
             email_send(proposal.user.user.email, subject, message)
             return HttpResponseRedirect("/proposal-review")

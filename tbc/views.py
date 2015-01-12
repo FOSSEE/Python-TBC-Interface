@@ -117,7 +117,10 @@ def Home(request):
 
     books = Book.objects.filter(approved=True).order_by("-id")[0:6]
     for book in books:
-        images.append(ScreenShots.objects.filter(book=book)[0])
+        try:
+            images.append(ScreenShots.objects.filter(book=book)[0])
+        except:
+            return HttpResponse(book)
     context['images'] = images
     book_images = []
     for i in range(len(books)):
@@ -563,6 +566,14 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             proposal.accepted = new_book
             proposal.save()
             add_log(user, proposal, CHANGE, 'Proposal accepted', proposal.id)
+            subject = "Python-TBC: Proposal Reviewed"
+            message = """ Dear """+proposal.user.user.first_name+""",\n
+            "Your proposal has been reviewed and the book titled """
+            proposal.accepted.title+""" by """+proposal.accepted.author+""" has
+             been approved. You may now submit the sample notebook through the
+             link given below. Once the sample notebook is approved, the book
+             will be alloted to you."""
+            email_send(proposal.user.user.email, subject, message)
             return HttpResponseRedirect("/proposal-review")
         else:
             new_proposals = Proposal.objects.filter(status="pending")
@@ -617,8 +628,15 @@ def AllotBook(request, proposal_id=None):
     proposal.status = "book alloted"
     proposal.save()
     subject = "Python-TBC: Book Alloted"
-    message = "Hi "+proposal.user.user.first_name+",\n"+\
-              "The book has been alloted to you."
+    message = """Hi """+proposal.user.user.first_name+""",\n
+    The sample examples for the book '"""+proposal.accepted.title+"""' are correct.
+    Hence, the book is now allotted to you. A time period of 2 months from today
+    is allotted to you for completion of the book. Convert all the solved/worked
+    examples of all the chapters. You can get back to us for any queries.\n
+    Good Luck!\n\n
+
+    Regards,\n
+    FOSSEE, IIT Bombay"""
     add_log(request.user, proposal, CHANGE, 'Book alloted', proposal_id)
     email_send(proposal.user.user.email, subject, message)
     return HttpResponseRedirect("/book-review/?book_alloted=done")

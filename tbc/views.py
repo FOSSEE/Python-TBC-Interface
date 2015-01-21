@@ -128,18 +128,16 @@ def Home(request):
         book_images.append(obj)
     context['items'] = book_images
 
-    #Check if user is logged in, Fetch user's pending proposal ID
+    #Check if user is logged in and fetch user's pending proposal ID
     if context.get('user'):
         curr_user = request.user
         proposal_pos = 0
 
-        user_profile = Profile.objects.get(user=curr_user.id)
-        pending_proposal = list(Proposal.objects.filter(status="pending"))
+        user_profile = Profile.objects.filter(user=curr_user)
         user_proposal = Proposal.objects.filter(user=user_profile)
-        user_proposal_pending = user_proposal.filter(status="pending")[0]
-        if user_proposal_pending in pending_proposal:
-            proposal_position = user_proposal_pending.id
-            context['proposal_position'] = proposal_position
+        user_proposal_pending = user_proposal.filter(status="pending")
+        if user_proposal_pending:
+            context['proposal_position'] = user_proposal_pending[0].id
 
     return render_to_response('base.html', context)
 

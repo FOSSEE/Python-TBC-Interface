@@ -52,12 +52,20 @@
     </center>
 {% endif %}
 
+{% if require_login %}
+    <center>
+        <div class="alert" style="width:350px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>The requested page requires login !</p>
+        </div>
+    </center>
+    <div class="clearfix"></div>
+{% endif %}
+
+
 <div id="content-wrap" style="max-width: 400px;">
 <h3>Login</h3>
 <hr>
-    {% if require_login %}
-    <p>The requsted page requires login.</p>
-    {% endif %}
     <form action="/login/" method=POST enctype="multipart/form-data">
     {% csrf_token %}
         {{ form.as_p }}

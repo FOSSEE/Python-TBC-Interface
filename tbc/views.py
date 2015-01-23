@@ -324,9 +324,13 @@ def UpdatePassword(request):
 
 def SubmitBook(request):
     context = {}
-    curr_user = request.user
-    if not _checkProfile(curr_user):
-        return HttpResponseRedirect("/profile/?update=profile")
+    if request.user.is_anonymous():
+        return HttpResponseRedirect("/login/?require_login=true")
+    else:
+        curr_user = request.user
+        if curr_user.isauthenticated():
+            if not _checkProfile(curr_user):
+                return HttpResponseRedirect("/profile/?update=profile")
 
     if request.method == 'POST':
         form = BookForm(request.POST)

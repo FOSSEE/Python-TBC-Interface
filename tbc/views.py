@@ -48,7 +48,7 @@ def email_send(to,subject,msg):
 
 
 def is_reviewer(user):
-    if user.groups.filter(name='reviewer').count() == 1:
+    if user.groups.filter(name='reviewer').exists():
         return True
 
 
@@ -127,6 +127,18 @@ def Home(request):
         obj = {'book':books[i], 'image':images[i]}
         book_images.append(obj)
     context['items'] = book_images
+
+    #Check if user is logged in and fetch user's pending proposal ID
+    if context.get('user'):
+        curr_user = request.user
+        proposal_pos = 0
+
+        user_profile = Profile.objects.filter(user=curr_user)
+        user_proposal = Proposal.objects.filter(user=user_profile)
+        user_proposal_pending = user_proposal.filter(status="pending")
+        if user_proposal_pending:
+            context['proposal_position'] = user_proposal_pending[0].id
+
     return render_to_response('base.html', context)
 
 
@@ -1266,7 +1278,6 @@ def RedirectToIpynb(request, notebook_path=None):
 # ajax views
 @csrf_exempt
 def ajax_matching_books(request):
-    print "here"
     titles = request.POST["titles"]
     titles = json.loads(titles)
     matches = []

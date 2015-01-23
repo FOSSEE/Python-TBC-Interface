@@ -58,6 +58,38 @@
             position: relative;
             top: -2px;
         }
+       .badge-custom {
+            padding: 1.5px 7px 1.5px;
+            font-size: 12.025px;
+            font-weight: bold;
+            white-space: nowrap;
+            color: #ffffff;
+            background-color: #f89406;
+            -webkit-border-radius: 9px;
+            -moz-border-radius: 9px;
+            border-radius: 15px;
+        }
+/*        .tooltip-custom {
+            max-width: 150px;
+            width: auto;
+            background-color: #1ABC9C;
+        }*/
+
+ /*       .tooltip-custom .tooltip-inner {
+            background-color: #1ABC9C;
+        }
+        .tooltip-custom .tooltip-arrow {
+              border-top-color: #1ABC9C;
+        }*/
+
+        .tooltip-inner {
+            background-color: #1ABC9C;
+            width: 150px;
+        }
+
+        .tooltip.bottom .tooltip-arrow {
+            border-bottom: 5px solid #1ABC9C;
+        }
     </style>
 
    {% block css %}
@@ -91,7 +123,7 @@
                   <li><a href="http://python.fossee.in" target="_blank">Python Team</a></li>
                 </ul>
               </li>
-	      <li class="dropdown">
+	            <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Textbooks<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url 'tbc:CompletedBooks' %}">Completed Books</a></li>
@@ -101,18 +133,35 @@
               <li><a href="{% url 'tbc:InternshipForms' %}">Internship Forms</a></li>
 
             {% if user %}
-                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                      <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book (OLD)</a></li>
-                      <li><a href="{% url 'tbc:ListAICTE' %}">Submit Proposal</a></li>
-                      <li><a href="{% url 'tbc:SubmitSample' %}">Submit Sample Notebook</a></li>
-                      <li><a href="{% url 'tbc:ConfirmBookDetails' %}">Submit Codes</a></li>
-                      <li><a href="{% url 'tbc:GetCertificate' %}">Get Certificate</a></li>
-                      <li><a href="{% url 'tbc:UpdatePassword' %}">Update Password</a></li>
-                      <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
-                    </ul>
-                 </li>
+                {% if proposal_position %}
+                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}<span class="badge-custom" rel="tooltip" title="Pending Proposal Position: {{ proposal_position }}" data-placement="bottom" style="margin-left:5px; margin-right:5px; display: inline-block">{{ proposal_position }}</span>
+                        <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book (OLD)</a></li>
+                          <li><a href="{% url 'tbc:ListAICTE' %}">Submit Proposal</a></li>
+                          <li><a href="{% url 'tbc:SubmitSample' %}">Submit Sample Notebook</a></li>
+                          <li><a href="{% url 'tbc:ConfirmBookDetails' %}">Submit Codes</a></li>
+                          <li><a href="{% url 'tbc:GetCertificate' %}">Get Certificate</a></li>
+                          <li><a href="{% url 'tbc:UpdatePassword' %}">Update Password</a></li>
+                          <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
+                        </ul>
+                     </li>
+
+                {% else %}
+                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book (OLD)</a></li>
+                          <li><a href="{% url 'tbc:ListAICTE' %}">Submit Proposal</a></li>
+                          <li><a href="{% url 'tbc:SubmitSample' %}">Submit Sample Notebook</a></li>
+                          <li><a href="{% url 'tbc:ConfirmBookDetails' %}">Submit Codes</a></li>
+                          <li><a href="{% url 'tbc:GetCertificate' %}">Get Certificate</a></li>
+                          <li><a href="{% url 'tbc:UpdatePassword' %}">Update Password</a></li>
+                          <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
+                        </ul>
+                     </li>
+                {% endif %}
             {% endif %}
 
             {% if reviewer %}
@@ -187,7 +236,7 @@
         <center>
             <div class="alert" style="width:650px;height:40px;">
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <p>Thank you for showing interest in contributing to Python TBC. <br>We have recevied your proposal. Please be patient we will get back to you within few days.</p>
+                <p>Thank you for showing interest in contributing to Python TBC. <br>We have received your proposal. Please be patient we will get back to you within few days.</p>
             </div>
         </center>
         <div class="clearfix"></div>
@@ -300,6 +349,11 @@
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
     g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("[rel=tooltip]").tooltip();
+  });
 </script>
 <noscript><p><img src="http://analytics.spoken-tutorial.org/piwik.php?idsite=15" style="border:0;" alt="" /></p></noscript>
 <!-- End Piwik Code -->

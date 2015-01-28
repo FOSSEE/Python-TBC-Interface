@@ -1095,7 +1095,6 @@ def NotifyChanges(request, book_id=None):
             message = "Hi, "+book.contributor.user.first_name+",\n"+\
             "Book titled, "+book.title+" requires following changes: \n"+\
             changes_required
-            return HttpResponse(message)
             context.update(csrf(request))
             add_log(request.user, book, CHANGE, msg,
                     proposal.id, chat=subject+'\n'+changes_required)

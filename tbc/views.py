@@ -637,10 +637,9 @@ def DisapproveProposal(request, proposal_id=None):
     if request.method == 'POST':
         changes_required = request.POST['changes_required']
         subject = "Python-TBC: Corrections Required in the sample notebook"
-        message = "Hi, "+proposal.user.user.first_name+",\n"+\
-        "Sample notebook for the book titled, "+proposal.accepted.title+"\
-        requires following changes: \n"+\
-        changes_required
+        message = """Hi, """+proposal.user.user.first_name+""",\n"""+\
+"""Sample notebook for the book titled, """+proposal.accepted.title+"""requires
+following changes: \n"""+changes_required
         add_log(request.user, proposal, CHANGE, 'Sample disapproved',
                 proposal_id, chat=subject + '\n' + changes_required)
         context.update(csrf(request))
@@ -1078,17 +1077,27 @@ def NotifyChanges(request, book_id=None):
     context = {}
     if is_reviewer(request.user):
         book = Book.objects.get(id=book_id)
-        proposal = Proposal.objects.get(accepted=book)
         if request.method == 'POST':
-            proposal.status = "codes disapproved"
-            proposal.save()
+            try:
+                proposal = Proposal.objects.get(accepted=book)
+                proposal.status = 'codes disapproved'
+                proposal.save()
+                msg = "Notified Changes"
+            except Proposal.DoesNotExist:
+                proposal = Proposal()
+                proposal.user = book.contributor
+                proposal.accepted = book
+                proposal.status = 'codes disapproved'
+                proposal.save()
+                msg = "Notified changes for old book"
             changes_required = request.POST['changes_required']
             subject = "Python-TBC: Corrections Required"
             message = "Hi, "+book.contributor.user.first_name+",\n"+\
             "Book titled, "+book.title+" requires following changes: \n"+\
             changes_required
+            return HttpResponse(message)
             context.update(csrf(request))
-            add_log(request.user, book, CHANGE, 'Changes notification',
+            add_log(request.user, book, CHANGE, msg,
                     proposal.id, chat=subject+'\n'+changes_required)
             email_send(book.contributor.user.email, subject, message)
             return HttpResponseRedirect("/book-review/?mail_notify=done")

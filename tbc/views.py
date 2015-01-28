@@ -1191,6 +1191,8 @@ def BooksUnderProgress(request):
             context['reviewer'] = request.user
         else:
             context['user'] = request.user
+    books_under_progress = list(Book.objects.filter(approved=False))
+    context['books_under_progress'] = books_under_progress
     return render_to_response('tbc/books_under_progress.html', context)
 
 

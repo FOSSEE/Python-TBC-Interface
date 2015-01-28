@@ -131,13 +131,16 @@ def Home(request):
     #Check if user is logged in and fetch user's pending proposal ID
     if context.get('user'):
         curr_user = request.user
-        proposal_pos = 0
-
         user_profile = Profile.objects.filter(user=curr_user)
-        user_proposal = Proposal.objects.filter(user=user_profile)
-        user_proposal_pending = user_proposal.filter(status="pending")
-        if user_proposal_pending:
-            context['proposal_position'] = user_proposal_pending[0].id
+
+        pending_proposal_list = list(Proposal.objects.filter(status="pending"))
+        try:
+            pending_user_proposal = Proposal.objects.get(user=user_profile, status="pending")
+        except:
+            pending_user_proposal = None
+
+        if pending_user_proposal:
+            context['proposal_position'] = pending_proposal_list.index(pending_user_proposal) + 1
 
     return render_to_response('base.html', context)
 

@@ -338,7 +338,7 @@ def SubmitBook(request):
             data = form.save(commit=False)
             profile = Profile.objects.get(user=request.user.id)
             data.contributor = profile
-            data.reviewer = Reviewer.objects.get(pk=1)
+            data.reviewer = Reviewer.objects.get(pk=2)
             data.save()
             context['user'] = curr_user
             curr_book = Book.objects.order_by("-id")[0]
@@ -591,7 +591,7 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             new_book.year_of_pub = accepted_book.year_of_pub
             new_book.no_chapters = accepted_book.no_chapters
             new_book.contributor = proposal.user
-            new_book.reviewer = Reviewer.objects.get(pk=1)
+            new_book.reviewer = Reviewer.objects.get(pk=2)
             new_book.save()
             proposal.status = "samples"
             proposal.accepted = new_book
@@ -638,8 +638,8 @@ def DisapproveProposal(request, proposal_id=None):
         changes_required = request.POST['changes_required']
         subject = "Python-TBC: Corrections Required in the sample notebook"
         message = """Hi, """+proposal.user.user.first_name+""",\n"""+\
-"""Sample notebook for the book titled, """+proposal.accepted.title+"""requires
-following changes: \n"""+changes_required
+"""Sample notebook for the book titled, """+proposal.accepted.title+""",\n
+requires following changes: \n"""+changes_required
         add_log(request.user, proposal, CHANGE, 'Sample disapproved',
                 proposal_id, chat=subject + '\n' + changes_required)
         context.update(csrf(request))

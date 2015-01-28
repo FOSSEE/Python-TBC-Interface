@@ -37,7 +37,7 @@ def add_log(user, object, flag, message, proposal_id=None, chat='No message'):
 def email_send(to,subject,msg):
     try:
         smtpObj = smtplib.SMTP('localhost')
-        mail_from = "textbook@fosse.in"
+        mail_from = "textbook@fossee.in"
         message = MIMEText(msg)
         message['Subject'] = subject
         message['From'] = mail_from

@@ -328,7 +328,7 @@ def SubmitBook(request):
         return HttpResponseRedirect("/login/?require_login=true")
     else:
         curr_user = request.user
-        if curr_user.isauthenticated():
+        if curr_user.is_authenticated():
             if not _checkProfile(curr_user):
                 return HttpResponseRedirect("/profile/?update=profile")
 
@@ -598,12 +598,12 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             proposal.save()
             add_log(user, proposal, CHANGE, 'Proposal accepted', proposal.id)
             subject = "Python-TBC: Proposal Reviewed"
-            message = """ Dear """+proposal.user.user.first_name+""",\n
-            "Your proposal has been reviewed and the book titled """
-            proposal.accepted.title+""" by """+proposal.accepted.author+""" has
-             been approved. You may now submit the sample notebook on the
-             interface. Once the sample notebook is approved, the book
-             will be alloted to you."""
+            message = """Dear """+proposal.user.user.first_name+""", \n\n
+            Your recent proposal for Python TBC has been reviewed and the book 
+            titled """+proposal.accepted.title+""" by """+\
+            proposal.accepted.author+""" has been approved. You may now submit
+            the sample notebook on the interface. Once the sample notebook is
+            approved, the book will be alloted to you."""
             email_send(proposal.user.user.email, subject, message)
             return HttpResponseRedirect("/proposal-review")
         else:

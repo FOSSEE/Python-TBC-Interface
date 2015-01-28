@@ -2,9 +2,19 @@
 
 {% block content %}
 <center><h2> Books Under Progress </h2></center><br/>
-    <ol>
+
+    <table class="table table-bordered table-hover">
+        <th>Sr #</th>
+        <th>Book</th>
         {% for book in books_under_progress %}
-        <li>{{ book.title }} by {{ book.author }}, {{ book.edition }}
+        <tr>
+            <td>
+                {{ forloop.counter }}
+            </td>
+            <td>
+                    <a href="{% url 'tbc:BookDetails' book.id %}">{{ book.title }} by {{ book.author }}</a>
+            </td>
+        </tr>
         {% endfor %}
-    </ol>
+    </table>
 {% endblock %}

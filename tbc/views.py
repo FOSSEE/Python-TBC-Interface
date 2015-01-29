@@ -1133,7 +1133,7 @@ def CompletedBooks(request):
 
 def BooksUnderProgress(request):
     context = {}
-    images = []
+    context.update(csrf(request))
     if request.user.is_anonymous():
         context['anonymous'] = True
     else:
@@ -1141,7 +1141,15 @@ def BooksUnderProgress(request):
             context['reviewer'] = request.user
         else:
             context['user'] = request.user
-    books_under_progress = list(Book.objects.filter(approved=False))
+    if request.method == "POST":
+        category = request.POST['category']
+        if category == "all":
+            books_under_progress = Book.objects.filter(approved=False)
+        else:
+            books_under_progress = Book.objects.filter(category=category,
+                                                       approved=False)
+    else:
+        books_under_progress = Book.objects.filter(approved=False)
     context['books_under_progress'] = books_under_progress
     return render_to_response('tbc/books_under_progress.html', context)
 

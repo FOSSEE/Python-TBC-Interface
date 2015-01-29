@@ -12,6 +12,8 @@ function submitCategory()
 {% block content %}
     <center>
         <h2> Books Under Progress </h2>
+        <hr>
+        <h4>Select Category</h4>
         <form name="underprogress" action="/books-under-progress/" method=POST enctype="multipart/form-data">
         {% csrf_token %}
         <select name="category" id="category" onchange="submitCategory();">

@@ -267,14 +267,7 @@ def ForgotPassword(request):
             user.set_password(password)
             user.save()
             subject = "PythonTBC: Password Reset"
-            message = "Dear "+user.first_name+",\n"+\
-            "Your password for PythonTBC interface has been reset."+\
-            "Your credentials are:\n"+\
-            "Username: "+user.username+\
-            "\nPassword: "+password+\
-            "\n\nKindly login with the given password and update your password through the below given link."+\
-            "\nLink: http://tbc-python.fossee.in/update-password."+\
-            "\n\nThank You !"
+            message = """Dear """+user.first_name+""",\nYour password for Python TBC interface has been reset. Your credentials are:\nUsername: """+user.username+"""\nPassword: """+password+"""\n\nKindly login with the given password and update your password through the link given below.\nLink: http://tbc-python.fossee.in/update-password.\n\nThank You !\n\nRegards,\n Python TBC Team,\nFOSSEE - IIT Bombay."""
             email_send(email, subject, message)
             form = UserLoginForm()
             context['form'] = form
@@ -387,16 +380,7 @@ def SubmitCodeOld(request, book_id=None):
             chapter.screen_shots.add(screenshot)
             chapter.save()
         subject = "Python-TBC: Book Submission"
-        message = "Hi "+curr_book.reviewer.name+",\n"+\
-                  "A book has been submitted on the Python TBC interface.\n"+\
-                  "Details of the Book & Contributor:\n"+\
-                  "Contributor: "+curr_book.contributor.user.first_name+" "+curr_book.contributor.user.last_name+"\n"+\
-                  "Book Title: "+curr_book.title+"\n"+\
-                  "Author: "+curr_book.author+"\n"+\
-                  "Publisher: "+curr_book.publisher_place+"\n"+\
-                  "ISBN: "+curr_book.isbn+"\n"+\
-                  "Follow the link to review the book: \n"+\
-                  "http://tbc-python.fossee.in/book-review/"+str(curr_book.id)
+        message = """Hi """+curr_book.reviewer.name+""",\nA book has been submitted on the Python TBC interface.\n Details of the book & contributor:\n Contributor: """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
         email_send(curr_book.reviewer.email, subject, message)
         return HttpResponseRedirect('/?up=done')
     else:
@@ -601,12 +585,7 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             proposal.save()
             add_log(user, proposal, CHANGE, 'Proposal accepted', proposal.id)
             subject = "Python-TBC: Proposal Reviewed"
-            message = """Dear """+proposal.user.user.first_name+""", \n\n
-            Your recent proposal for Python TBC has been reviewed and the book 
-            titled """+proposal.accepted.title+""" by """+\
-            proposal.accepted.author+""" has been approved. You may now submit
-            the sample notebook on the interface. Once the sample notebook is
-            approved, the book will be alloted to you."""
+            message = """Dear """+proposal.user.user.first_name+""", \n\nYour recent proposal for Python TBC has been reviewed and the book titled """+proposal.accepted.title+""" by """+proposal.accepted.author+""" has been approved. You may now submit the sample notebook on the interface. Once the sample notebook is approved, the book will be alloted to you.\n\nRegards,\nPython TBC Team\nFOSSEE - IIT Bombay"""
             email_send(proposal.user.user.email, subject, message)
             return HttpResponseRedirect("/proposal-review")
         else:
@@ -640,9 +619,7 @@ def DisapproveProposal(request, proposal_id=None):
     if request.method == 'POST':
         changes_required = request.POST['changes_required']
         subject = "Python-TBC: Corrections Required in the sample notebook"
-        message = """Hi, """+proposal.user.user.first_name+""",\n"""+\
-"""Sample notebook for the book titled, """+proposal.accepted.title+""",\n
-requires following changes: \n"""+changes_required
+        message = """Hi, """+proposal.user.user.first_name+""",\nSample notebook submitted by you for the book titled, """+proposal.accepted.title+""",\nrequires following changes: \n"""+changes_required+"""\n\nKindly make the necessary changes and upload the sample notebook again.\n\nThank You !\n\n Regards,\nPython TBC Team\nFOSSEE - IIT Bombay"""
         add_log(request.user, proposal, CHANGE, 'Sample disapproved',
                 proposal_id, chat=subject + '\n' + changes_required)
         context.update(csrf(request))
@@ -661,15 +638,7 @@ def AllotBook(request, proposal_id=None):
     proposal.status = "book alloted"
     proposal.save()
     subject = "Python-TBC: Book Alloted"
-    message = """Hi """+proposal.user.user.first_name+""",\n
-    The sample examples for the book '"""+proposal.accepted.title+"""' are correct.
-    Hence, the book is now allotted to you. A time period of 2 months from today
-    is allotted to you for completion of the book. Convert all the solved/worked
-    examples of all the chapters. You can get back to us for any queries.\n
-    Good Luck!\n\n
-
-    Regards,\n
-    FOSSEE, IIT Bombay"""
+    message = """Hi """+proposal.user.user.first_name+""",\n The sample examples for the book '"""+proposal.accepted.title+"""' are correct. Hence, the book is now allotted to you. A time period of 2 months from today is allotted to you for completion of the book. Convert all the solved/worked examples of all the chapters. You can get back to us for any queries.\n\nGood Luck!\n\nRegards,\nPython TBC Team\nFOSSEE - IIT Bombay"""
     add_log(request.user, proposal, CHANGE, 'Book alloted', proposal_id)
     email_send(proposal.user.user.email, subject, message)
     return HttpResponseRedirect("/book-review/?book_alloted=done")
@@ -689,8 +658,7 @@ def RejectProposal(request, proposal_id=None):
         proposal.save()
         remarks = request.POST['remarks']
         subject = "Python-TBC: Rejection of Proposal"
-        message = "Dear "+proposal.user.user.first_name+"\nYour proposal has been\
-        rejected. "+request.POST.get('remarks')
+        message = """Dear """+proposal.user.user.first_name+"""\nYour recent proposal for contributing in Python TBC has been rejected for the following reasons"""+request.POST.get('remarks')+"""\nHowever, your last proposal will be saved and you can edit the same proposal or propose a fresh one again.\n\nRegards\nPython TBC Team\nFOSSEE - IIT Bombay"""
         add_log(request.user, proposal, CHANGE, 'Proposal rejected',
                 proposal.id, chat=subject + '\n' + remarks)
         email_send(proposal.user.user.email, subject, message)
@@ -855,16 +823,7 @@ def SubmitCode(request):
         proposal.status = "codes submitted"
         proposal.save()
         subject = "Python-TBC: Book Submission"
-        message = "Hi "+curr_book.reviewer.name+",\n"+\
-                  "A book has been submitted on the Python TBC interface.\n"+\
-                  "Details of the Book & Contributor:\n"+\
-                  "Contributor: "+curr_book.contributor.user.first_name+" "+curr_book.contributor.user.last_name+"\n"+\
-                  "Book Title: "+curr_book.title+"\n"+\
-                  "Author: "+curr_book.author+"\n"+\
-                  "Publisher: "+curr_book.publisher_place+"\n"+\
-                  "ISBN: "+curr_book.isbn+"\n"+\
-                  "Follow the link to review the book: \n"+\
-                  "http://tbc-python.fossee.in/book-review/"+str(curr_book.id)
+        message = """Hi """+curr_book.reviewer.name+""",\nA book has been submitted on the Python TBC interface.\n Detailf othe book & contributor:\n Contributor: """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
         log_chat = subject + '\n' + 'Book ' + curr_book.title + \
                 ' has been submitted on the Python TBC interface.'
         add_log(user, curr_book, CHANGE, 'Chapters and Screenshots added',
@@ -901,16 +860,7 @@ def UpdateContent(request, book_id=None):
             screenshot.save()
         proposal = Proposal.objects.get(accepted=current_book)
         subject = "Python-TBC: Book Updated"
-        message = "Hi "+current_book.reviewer.name+",\n"+\
-                  "Submission for a book has been updated on the Python TBC interface.\n"+\
-                  "Details of the Book & Contributor:\n"+\
-                  "Contributor: "+current_book.contributor.user.first_name+" "+current_book.contributor.user.last_name+"\n"+\
-                  "Book Title: "+current_book.title+"\n"+\
-                  "Author: "+current_book.author+"\n"+\
-                  "Publisher: "+current_book.publisher_place+"\n"+\
-                  "ISBN: "+current_book.isbn+"\n"+\
-                  "Follow the link to review the book: \n"+\
-                  "http://dev.fossee.in/book-review/"+str(current_book.id)
+        message = """Hi """+curr_book.reviewer.name+""",\nSubmission for a book has been updated on the Python TBC interface.\n Detailf othe book & contributor: \nContributor: """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
         log_chat = subject + '\n' + current_book.title +\
                 ' book has been updated on the Python TBC interface.'
         add_log(user, current_book, CHANGE, 'book updated', proposal.id,
@@ -1051,17 +1001,8 @@ def ApproveBook(request, book_id=None):
             fp.close()
             os.popen("cp -r '"+book_title+"' '"+copy_path+"'")
             subject = "Python-TBC: Book Completion"
-            message = "Hi "+book.contributor.user.first_name+",\n"+\
-            "Congratulations !\n"+\
-            "The book - "+book.title+" is now complete.\n"+\
-            "Please visit the below given link to download the forms to be filled to complete the formalities.\n"+\
-            "http://tbc-python.fossee.in/internship-forms"+"\n"+\
-            "The forms should be duly filled(fill only sections which are applicable) & submit at the following address:\n"+\
-            "Dr. Prabhu Ramachandran, \n"+\
-            "Department of Aerospace Engineering,\n"+\
-            "IIT Bombay, Powai, Mumbai - 400076\n"+\
-            "Kindly, write Python Texbook Companion on top of the envelope.\n\n\n"+\
-            "Regards,\n"+"Python TBC,\n"+"FOSSEE, IIT - Bombay"
+            message = """Hi """+book.contributor.user.first_name+""",\n
+Congratulations !\nThe book - """+book.title+""" is now complete.\nPlease visit the link given below to download the forms to be filled to complete the formalities.\nhttp://tbc-python.fossee.in/internship-forms\nThe forms should be duly filled (fill only the sections which are applicable) & submitted at the following address:\nDr. Prabhu Ramachandran,\nDepartment of Aerospace Engineering,\nIIT Bombay, Powai, Mumbai - 400076\nKindly write Python Textbook Companion on top of the envelope.\n\nThank You for you contribution !\nRegards,\n Python TBC Team,\nFOSSEE - IIT Bombay"""
             add_log(user, book, CHANGE, msg, proposal.id,
                     chat=subject + '\n' + message)
             email_send(book.reviewer.email, subject, message)

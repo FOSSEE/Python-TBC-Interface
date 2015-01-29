@@ -1036,9 +1036,7 @@ def NotifyChanges(request, book_id=None):
                 msg = "Notified changes for old book"
             changes_required = request.POST['changes_required']
             subject = "Python-TBC: Corrections Required"
-            message = "Hi, "+book.contributor.user.first_name+",\n"+\
-            "Book titled, "+book.title+" requires following changes: \n"+\
-            changes_required
+            message = """Hi, """+book.contributor.user.first_name+""",\n\nBook titled, '"""+book.title+"""' requires following changes\n"""+changes_required+"""\n\nKindly make the required corrections and submit the codes again.\n\nRegards,\nPython TBC Team\nFOSSEE - IIT Bombay"""
             context.update(csrf(request))
             add_log(request.user, book, CHANGE, msg,
                     proposal.id, chat=subject+'\n'+changes_required)

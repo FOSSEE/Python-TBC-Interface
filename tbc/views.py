@@ -114,6 +114,8 @@ def Home(request):
         context['sample_notebook'] = True
     if 'cannot_submit_sample' in request.GET:
         context['cannot_submit_sample'] =True
+    if 'bookupdate' in request.GET:
+        context['bookupdate'] =True
 
     books = Book.objects.filter(approved=True).order_by("-id")[0:6]
     for book in books:
@@ -807,7 +809,7 @@ def SubmitCode(request):
             curr_proposal.save()
             add_log(user, curr_book, CHANGE, 'Codes & Screenshots Resubmitted',
                 curr_proposal.id)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/?bookupdate=done')
     if request.method == 'POST':
         for i in range(1, curr_book.no_chapters+1):
             chapter = Chapters()

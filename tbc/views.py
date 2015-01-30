@@ -197,11 +197,12 @@ def UserRegister(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             email = request.POST['email']
-            if User.objects.get(email=email):
+            try:
+                User.objects.get(email=email)
                 context['form'] = form
                 context['DuplicateEmail'] = True
                 return render_to_response('tbc/register.html', context)
-            else:
+            except:
                 user = form.save()
                 add_log(user, user, CHANGE, 'Registered')
                 return HttpResponseRedirect('/login/?signup=done')

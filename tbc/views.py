@@ -665,7 +665,7 @@ def RejectProposal(request, proposal_id=None):
         proposal.save()
         remarks = request.POST['remarks']
         subject = "Python-TBC: Rejection of Proposal"
-        message = """Dear """+proposal.user.user.first_name+"""\nYour recent proposal for contributing in Python TBC has been rejected for the following reasons"""+request.POST.get('remarks')+"""\nHowever, your last proposal will be saved and you can edit the same proposal or propose a fresh one again.\n\nRegards\nPython TBC Team\nFOSSEE - IIT Bombay"""
+        message = """Dear """+proposal.user.user.first_name+"""\nYour recent proposal for contributing in Python TBC has been rejected for the following reasons\n"""+request.POST.get('remarks')+"""\n\nHowever, your last proposal will be saved and you can edit the same proposal or propose a fresh one again.\n\nRegards\nPython TBC Team\nFOSSEE - IIT Bombay"""
         add_log(request.user, proposal, CHANGE, 'Proposal rejected',
                 proposal.id, chat=subject + '\n' + remarks)
         email_send(proposal.user.user.email, subject, message)
@@ -738,6 +738,7 @@ def ConfirmBookDetails(request):
         context['book'] = book_to_update
         context['chapters'] = chapters
         context['screenshots'] = screen_shots
+        context['no_notebooks'] = book_to_update.no_chapters
         return render_to_response('tbc/update-code.html', context)
     if request.method == 'POST':
         book_form = BookForm(request.POST, instance=book_to_update)

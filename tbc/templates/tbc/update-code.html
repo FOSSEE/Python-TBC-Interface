@@ -9,6 +9,47 @@ $(document).ready(function() {
         });
 });
 </script>
+<script>
+function validate_content()
+{
+    no_notebooks = {{ no_notebooks }};
+    for(i=1;i<=no_notebooks;i++)
+    {
+        name = document.getElementById("chapter"+i).value;
+        extension = document.getElementById("notebook"+i).value;
+        extension = extension.split(".");
+        if (extension == "" || name == "")
+        {
+            alert("Chapter names & file fields cannot be empty !!");
+            return false;
+        }
+        if(extension.slice(Math.max(extension.length - 1, 1)) == "ipynb")
+            continue;
+        else
+            alert("Oops !! You can upload only Ipython Notebooks (.ipynb extension)");    
+            return false;
+    }
+    for(i=1;i<=3;i++)
+    {
+        caption = document.getElementById("caption"+i).value;
+        extension = document.getElementById("image"+i).value;
+        extension = extension.split(".");
+        if (extension == "" || caption == "")
+        {
+            alert("Captions and file fields cannot be empty");
+            return false;
+        }
+
+        if(extension.slice(Math.max(extension.length - 1, 1)) == "png")
+            continue;
+        else
+            alert("Only .png files are allowed for screenshots");    
+            return false;
+    }
+    return true;
+}
+</script>
+
 {% endblock %}
 {% block content %}
     <div id="content-wrap" style="max-width:600px;">
@@ -18,7 +59,7 @@ $(document).ready(function() {
             {% csrf_token %}
             {% for chapter in chapters %}
             <input class="chapters" type=text id=chapter{{forloop.counter}} name=chapter{{forloop.counter}} value="{{ chapter.name }}">
-            <input type=file name=notebook{{forloop.counter}}>
+            <input type=file name=notebook{{forloop.counter}} id=notebook{{forloop.counter}}>
             {% endfor %}
             <br>
             <hr>
@@ -33,7 +74,7 @@ $(document).ready(function() {
                 <input type=file id=image{{forloop.counter}} name=image{{forloop.counter}}>
                 {% endfor %}
                 <br><br>
-            <center><input class="btn btn-primary" type=submit value=submit></center>
+            <center><input class="btn btn-primary" type=submit value=submit onClick="return validate_content();"></center>
         </form>
     </div>
 {% endblock %}

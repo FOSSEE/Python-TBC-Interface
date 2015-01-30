@@ -1002,10 +1002,10 @@ def ApproveBook(request, book_id=None):
             os.popen("cp -r '"+book_title+"' '"+copy_path+"'")
             subject = "Python-TBC: Book Completion"
             message = """Hi """+book.contributor.user.first_name+""",\n
-Congratulations !\nThe book - """+book.title+""" is now complete.\nPlease visit the link given below to download the forms to be filled to complete the formalities.\nhttp://tbc-python.fossee.in/internship-forms\nThe forms should be duly filled (fill only the sections which are applicable) & submitted at the following address:\nDr. Prabhu Ramachandran,\nDepartment of Aerospace Engineering,\nIIT Bombay, Powai, Mumbai - 400076\nKindly write Python Textbook Companion on top of the envelope.\nIf you already sent the forms then you may kindly ignore this mail.\n\nThank You for your contribution !\nRegards,\n Python TBC Team,\nFOSSEE - IIT Bombay"""
+Congratulations !\nThe book - """+book.title+""" is now complete & published.\nPlease visit the link given below to download the forms to be filled to complete the formalities.\nhttp://tbc-python.fossee.in/internship-forms\nThe forms should be duly filled (fill only the sections which are applicable) & submitted at the following address:\nDr. Prabhu Ramachandran,\nDepartment of Aerospace Engineering,\nIIT Bombay, Powai, Mumbai - 400076\nKindly write Python Textbook Companion on top of the envelope.\nIf you already sent the forms then you may kindly ignore this mail.\n\nThank You for your contribution !\nRegards,\n Python TBC Team,\nFOSSEE - IIT Bombay"""
             add_log(user, book, CHANGE, msg, proposal.id,
                     chat=subject + '\n' + message)
-            email_send(book.reviewer.email, subject, message)
+            email_send(book.contributor.user.email, subject, message)
             context['user'] = user
             return HttpResponseRedirect("/book-review/?book_review=done")
         elif request.method == 'POST' and request.POST['approve_notify'] == "notify":

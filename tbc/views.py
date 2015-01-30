@@ -192,12 +192,19 @@ def UserLogin(request):
 
 def UserRegister(request):
     context = {}
+    context.update(csrf(request))
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            add_log(user, user, CHANGE, 'Registered')
-            return HttpResponseRedirect('/login/?signup=done')
+            email = request.POST['email']
+            if User.objects.get(email=email):
+                context['form'] = form
+                context['DuplicateEmail'] = True
+                return render_to_response('tbc/register.html', context)
+            else:
+                user = form.save()
+                add_log(user, user, CHANGE, 'Registered')
+                return HttpResponseRedirect('/login/?signup=done')
         else:
             context = {}
             context.update(csrf(request))
@@ -205,7 +212,6 @@ def UserRegister(request):
             return render_to_response('tbc/register.html', context)
     else:
         form = UserRegisterForm()
-    context.update(csrf(request))
     context['form'] = form
     return render_to_response('tbc/register.html', context)
 

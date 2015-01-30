@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.models import CHANGE
+from django.contrib.auth.decorators import login_required
 from models import *
 from tbc.forms import *
 import os
@@ -502,7 +503,10 @@ def ListAICTE(request):
 
 
 def SubmitAICTEProposal(request, aicte_book_id=None):
-    curr_user = request.user
+    if request.user.is_anonymous():
+        return HttpResponseRedirect('/login/?require_login=True')
+    else:
+        curr_user = request.user
     if not _checkProfile(curr_user):
         return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=curr_user.id)
@@ -680,7 +684,10 @@ def RejectProposal(request, proposal_id=None):
 
 def SubmitSample(request, proposal_id=None, old_notebook_id=None):
     context = {}
-    user = request.user
+    if request.user.is_anonymous():
+        return HttpResponseRedirect('/login/?require_login=True')
+    else:
+        user = request.user
     if not _checkProfile(user):
         return HttpResponseRedirect("/profile/?update=profile")
     context.update(csrf(request))
@@ -724,7 +731,10 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
 
 def ConfirmBookDetails(request):
     context = {}
-    current_user = request.user
+    if request.user.is_anonymous():
+        return HttpResponseRedirect('/login/?require_login=True')
+    else:
+        current_user = request.user
     if not _checkProfile(current_user):
         return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=current_user)
@@ -770,7 +780,10 @@ def ConfirmBookDetails(request):
 
 
 def SubmitCode(request):
-    user = request.user
+    if request.user.is_anonymous():
+        return HttpResponseRedirect('/login/?require_login=True')
+    else:
+        user = request.user
     if not _checkProfile(user):
         return HttpResponseRedirect("/profile/?update=profile")
     curr_profile = Profile.objects.get(user=user)
@@ -851,7 +864,10 @@ def SubmitCode(request):
 
 def UpdateContent(request, book_id=None):
     context = {}
-    user = request.user
+    if request.user.is_anonymous():
+        return HttpResponseRedirect('/login/?require_login=True')
+    else:
+        user = request.user
     current_book = Book.objects.get(id=book_id)
     chapters_to_update = Chapters.objects.filter(book=current_book)
     screenshots_to_update = ScreenShots.objects.filter(book=current_book)
@@ -1165,7 +1181,10 @@ def BooksUnderProgress(request):
 
 
 def GetCertificate(request, book_id=None):
-    user = request.user
+    if request.user.is_anonymous():
+        return HttpResponseRedirect('/login/?require_login=True')
+    else:
+        user = request.user
     user_profile = Profile.objects.get(user=user)
     books = Book.objects.filter(contributor=user_profile, approved=True)
     context = {}

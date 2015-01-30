@@ -478,7 +478,10 @@ def SubmitProposal(request):
 
 
 def ListAICTE(request):
-    curr_user = request.user
+    if request.user.is_anonymous():
+        return HttpResponseRedirect('/login/?require_login=True')
+    else:
+        curr_user = request.user
     if not _checkProfile(curr_user):
         return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=curr_user.id)

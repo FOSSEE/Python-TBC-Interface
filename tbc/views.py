@@ -198,7 +198,7 @@ def UserRegister(request):
         if form.is_valid():
             email = request.POST['email']
             try:
-                User.objects.get(email=email)
+                check_email = User.objects.get(email=email)
                 context['form'] = form
                 context['DuplicateEmail'] = True
                 return render_to_response('tbc/register.html', context)

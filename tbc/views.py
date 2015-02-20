@@ -1178,8 +1178,6 @@ def GetCertificate(request, book_id=None):
             proposal_id = None
         title = book.title
         edition = book.edition
-        course = user_profile.course
-        department = user_profile.dept_desg
         institute = user_profile.insti_org
         gender = user_profile.gender
         if gender == 'female':

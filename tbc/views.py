@@ -1204,8 +1204,6 @@ def GetCertificate(request, book_id=None):
             proposal_id = None
         title = book.title
         edition = book.edition
-        course = user_profile.course
-        department = user_profile.dept_desg
         institute = user_profile.insti_org
         gender = user_profile.gender
         if gender == 'female':
@@ -1213,8 +1211,8 @@ def GetCertificate(request, book_id=None):
         else:
             pronoun = 'He'
         full_name = '%s %s' %(user.first_name, user.last_name)
-        user_details = '%s, %s at %s' % (course, department, institute)
-        book_details = '%s, %s' % (title, edition)
+        user_details = 'from %s' % (institute)
+        book_details = '%s, %s edition' % (title, edition)
         try:
             template_file = open('{0}template_certificate'.format\
                     (certificate_path), 'r')

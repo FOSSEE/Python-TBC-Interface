@@ -1187,8 +1187,8 @@ def GetCertificate(request, book_id=None):
         else:
             pronoun = 'He'
         full_name = '%s %s' %(user.first_name, user.last_name)
-        user_details = '%s, %s at %s' % (course, department, institute)
-        book_details = '%s, %s' % (title, edition)
+        user_details = 'from %s' % (institute)
+        book_details = '%s, %s edition' % (title, edition)
         try:
             template_file = open('{0}template_certificate'.format\
                     (certificate_path), 'r')

@@ -272,7 +272,7 @@ def UpdateProfile(request):
             return HttpResponseRedirect('/')
         else:
             context['form'] = form
-            return render_to_response('tbc/profile.html', context)
+            return render_to_response('tbc/update-profile.html', context)
     else:
         form = UserProfileForm()
         form.initial['about'] = user_profile.about
@@ -284,7 +284,7 @@ def UpdateProfile(request):
         form.initial['phone_no'] = user_profile.phone_no
         form.initial['about_proj'] = user_profile.about_proj
     context['form'] = form
-    return render_to_response('tbc/profile.html', context)
+    return render_to_response('tbc/update-profile.html', context)
 
 def UserLogout(request):
     user = request.user

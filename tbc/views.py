@@ -252,6 +252,40 @@ def UserProfile(request):
         return HttpResponseRedirect('/login/?require_login=True')
 
 
+def UpdateProfile(request):
+    user = request.user
+    context = {}
+    context.update(csrf(request))
+    if user.is_anonymous():
+        return HttpResponseRedirect('/login/?require_login=True')
+    if not _checkProfile(user):
+        return HttpResponseRedirect("/profile/?update=profile")
+    context['user'] = user   
+    user_profile = Profile.objects.get(user=user)
+    if request.method == "POST":
+        form = UserProfileForm(request.POST)
+        if form.is_valid():
+            data = form.save(commit=False)
+            data.user = request.user
+            data.save()
+            add_log(user, user, CHANGE,'Profile entry')
+            return HttpResponseRedirect('/')
+        else:
+            context['form'] = form
+            return render_to_response('tbc/profile.html', context)
+    else:
+        form = UserProfileForm()
+        form.initial['about'] = user_profile.about
+        form.initial['insti_org'] = user_profile.insti_org
+        form.initial['course'] = user_profile.course
+        form.initial['dept_desg'] = user_profile.dept_desg
+        form.initial['dob'] = user_profile.dob
+        form.initial['gender'] = user_profile.gender
+        form.initial['phone_no'] = user_profile.phone_no
+        form.initial['about_proj'] = user_profile.about_proj
+    context['form'] = form
+    return render_to_response('tbc/profile.html', context)
+
 def UserLogout(request):
     user = request.user
     if user.is_authenticated() and user.is_active:

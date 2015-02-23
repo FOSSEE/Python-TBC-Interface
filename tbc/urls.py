@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^login/$', 'tbc.views.UserLogin', name='UserLogin'),
     url(r'^logout/$', 'tbc.views.UserLogout', name='UserLogout'),
     url(r'^profile/$', 'tbc.views.UserProfile', name='UserProfile'),
+    url(r'^update-profile/$', 'tbc.views.UpdateProfile', name='UpdateProfile'),
     url(r'^forgot-password/$', 'tbc.views.ForgotPassword', name='ForgotPassword'),
     url(r'^update-password/$', 'tbc.views.UpdatePassword', name='UpdatePassword'),
     

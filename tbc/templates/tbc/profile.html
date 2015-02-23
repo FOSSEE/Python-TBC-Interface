@@ -10,9 +10,12 @@
     <div class="clearfix"></div>
 {% endif %}
 <div id="content-wrap" style="max-width:600px;">
+    <h3>Update Your Profile</h3>
+    <hr>
     <form action="/profile/" method=POST>
         {% csrf_token %}
         {{ form.as_p }}
+        {{ form.errors }}
         <br>
         <input class="btn btn-primary" type=submit value=submit>
     </form>

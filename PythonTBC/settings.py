@@ -56,12 +56,14 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = join(PROJDIR, '../tbc/static/uploads')
+MEDIA_ROOT = '/home/hardik/Virtualenvs/PythonTBC/Python-Textbook-Companions'
+#MEDIA_ROOT = join(PROJDIR, '../tbc/static/uploads')
+#print PROJDIR
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = '/tbc/static/uploads/'
+MEDIA_URL = '/Python-Textbook-Companions/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -79,6 +81,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     join(PROJDIR, '../tbc/static'),
+    '/home/hardik/PythonTBC'
 )
 
 # List of finder classes that know how to find static files in
@@ -120,7 +123,8 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     join(PROJDIR, '../tbc/templates'),
     join(PROJDIR, '../tbc/static/uploads'),
-    join(PROJDIR, '../comments/templates')
+    join(PROJDIR, '../comments/templates'),
+    '/home/hardik/Virtualenvs/PythonTBC/Python-Textbook-Companions'
 )
 INSTALLED_APPS = (
     'django.contrib.auth',

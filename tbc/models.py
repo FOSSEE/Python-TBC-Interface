@@ -56,11 +56,11 @@ BOOK_PREFERENCE = (("book1","1st Book"),
 
 
 def get_notebook_dir(instance, filename):
-    return '%s/%s/%s' % (instance.book.contributor, instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
+    return '%s/%s' % (instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
 
 
 def get_image_dir(instance, filename):
-    return '%s/%s/screenshots/%s' % (instance.book.contributor, instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
+    return '%s/screenshots/%s' % (instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
 
 
 def get_sample_dir(instance, filename):

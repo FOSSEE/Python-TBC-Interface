@@ -9,6 +9,7 @@ from django.contrib.admin.models import CHANGE
 from django.contrib.auth.decorators import login_required
 from models import *
 from tbc.forms import *
+import local
 import os
 import zipfile
 import StringIO
@@ -1151,8 +1152,7 @@ def BrowseBooks(request):
 
 def ConvertNotebook(request, notebook_path=None):
     context = {}
-    path = os.path.abspath(os.path.dirname(__file__))
-    path = path+"/static/uploads/"
+    path = local.path
     path = path+notebook_path
     notebook_name = path.split("/")[-1:]
     notebook_name = notebook_name[0].split(".")[0]
@@ -1160,13 +1160,11 @@ def ConvertNotebook(request, notebook_path=None):
     path = "/".join(path)+"/"
     os.chdir(path)
     try:
-        template = path.split("/")[8:]
-        template = "/".join(template)+notebook_name+".html"
+        template = path+notebook_name+".html"
         return render_to_response(template, {})
     except:
         os.popen("ipython nbconvert --to html \""+path+notebook_name+".ipynb\"")
-        template = path.split("/")[8:]
-        template = "/".join(template)+notebook_name+".html"
+        template = path+notebook_name+".html"
         return render_to_response(template, {})
 
 

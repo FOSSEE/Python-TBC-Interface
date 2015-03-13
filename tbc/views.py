@@ -9,6 +9,7 @@ from django.contrib.admin.models import CHANGE
 from django.contrib.auth.decorators import login_required
 from models import *
 from tbc.forms import *
+import local
 import os
 import zipfile
 import StringIO
@@ -1028,8 +1029,22 @@ def ApproveBook(request, book_id=None):
     if is_reviewer(request.user):
         if request.method == 'POST' and request.POST['approve_notify'] == "approve":
             book = Book.objects.get(id=book_id)
-            book.approved = True
-            book.save()
+            file_path = local.path
+            book_title = book.title.replace(" ", "_")
+            directory = file_path+book_title
+            os.chdir(directory)
+            fp = open(directory+"/README.txt", 'w')
+            fp.write("Contributed By: "+book.contributor.user.first_name+" "+book.contributor.user.last_name+"\n")
+            fp.write("Course: "+book.contributor.course+"\n")
+            fp.write("College/Institute/Organization: "+book.contributor.insti_org+"\n")
+            fp.write("Department/Designation: "+book.contributor.dept_desg+"\n")
+            fp.write("Book Title: "+book.title+"\n")
+            fp.write("Author: "+book.author+"\n")
+            fp.write("Publisher: "+book.publisher_place+"\n")
+            fp.write("Year of publication: "+book.year_of_pub+"\n")
+            fp.write("Isbn: "+book.isbn+"\n")
+            fp.write("Edition: "+book.edition)
+            fp.close()
             try:
                 proposal = Proposal.objects.get(accepted=book)
                 proposal.status = "book completed"
@@ -1042,27 +1057,8 @@ def ApproveBook(request, book_id=None):
                 proposal.status = "book completed"
                 proposal.save()
                 msg = "Old Book Approved"
-            file_path = os.path.abspath(os.path.dirname(__file__))
-            copy_path = "/".join(file_path.split("/")[1:-2])
-            copy_path = "/"+copy_path+"/Python-Textbook-Companions/"
-            file_path = file_path+"/static/uploads/"
-            directory = file_path+book.contributor.user.first_name
-            os.chmod(directory, 0777)
-            os.chdir(directory)
-            book_title = book.title.replace(" ", "_")
-            fp = open(book_title+"/README.txt", 'w')
-            fp.write("Contributed By: "+book.contributor.user.first_name+" "+book.contributor.user.last_name+"\n")
-            fp.write("Course: "+book.contributor.course+"\n")
-            fp.write("College/Institute/Organization: "+book.contributor.insti_org+"\n")
-            fp.write("Department/Designation: "+book.contributor.dept_desg+"\n")
-            fp.write("Book Title: "+book.title+"\n")
-            fp.write("Author: "+book.author+"\n")
-            fp.write("Publisher: "+book.publisher_place+"\n")
-            fp.write("Year of publication: "+book.year_of_pub+"\n")
-            fp.write("Isbn: "+book.isbn+"\n")
-            fp.write("Edition: "+book.edition)
-            fp.close()
-            os.popen("cp -r '"+book_title+"' '"+copy_path+"'")
+            book.approved = True
+            book.save()
             subject = "Python-TBC: Book Completion"
             message = """Hi """+book.contributor.user.first_name+""",\n
 Congratulations !\nThe book - """+book.title+""" is now complete & published.\nPlease visit the link given below to download the forms to be filled to complete the formalities.\nhttp://tbc-python.fossee.in/internship-forms\nThe forms should be duly filled (fill only the sections which are applicable) & submitted at the following address:\nDr. Prabhu Ramachandran,\nDepartment of Aerospace Engineering,\nIIT Bombay, Powai, Mumbai - 400076\nKindly write Python Textbook Companion on top of the envelope.\nIf you already sent the forms then you may kindly ignore this mail.\n\nThank You for your contribution !\nRegards,\n Python TBC Team,\nFOSSEE - IIT Bombay"""
@@ -1151,8 +1147,7 @@ def BrowseBooks(request):
 
 def ConvertNotebook(request, notebook_path=None):
     context = {}
-    path = os.path.abspath(os.path.dirname(__file__))
-    path = path+"/static/uploads/"
+    path = local.path
     path = path+notebook_path
     notebook_name = path.split("/")[-1:]
     notebook_name = notebook_name[0].split(".")[0]
@@ -1160,13 +1155,11 @@ def ConvertNotebook(request, notebook_path=None):
     path = "/".join(path)+"/"
     os.chdir(path)
     try:
-        template = path.split("/")[8:]
-        template = "/".join(template)+notebook_name+".html"
+        template = path+notebook_name+".html"
         return render_to_response(template, {})
     except:
         os.popen("ipython nbconvert --to html \""+path+notebook_name+".ipynb\"")
-        template = path.split("/")[8:]
-        template = "/".join(template)+notebook_name+".html"
+        template = path+notebook_name+".html"
         return render_to_response(template, {})
 
 

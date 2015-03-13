@@ -20,9 +20,9 @@ function redirectToIpynb(notebook)
 {% for image in images %}
     <div class ="module-list">
         {% if image.chapters_set.get.notebook %}
-            <a href="{% url 'tbc:ConvertNotebook' image.chapters_set.get.notebook %}"><img src="{% static 'uploads/' %}{{ image.image }}"></a>
+            <a href="{% url 'tbc:ConvertNotebook' image.chapters_set.get.notebook %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}"></a>
         {% else %}
-            <img src="{% static 'uploads/' %}{{ image.image }}">
+            <img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}">
         {% endif %}
         <center><p style="margin-top:30px;">{{ image.caption }}</p></center>
     </div>

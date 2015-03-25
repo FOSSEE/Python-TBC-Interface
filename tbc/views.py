@@ -879,10 +879,8 @@ def SubmitCode(request):
             chapter = list(Chapters.objects.filter(name=dict[chapter_image]))[-1]
             chapter.screen_shots.add(screenshot)
             chapter.save()
-        book = Book.objects.order_by("-id")[0]
-        proposal = Proposal.objects.get(accepted=book)
-        proposal.status = "codes submitted"
-        proposal.save()
+        curr_proposal.status = "codes submitted"
+        curr_proposal.save()
         subject = "Python-TBC: Book Submission"
         message = """Hi """+curr_book.reviewer.name+""",\nA book has been submitted on the Python TBC interface.\n Detailf othe book & contributor:\n Contributor: """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
         log_chat = subject + '\n' + 'Book ' + curr_book.title + \

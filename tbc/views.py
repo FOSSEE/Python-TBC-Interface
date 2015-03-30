@@ -137,7 +137,7 @@ def Home(request):
         curr_user = request.user
         user_profile = Profile.objects.filter(user=curr_user)
 
-        pending_proposal_list = list(Proposal.objects.filter(status="pending"))
+        pending_proposal_list = list(Proposal.objects.filter(status="pending").order_by('id'))
         try:
             pending_user_proposal = Proposal.objects.get(user=user_profile, status="pending")
         except:
@@ -640,7 +640,7 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             email_send(proposal.user.user.email, subject, message)
             return HttpResponseRedirect("/proposal-review")
         else:
-            new_proposals = Proposal.objects.filter(status="pending")
+            new_proposals = Proposal.objects.filter(status="pending").order_by('id')
             old_proposals = []
             old_proposal_status = ['samples', 'sample disapproved', 'sample resubmitted', 'sample submitted']
             proposals = Proposal.objects.filter(status__in=old_proposal_status)

@@ -70,7 +70,7 @@
                 <h5><b>Book Accepted/Alloted:</b> {{ proposal.proposal.accepted.title }}</h5>
                 {% ifequal proposal.proposal.status "sample resubmitted" %}
                     {% if proposal.sample.sample_notebook %}
-                        <h5><a href="{% static 'uploads/' %}{{ proposal.sample.sample_notebook }}">sample notebook</a><br></h5>
+                        <h5><a href="{% static 'Python-Textbook-Companions/' %}{{ proposal.sample.sample_notebook }}">sample notebook</a><br></h5>
                         <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.proposal.id %}">Disapprove Samples</a>
                         <a class="btn btn-primary" href="{% url 'tbc:AllotBook' proposal.proposal.id %}">Alot Book</a>
                         <h5>This is resubmission of the sample notebook</h5>
@@ -80,7 +80,7 @@
                 {% endifequal %}
                 {% ifequal proposal.proposal.status "sample submitted" %}
                     {% if proposal.sample.sample_notebook %}
-                        <h5><a href="{% static 'uploads/' %}{{ proposal.sample.sample_notebook }}">sample notebook</a><br></h5>
+                        <h5><a href="{% static 'Python-Textbook-Companions/' %}{{ proposal.sample.sample_notebook }}">sample notebook</a><br></h5>
                         <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.proposal.id %}">Disapprove Samples</a>
                         <a class="btn btn-primary" href="{% url 'tbc:AllotBook' proposal.proposal.id %}">Alot Book</a>
                     {% else %}

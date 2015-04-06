@@ -2,6 +2,11 @@ from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.core.exceptions import ValidationError
+from django.forms.formsets import formset_factory
+from django.forms.formsets import BaseFormSet
+import datetime
+import re
 
 from tbc.models import *
 
@@ -60,6 +65,39 @@ class BookForm(forms.ModelForm):
         self.fields['edition'].label = "Book Edition"
         self.fields['year_of_pub'].label = "Year of Publication"
         self.fields['no_chapters'].label = "Number of Chapters"
+
+    def clean_isbn(self):
+        try:
+            isbn = self.cleaned_data["isbn"]
+        except:
+            return self.cleaned_data["isbn"]
+
+        # Validate ISBN number
+        if len(isbn) not in [10,13]:
+            raise ValidationError({'isbn': ["ISBN no. must be 10 digits or 13 digits long",]})
+
+        has_alpha_or_symbols = bool(re.search('[a-z!-/:-@[-`{-~]', isbn, re.IGNORECASE))
+        if has_alpha_or_symbols:
+            raise ValidationError({'isbn': ["ISBN No. cannot contain alphabet \
+                                    or special characters like '-'",]})
+
+        return  self.cleaned_data["isbn"]
+
+    def clean_year_of_pub(self):
+        try:
+            submitted_year_of_pub = self.cleaned_data['year_of_pub']
+            formatted_year_of_pub = datetime.datetime.strptime(submitted_year_of_pub, "%Y")
+        except:
+            return self.cleaned_data['year_of_pub']
+
+        current_date = datetime.datetime.now()
+
+        # Validate year_of_pub
+        if formatted_year_of_pub.year > current_date.year:
+            raise ValidationError({'year_of_pub': ["Enter a valid Year of Publication",]})
+
+        return self.cleaned_data['year_of_pub']
+
     class Meta:
         model = Book
         exclude = ('contributor', 'approved', 'reviewer')
@@ -72,3 +110,5 @@ class BookForm(forms.ModelForm):
         'year_of_pub':forms.TextInput(attrs={'placeholder':'Year when the Book was published'}),
         'no_chapters':forms.TextInput(attrs={'placeholder':'Total number of chapters in the Book (only include chapters that have solved examples)'}),
         }
+
+BookFormSet = formset_factory(BookForm, extra=3, max_num=3) # formset=BaseBookFormSet

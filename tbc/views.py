@@ -458,56 +458,64 @@ def SubmitProposal(request):
 
     if can_submit_new:
         if request.method == 'POST':
-            try:
-                proposal = Proposal.objects.get(id=proposal_id)
-            except:
-                proposal = Proposal()
-            proposal.user = user_profile
-            proposal.status = 'Pending'
-            proposal.save()
-            book_titles = request.POST.getlist('title')
-            book_authors = request.POST.getlist('author')
-            book_categories = request.POST.getlist('category')
-            book_pubs = request.POST.getlist('publisher_place')
-            book_isbns = request.POST.getlist('isbn')
-            book_editions = request.POST.getlist('edition')
-            book_years = request.POST.getlist('year_of_pub')
-            book_chapters = request.POST.getlist('no_chapters')
-            textbooks = proposal.textbooks.all()
-            textbooks.delete()
-            for item in range(3):
-                tempbook = TempBook(no_chapters=0)
-                tempbook.title = book_titles[item]
-                tempbook.author = book_authors[item]
-                tempbook.category = book_categories[item]
-                tempbook.publisher_place = book_pubs[item]
-                tempbook.isbn = book_isbns[item]
-                tempbook.edition = book_editions[item]
-                tempbook.year_of_pub = book_years[item]
-                tempbook.save()
-                proposal.textbooks.add(tempbook)
-            add_log(curr_user, proposal, CHANGE, 'Proposed Books', proposal.id)
-            return HttpResponseRedirect('/?proposal=submitted')
-        else:
-            book_forms = []
-            for i in range(3):
-                form = BookForm()
-                if proposal_id:
+            formset = BookFormSet(request.POST)
+            if formset.is_valid():
+                try:
                     proposal = Proposal.objects.get(id=proposal_id)
-                    textbooks = proposal.textbooks.all()
-                    if len(textbooks) == 3:
-                        form.initial['title'] = textbooks[i].title
-                        form.initial['author'] = textbooks[i].author
-                        form.initial['category'] = textbooks[i].category
-                        form.initial['publisher_place'] = textbooks[i].publisher_place
-                        form.initial['isbn'] = textbooks[i].isbn
-                        form.initial['edition'] = textbooks[i].edition
-                        form.initial['year_of_pub'] = textbooks[i].year_of_pub
-                        form.initial['no_chapters'] = textbooks[i].no_chapters
+                except:
+                    proposal = Proposal()
+                proposal.user = user_profile
+                proposal.status = 'Pending'
+                proposal.save()
+                book_titles = request.POST.getlist('title')
+                book_authors = request.POST.getlist('author')
+                book_categories = request.POST.getlist('category')
+                book_pubs = request.POST.getlist('publisher_place')
+                book_isbns = request.POST.getlist('isbn')
+                book_editions = request.POST.getlist('edition')
+                book_years = request.POST.getlist('year_of_pub')
+                book_chapters = request.POST.getlist('no_chapters')
+                textbooks = proposal.textbooks.all()
+                textbooks.delete()
+                for item in range(3):
+                    tempbook = TempBook(no_chapters=0)
+                    tempbook.title = book_titles[item]
+                    tempbook.author = book_authors[item]
+                    tempbook.category = book_categories[item]
+                    tempbook.publisher_place = book_pubs[item]
+                    tempbook.isbn = book_isbns[item]
+                    tempbook.edition = book_editions[item]
+                    tempbook.year_of_pub = book_years[item]
+                    tempbook.save()
+                    proposal.textbooks.add(tempbook)
+                add_log(curr_user, proposal, CHANGE, 'Proposed Books', proposal.id)
+                return HttpResponseRedirect('/?proposal=submitted')
+            else:
+                context['book_forms'] = formset
+                return render_to_response('tbc/submit-proposal.html', context)
 
-                book_forms.append(form)
-            context['book_forms'] = book_forms
+        else:
+            formset = BookFormSet()
+            if proposal_id:
+                proposal = Proposal.objects.get(id=proposal_id)
+                textbooks = proposal.textbooks.all()
+                if len(textbooks) == 3:
+                    initial_proposal_data = []
+                    for i in range(3):
+                        initial_proposal_data.append({'title': textbooks[i].title,
+                                                'author': textbooks[i].author,
+                                                'category': textbooks[i].category,
+                                                'publisher_place': textbooks[i].publisher_place,
+                                                'isbn': textbooks[i].isbn,
+                                                'edition': textbooks[i].edition,
+                                                'year_of_pub': textbooks[i].year_of_pub,
+                                                'no_chapters': textbooks[i].no_chapters
+                                                })
+                    formset = ArticleFormSet(initial=initial_proposal_data)
+
+            context['book_forms'] = formset
             return render_to_response('tbc/submit-proposal.html', context)
+
     else:
         return HttpResponseRedirect('/?proposal_pending=True')
 
@@ -593,7 +601,6 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             tempbook.year_of_pub = book_proposed.year_of_pub
             tempbook.save()
             proposal.textbooks.add(tempbook)
-            print proposal.textbooks.all()
             add_log(curr_user, proposal, CHANGE, 'AICTE proposal' ,proposal.id)
             return HttpResponseRedirect('/?proposal=submitted')
         else:

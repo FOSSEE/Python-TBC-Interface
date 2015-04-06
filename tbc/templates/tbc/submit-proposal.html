@@ -3,16 +3,31 @@
 <div id="content-wrap" style="max-width:600px;">
     <form id="proposal-form" action="/submit-proposal/" method=POST enctype="multipart/form-data">
         {% csrf_token %}
+        {{ book_forms.management_form }}
         {% for form in book_forms %}
             <h4>Book Preference {{ forloop.counter }}</h4>
-            {{ form.errors }}
-            {{ form.as_p }}
+                <p> Title
+                <p> {{ form.title }}{{ form.title.errors }}
+                <p> Author
+                <p> {{ form.author }}{{form.author.errors}}
+                <p> Category
+                <p> {{ form.category }}{{form.category.errors}}
+                <p> Publisher with Place
+                <p> {{ form.publisher_place }}{{form.publisher_place.errors}}
+                <p> ISBN No.
+                <p> {{ form.isbn }}{{form.isbn.errors}}
+                <p> Book Edition
+                <p> {{ form.edition }}{{form.edition.errors}}
+                <p> Year Of Publication
+                <p> {{ form.year_of_pub }}{{form.year_of_pub.errors}}
+                <p> Number Of Chapters
+                <p> {{ form.no_chapters }}{{form.no_chapters.errors}}
+
         {% endfor %}
         <hr>
         <input id="proposal-form-submit" class="btn btn-primary" type=submit value=submit>
     </form>
 </div>
-
 
 <!-- Button to trigger modal -->
 <!-- Modal -->

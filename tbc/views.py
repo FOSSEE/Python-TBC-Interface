@@ -942,7 +942,7 @@ def generateZip(book_id):
     book = Book.objects.get(id=book_id)
     files_to_zip = []
     file_path = os.path.abspath(os.path.dirname(__file__))
-    file_path = file_path+"/static/uploads/"
+    file_path = file_path+"/static/Python-Textbook-Companions/"
     notebooks = Chapters.objects.filter(book=book)
     for notebook in notebooks:
         files_to_zip.append(file_path+str(notebook.notebook))

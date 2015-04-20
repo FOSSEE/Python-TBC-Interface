@@ -886,7 +886,7 @@ def SubmitCode(request):
         log_chat = subject + '\n' + 'Book ' + curr_book.title + \
                 ' has been submitted on the Python TBC interface.'
         add_log(user, curr_book, CHANGE, 'Chapters and Screenshots added',
-                proposal.id, chat=log_chat)
+                curr_proposal.id, chat=log_chat)
         email_send(book.reviewer.email, subject, message)
         return HttpResponseRedirect('/?up=done')
     else:

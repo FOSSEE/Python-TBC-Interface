@@ -781,15 +781,6 @@ def ConfirmBookDetails(request):
     except:
         return HttpResponseRedirect('/?no_book_alloted=true')
     book_to_update = Book.objects.get(id=proposal.accepted.id)
-    if proposal.status == "codes disapproved":
-        chapters = Chapters.objects.filter(book=book_to_update)
-        screen_shots = ScreenShots.objects.filter(book=book_to_update)
-        context.update(csrf(request))
-        context['book'] = book_to_update
-        context['chapters'] = chapters
-        context['screenshots'] = screen_shots
-        context['no_notebooks'] = book_to_update.no_chapters
-        return render_to_response('tbc/update-code.html', context)
     if request.method == 'POST':
         book_form = BookForm(request.POST, instance=book_to_update)
         if book_form.is_valid():
@@ -799,6 +790,15 @@ def ConfirmBookDetails(request):
             context.update(csrf(request))
             context['form'] = book_form
             add_log(current_user, book_to_update, CHANGE, 'Book updated', proposal.id)
+            if proposal.status == "codes disapproved":
+                chapters = Chapters.objects.filter(book=book_to_update)
+                screen_shots = ScreenShots.objects.filter(book=book_to_update)
+                context.update(csrf(request))
+                context['book'] = book_to_update
+                context['chapters'] = chapters
+                context['screenshots'] = screen_shots
+                context['no_notebooks'] = [i for i in range(1, book_to_update.no_chapters+1)]
+                return render_to_response('tbc/update-code.html', context)
             return HttpResponseRedirect('/submit-code/')
     else:
         book_form = BookForm()
@@ -887,7 +887,7 @@ def SubmitCode(request):
                 ' has been submitted on the Python TBC interface.'
         add_log(user, curr_book, CHANGE, 'Chapters and Screenshots added',
                 curr_proposal.id, chat=log_chat)
-        email_send(book.reviewer.email, subject, message)
+        email_send(curr_book.reviewer.email, subject, message)
         return HttpResponseRedirect('/?up=done')
     else:
         context.update(csrf(request))

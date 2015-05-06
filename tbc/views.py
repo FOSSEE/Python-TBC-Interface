@@ -475,6 +475,7 @@ def SubmitProposal(request):
             book_chapters = request.POST.getlist('no_chapters')
             textbooks = proposal.textbooks.all()
             textbooks.delete()
+            proposed_books = []
             for item in range(3):
                 tempbook = TempBook(no_chapters=0)
                 tempbook.title = book_titles[item]
@@ -486,7 +487,13 @@ def SubmitProposal(request):
                 tempbook.year_of_pub = book_years[item]
                 tempbook.save()
                 proposal.textbooks.add(tempbook)
+                proposed_books.append(tempbook)
+            subject = "Python TBC: Proposal Acknowledgement"
+            message = """Dear """+proposal.user.user.first_name+""",\n
+Thank you for showing interest in contributing to Python Textbook Companion Activity.\n\nWe have received your proposal. Details of the books proposed by you are given below:\n\nBook Preference 1\nTitle: """+proposed_books[0].title+"""\nAuthor: """+proposed_books[0].author+"""\nEdition: """+proposed_books[0].edition+"""\nISBN: """+proposed_books[0].isbn+"""\nPublisher: """+proposed_books[0].publisher_place+"""\nYear of Publication: """+proposed_books[0].year_of_pub+"""\nBook Preference 2\nTitle: """+proposed_books[1].title+"""\nAuthor: """+proposed_books[1].author+"""\nEdition: """+proposed_books[1].edition+"""\nISBN: """+proposed_books[1].isbn+"""\nPublisher: """+proposed_books[1].publisher_place+"""\nYear of Publication: """+proposed_books[1].year_of_pub+"""\nBook Preference 3\nTitle: """+proposed_books[2].title+"""\nAuthor: """+proposed_books[2].author+"""\nEdition: """+proposed_books[2].edition+"""\nISBN: """+proposed_books[2].isbn+"""\nPublisher: """+proposed_books[2].publisher_place+"""\nYear of Publication: """+proposed_books[2].year_of_pub+"""\n\nPlese be patient while we review your proposal. You will be notified to submit sample notebook once the proposal hase been reviewed.\n\nRegards,\nPython TBC Team\nFOSSEE - IIT Bombay"""
+            return HttpResponse(message)
             add_log(curr_user, proposal, CHANGE, 'Proposed Books', proposal.id)
+            email_send(proposal.user.user.email, subject, message)
             return HttpResponseRedirect('/?proposal=submitted')
         else:
             book_forms = []
@@ -593,8 +600,11 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             tempbook.year_of_pub = book_proposed.year_of_pub
             tempbook.save()
             proposal.textbooks.add(tempbook)
-            print proposal.textbooks.all()
             add_log(curr_user, proposal, CHANGE, 'AICTE proposal' ,proposal.id)
+            subject = "Python TBC: Proposal Acknowledgement"
+            message = """Dear """+proposal.user.user.first_name+""",\n
+Thank you for showing interest in contributing to Python Textbook Companion Activity.\n\nWe have received your proposal & you have chosen to contribute an AICTE recommended book. Detail of the book you proposed is given below:\nTitle: """+tempbook.title+"""\nAuthor: """+tempbook.author+"""\nEdition: """+tempbook.edition+"""\nISBN: """+tempbook.isbn+"""\nPublisher: """+tempbook.publisher_place+"""\nYear of Publication: """+tempbook.year_of_pub+"""\n\nRegards,\nPython TBC Team\nFOSSEE - IIT Bombay"""
+            email_send(proposal.user.user.email, subject, message)
             return HttpResponseRedirect('/?proposal=submitted')
         else:
             book_form = BookForm()
@@ -835,6 +845,7 @@ def SubmitCode(request):
     if curr_proposal.status == "codes disapproved":
         if request.method == 'POST':
             chapters = Chapters.objects.filter(book=curr_book)
+            old_chapter_count = len(chapters)
             screen_shots = ScreenShots.objects.filter(book=curr_book)
             counter = 1
             for chapter in chapters:
@@ -844,6 +855,8 @@ def SubmitCode(request):
                 chapter.screen_shots.clear()
                 chapter.save()
                 counter += 1
+            num_new_chapters = curr_book.no_chapters - old_chapter_count
+            return HttpResponse(num_new_chapters)
             counter = 1
             for screenshot in screen_shots:
                 screenshot.caption = request.POST['caption'+str(counter)]

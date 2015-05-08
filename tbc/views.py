@@ -110,6 +110,8 @@ def Home(request):
         context['proposal_submitted'] = True
     if 'proposal_pending' in request.GET:
         context['proposal_pending'] = True
+    if 'book_pending' in request.GET:
+        context['book_pending'] = True
     if 'no_book_alloted' in request.GET:
         context['no_book_alloted'] = True
     if 'sample_notebook' in request.GET:
@@ -372,30 +374,43 @@ def SubmitBook(request):
         if curr_user.is_authenticated():
             if not _checkProfile(curr_user):
                 return HttpResponseRedirect("/profile/?update=profile")
-
-    if request.method == 'POST':
-        form = BookForm(request.POST)
-        if form.is_valid():
-            data = form.save(commit=False)
-            profile = Profile.objects.get(user=request.user.id)
-            data.contributor = profile
-            data.reviewer = Reviewer.objects.get(pk=2)
-            data.save()
-            context['user'] = curr_user
-            curr_book = Book.objects.order_by("-id")[0]
-            curr_book_id = curr_book.id
-            return HttpResponseRedirect('/submit-code-old/'+str(curr_book_id))
+    user_profile = Profile.objects.get(user=curr_user)
+    curr_proposals = Proposal.objects.filter(user=user_profile)
+    user_books = Book.objects.filter(contributor=user_profile)
+    can_submit_book = True
+    for proposal in curr_proposals:
+        if proposal.status not in ['book completed', 'rejected']:
+            can_submit_book = False
+    for book in user_books:
+        if not book.approved:
+            can_submit_book = False
+    if can_submit_book:
+        if request.method == 'POST':
+            form = BookForm(request.POST)
+            if form.is_valid():
+                data = form.save(commit=False)
+                profile = Profile.objects.get(user=request.user.id)
+                data.contributor = profile
+                data.reviewer = Reviewer.objects.get(pk=2)
+                data.save()
+                context['user'] = curr_user
+                curr_book = Book.objects.order_by("-id")[0]
+                curr_book_id = curr_book.id
+                return HttpResponseRedirect('/submit-code-old/'+str(curr_book_id))
+            else:
+                context.update(csrf(request))
+                context['form'] = form
+                context['user'] = curr_user
+                return render_to_response('tbc/submit-book.html', context)
         else:
-            context.update(csrf(request))
-            context['form'] = form
-            context['user'] = curr_user
-            return render_to_response('tbc/submit-book.html', context)
+            form = BookForm()
+        context.update(csrf(request))
+        context['form'] = form
+        context['user'] = curr_user
+        return render_to_response('tbc/submit-book.html', context)
     else:
-        form = BookForm()
-    context.update(csrf(request))
-    context['form'] = form
-    context['user'] = curr_user
-    return render_to_response('tbc/submit-book.html', context)
+        return HttpResponseRedirect('/?book_pending=True')
+        
 
 
 def SubmitCodeOld(request, book_id=None):

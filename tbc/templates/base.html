@@ -239,6 +239,15 @@
         </center>
         <div class="clearfix"></div>
     {% endif %}
+    {% if book_pending %}
+        <center>
+            <div class="alert" style="width:650px;height:40px;">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <p>You either have a proposal pending or you are already working on a book. You cannot submit a proposal at this moment.</p>
+            </div>
+        </center>
+        <div class="clearfix"></div>
+    {% endif %}
     {% if no_book_alloted %}
         <center>
             <div class="alert" style="width:400px;height:25px;">

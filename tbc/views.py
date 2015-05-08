@@ -855,7 +855,14 @@ def SubmitCode(request):
                 chapter.save()
                 counter += 1
             num_new_chapters = curr_book.no_chapters - old_chapter_count
-            return HttpResponse(num_new_chapters)
+            if num_new_chapters > 0:
+                for i in range(num_new_chapters):
+                    new_chapter = Chapters()
+                    new_chapter.book = curr_book
+                    new_chapter.name = request.POST['chapter'+str(counter)]
+                    new_chapter.notebook = request.FILES['notebook'+str(counter)]
+                    new_chapter.save()
+                    counter += 1
             counter = 1
             for screenshot in screen_shots:
                 screenshot.caption = request.POST['caption'+str(counter)]

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from PythonTBC import settings
 from django.contrib.admin.models import LogEntry
+from local import sitemap_path
 
 
 CATEGORY = (("fluid mechanics", "Fluid Mechanics"),
@@ -115,7 +116,7 @@ class Chapters(models.Model):
         name = self.name or 'Chapter'
         return '%s'%(name)
     def get_absolute_url(self):
-        return self.notebook
+        return sitemap_path+str(self.notebook)
 
 
 class ScreenShots(models.Model):

@@ -104,6 +104,7 @@ class Book(models.Model):
     def __unicode__(self):
         name = self.title or 'Book'
         return '%s'%(name)
+
         
 class Chapters(models.Model):
     name = models.CharField(max_length=200)
@@ -113,6 +114,8 @@ class Chapters(models.Model):
     def __unicode__(self):
         name = self.name or 'Chapter'
         return '%s'%(name)
+    def get_absolute_url(self):
+        return self.notebook
 
 
 class ScreenShots(models.Model):

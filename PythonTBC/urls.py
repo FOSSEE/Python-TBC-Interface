@@ -4,6 +4,11 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+from sitemap import TbcBookSitemap
+sitemaps = { 
+    'book': TbcBookSitemap, 
+}
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'PythonTBC.views.home', name='home'),
@@ -16,4 +21,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^comments/', include('comments.urls')),
     url(r'^', include('tbc.urls', namespace='tbc')),
+    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 )
+
+

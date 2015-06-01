@@ -57,7 +57,8 @@ BOOK_PREFERENCE = (("book1","1st Book"),
 
 
 def get_notebook_dir(instance, filename):
-    return '%s/%s' % (instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
+    book_dir = instance.book.title.replace(' ', '_')+'_by_'+instance.book.author.replace(' ','_')
+    return '%s/%s' % (book_dir, filename.replace(' ', '_'))
 
 
 def get_image_dir(instance, filename):

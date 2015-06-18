@@ -892,8 +892,11 @@ def SubmitCode(request):
                 counter += 1
             curr_proposal.status = "codes submitted"
             curr_proposal.save()
+            subject = "Python-TBC: Book & Code Updated"
+            message = """Hi """+curr_book.reviewer.name+""",\nA book & code has been updated on the Python TBC interface.\n Details of the book & contributor:\n Contributor: """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
             add_log(user, curr_book, CHANGE, 'Codes & Screenshots Resubmitted',
                 curr_proposal.id)
+            email_send(curr_book.reviewer.email, subject, message)
             return HttpResponseRedirect('/?bookupdate=done')
     if request.method == 'POST':
         for i in range(1, curr_book.no_chapters+1):
@@ -916,7 +919,7 @@ def SubmitCode(request):
         curr_proposal.status = "codes submitted"
         curr_proposal.save()
         subject = "Python-TBC: Book Submission"
-        message = """Hi """+curr_book.reviewer.name+""",\nA book has been submitted on the Python TBC interface.\n Detailf othe book & contributor:\n Contributor: """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
+        message = """Hi """+curr_book.reviewer.name+""",\nA book has been submitted on the Python TBC interface.\n Details of the book & contributor:\n Contributor: """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
         log_chat = subject + '\n' + 'Book ' + curr_book.title + \
                 ' has been submitted on the Python TBC interface.'
         add_log(user, curr_book, CHANGE, 'Chapters and Screenshots added',

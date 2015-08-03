@@ -62,7 +62,8 @@ def get_notebook_dir(instance, filename):
 
 
 def get_image_dir(instance, filename):
-    return '%s/screenshots/%s' % (instance.book.title.replace(' ', '_'), filename.replace(' ', '_'))
+    book_dir = instance.book.title.replace(' ', '_')+'_by_'+instance.book.author.replace(' ','_')
+    return '%s/screenshots/%s' % (book_dir, filename.replace(' ', '_'))
 
 
 def get_sample_dir(instance, filename):

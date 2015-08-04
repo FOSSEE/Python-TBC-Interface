@@ -439,6 +439,9 @@ def SubmitCodeOld(request, book_id=None):
             chapter = list(Chapters.objects.filter(name=dict[chapter_image]))[-1]
             chapter.screen_shots.add(screenshot)
             chapter.save()
+        subject = "Python-TBC: Codes Submitted Acknowledgement"
+        message = """Hi """+curr_book.contributor.user.first_name+""",\nThank you for your contribution to Python TBC.\nWe have received the book & codes submitted by you.\nDetails of the book are given below: \nBook Title: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\n\nPlease be patient while we review your book & get back to you. Review of the book will take a minimum of 25 days. Hoping for kind cooperation."""
+        email_send(curr_book.contributor.user.email, subject, message)
         subject = "Python-TBC: Book Submission"
         message = """Hi """+curr_book.reviewer.name+""",\nA book has been submitted on the Python TBC interface.\n Details of the book & contributor:\n Contributor: """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
         email_send(curr_book.reviewer.email, subject, message)
@@ -897,6 +900,10 @@ def SubmitCode(request):
             add_log(user, curr_book, CHANGE, 'Codes & Screenshots Resubmitted',
                 curr_proposal.id)
             email_send(curr_book.reviewer.email, subject, message)
+            subject = "Python-TBC: Codes Updated Acknowledgement"
+            message = """Hi """+curr_book.contributor.user.first_name+""",\nCodes for the book given below have been successfully updated.\nBook Title: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\n\nPlease be patient while we review your updated codes & get back to you. Review will take a minimum of 25 days. Hoping for kind cooperation."""
+        email_send(curr_book.contributor.user.email, subject, message)
+
             return HttpResponseRedirect('/?bookupdate=done')
     if request.method == 'POST':
         for i in range(1, curr_book.no_chapters+1):
@@ -925,6 +932,9 @@ def SubmitCode(request):
         add_log(user, curr_book, CHANGE, 'Chapters and Screenshots added',
                 curr_proposal.id, chat=log_chat)
         email_send(curr_book.reviewer.email, subject, message)
+        subject = "Python-TBC: Codes Submitted Acknowledgement"
+        message = """Hi """+curr_book.contributor.user.first_name+""",\nThank you for your contribution to Python TBC.\nWe have received the book & codes submitted by you.\nDetails of the book are given below: \nBook Title: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\n\nPlease be patient while we review your book & get back to you. Review of the book will take a minimum of 25 days. Hoping for kind cooperation."""
+        email_send(curr_book.contributor.user.email, subject, message)
         return HttpResponseRedirect('/?up=done')
     else:
         context.update(csrf(request))

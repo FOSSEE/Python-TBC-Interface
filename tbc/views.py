@@ -1075,6 +1075,7 @@ def ApproveBook(request, book_id=None):
             book = Book.objects.get(id=book_id)
             file_path = local.path
             book_title = book.title.replace(" ", "_")
+            book_title = book.title +'_by_'+book.author.replace(" ", "_")
             directory = file_path+book_title
             os.chdir(directory)
             fp = open(directory+"/README.txt", 'w')
@@ -1105,7 +1106,7 @@ def ApproveBook(request, book_id=None):
             book.save()
             subject = "Python-TBC: Book Completion"
             message = """Hi """+book.contributor.user.first_name+""",\n
-Congratulations !\nThe book - """+book.title+""" is now complete & published.\nPlease visit the link given below to download the forms to be filled to complete the formalities.\nhttp://tbc-python.fossee.in/internship-forms\nThe forms should be duly filled (fill only the sections which are applicable) & submitted at the following address:\nDr. Prabhu Ramachandran,\nDepartment of Aerospace Engineering,\nIIT Bombay, Powai, Mumbai - 400076\nKindly write Python Textbook Companion on top of the envelope.\nIf you already sent the forms then you may kindly ignore this mail.\n\nThank You for your contribution !\nRegards,\n Python TBC Team,\nFOSSEE - IIT Bombay"""
+Congratulations !\nThe book - """+book.title+""" is now complete & published.\nPlease visit the link given below to download the forms to be filled to complete the formalities.\nhttp://tbc-python.fossee.in/internship-forms\nThe forms should be duly filled (fill only the sections which are applicable) & submitted at the following address:\nDr. Prabhu Ramachandran,\nDepartment of Aerospace Engineering,\nIIT Bombay, Powai, Mumbai - 400076\nKindly write Python Textbook Companion on top of the envelope.\nIf you have already sent the forms then you may kindly ignore this mail.\n\nPlease note that honorarium will be processed within 15 days from the day we receive your forms. We kindly request you to be patient.\n\nCertificate for completed books can be downloaded from the TBC interface itself under the 'Get Certificate' tab which will be available once you login.\n\nThank You for your contribution !\nRegards,\n Python TBC Team,\nFOSSEE - IIT Bombay"""
             add_log(user, book, CHANGE, msg, proposal.id,
                     chat=subject + '\n' + message)
             email_send(book.contributor.user.email, subject, message)

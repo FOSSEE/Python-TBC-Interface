@@ -903,8 +903,7 @@ def SubmitCode(request):
             subject = "Python-TBC: Codes Updated Acknowledgement"
             message = """Hi """+curr_book.contributor.user.first_name+""",\nCodes for the book given below have been successfully updated.\nBook Title: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\n\nPlease be patient while we review your updated codes & get back to you. Review will take a minimum of 25 days. Hoping for kind cooperation."""
         email_send(curr_book.contributor.user.email, subject, message)
-
-            return HttpResponseRedirect('/?bookupdate=done')
+        return HttpResponseRedirect('/?bookupdate=done')
     if request.method == 'POST':
         for i in range(1, curr_book.no_chapters+1):
             chapter = Chapters()

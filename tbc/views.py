@@ -1075,7 +1075,7 @@ def ApproveBook(request, book_id=None):
             book = Book.objects.get(id=book_id)
             file_path = local.path
             book_title = book.title.replace(" ", "_")
-            book_title = book.title +'_by_'+book.author.replace(" ", "_")
+            book_title = book_title +'_by_'+book.author.replace(" ", "_")
             directory = file_path+book_title
             os.chdir(directory)
             fp = open(directory+"/README.txt", 'w')

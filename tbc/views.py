@@ -901,7 +901,7 @@ def SubmitCode(request):
                 curr_proposal.id)
             email_send(curr_book.reviewer.email, subject, message)
             subject = "Python-TBC: Codes Updated Acknowledgement"
-            message = """Hi """+curr_book.contributor.user.first_name+""",\nCodes for the book given below have been successfully updated.\nBook Title: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\n\nPlease be patient while we review your updated codes & get back to you. Review will take a minimum of 25 days. Hoping for kind cooperation."""
+            message = """Hi """+curr_book.contributor.user.first_name+""",\nCodes for the book given below have been successfully updated.\nBook Title: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\n\nPlease be patient while we review your updated codes & get back to you. Hoping for kind cooperation."""
         email_send(curr_book.contributor.user.email, subject, message)
         return HttpResponseRedirect('/?bookupdate=done')
     if request.method == 'POST':

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <center><font color='blue'><b>
+    {% if success %}
+        Thank you for your contribution.<br>
+        Click <a href={% url 'tbc:brokenbooks' %}>Broken Books</a> to contribute further.<br>
+    {% else %}
+    Link image for the book
+    {{ book.title }} by {{ book.author }}.<br>
+    Select an appropriate chapter from the dropdown for the corresponding image.<br>
+    You can verify using the chapters link given at the bottom.<br>
+    Once you are sure, click on Submit button.
+    </font></b>
+    </center>
+    <hr>
+    <form action="/link-image/" method=POST enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="book" value={{book.id}}>
+    <div class ="row-fluid">
+    {% for screenshot in screenshots %}
+    <!--<a href="/static/uploads/{{ screenshot.image }}" target="_blank">{{ screenshot }}</a>-->
+        <div class ="module-list">
+            <img src="/static/uploads/{{ screenshot.image }}">
+            <br>
+            <select style="border-color:black" name="chapters{{screenshot.id}}" id="chapters{{screenshot.id}}">
+                {% for chapter in chapters %}
+                    <option value={{ chapter.id }}>{{ chapter }}</option>
+                {% endfor %}
+            </select>
+            <hr>
+        </div>
+    {% endfor %}
+    </div>
+    <br>
+    <div >
+        <b><u> Below are the links to the chapters:</u></b><br>
+
+        {% for chapter in chapters %}
+        <a href="{% url 'tbc:ConvertNotebook' chapter.notebook %}" target="_blank">{{ chapter }}</a>
+        <br>
+        {% endfor %}
+    </div>
+    <center><input class="btn btn-primary" type=submit value=submit></center>
+    </form>
+{% endif %}
+{% endblock %}

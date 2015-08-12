@@ -21,7 +21,7 @@
     {% for screenshot in screenshots %}
     <!--<a href="/static/uploads/{{ screenshot.image }}" target="_blank">{{ screenshot }}</a>-->
         <div class ="module-list">
-            <img src="/static/uploads/{{ screenshot.image }}">
+            <img src="/static/Python-Textbook-Companions/{{ screenshot.image }}">
             <br>
             <select style="border-color:black" name="chapters{{screenshot.id}}" id="chapters{{screenshot.id}}">
                 {% for chapter in chapters %}

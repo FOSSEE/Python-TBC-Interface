@@ -7,6 +7,7 @@ from django.core.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.models import CHANGE
 from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
 from models import *
 from tbc.forms import *
 import local
@@ -1362,3 +1363,53 @@ def ajax_matching_books(request):
         'flag': flag
     }
     return render_to_response('tbc/ajax-matching-books.html', context)
+
+
+def get_broken_books(request):
+    context = {}
+    ci = RequestContext(request)
+    if request.method == 'POST':
+        _book_id = request.POST["books"]
+        try:
+            book = Book.objects.get(id=_book_id)
+        except Book.DoesNotExist:
+            pass
+        else:
+            chapters = Chapters.objects.filter(book_id=_book_id)
+            screenshots = ScreenShots.objects.filter(book_id=_book_id)
+            context['book'] = book
+            context['chapters'] = chapters
+            context['screenshots'] = screenshots
+            return render_to_response('tbc/link_image.html', context,
+                context_instance = ci)
+    books = Book.objects.all()
+    broken_books = []
+    for book in  books:
+        chapters = Chapters.objects.filter(book=book)
+        screenshots = ScreenShots.objects.filter(book=book)
+        try:
+            if screenshots and chapters:
+                for screenshot in screenshots:
+                    screenshot.chapters_set.get()
+        except Chapters.MultipleObjectsReturned:
+            pass
+        except Chapters.DoesNotExist:
+            broken_books.append(book)
+    context = {'books_to_link': broken_books}
+    return render_to_response('tbc/brokenbooks.html', context, context_instance=ci)
+
+
+def link_image(request):
+    context = {}
+    context['success'] = False
+    ci = RequestContext(request)
+    if request.method == 'POST':
+        _book_id = request.POST["book"]
+        screenshots = ScreenShots.objects.filter(book_id=_book_id)
+        for screenshot in screenshots:
+            chapter_id = request.POST["chapters{0}".format(screenshot.id)]
+            chapter = Chapters.objects.get(id=chapter_id)
+            chapter.screen_shots.add(screenshot)
+            chapter.save()
+        context['success'] = True
+    return render_to_response('tbc/link_image.html', context, context_instance=ci)

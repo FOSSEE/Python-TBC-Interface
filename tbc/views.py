@@ -589,41 +589,39 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             proposal_id = proposal.id
     if can_submit_new:
         if request.method == 'POST':
-            book_proposed.title = request.POST['title']
-            book_proposed.author = request.POST['author']
-            book_proposed.category = request.POST['category']
-            book_proposed.publisher_place = request.POST['publisher_place']
-            book_proposed.isbn = request.POST['isbn']
-            book_proposed.edition = request.POST['edition']
-            book_proposed.year_of_pub = request.POST['year_of_pub']
-            book_proposed.proposed = True
-            book_proposed.save()
-            try:
-                proposal = Proposal.objects.get(id=proposal_id)
-            except:
-                proposal = Proposal()
-            proposal.user = user_profile
-            proposal.status = 'Pending'
-            proposal.save()
-            textbooks = proposal.textbooks.all()
-            if textbooks:
-                textbooks.delete()
-            tempbook = TempBook(no_chapters=0)
-            tempbook.title = book_proposed.title
-            tempbook.author = book_proposed.author
-            tempbook.category = book_proposed.category
-            tempbook.publisher_place = book_proposed.publisher_place
-            tempbook.isbn = book_proposed.isbn
-            tempbook.edition = book_proposed.edition
-            tempbook.year_of_pub = book_proposed.year_of_pub
-            tempbook.save()
-            proposal.textbooks.add(tempbook)
-            add_log(curr_user, proposal, CHANGE, 'AICTE proposal' ,proposal.id)
-            subject = "Python TBC: Proposal Acknowledgement"
-            message = """Dear """+proposal.user.user.first_name+""",\n
-Thank you for showing interest in contributing to Python Textbook Companion Activity.\n\nWe have received your proposal & you have chosen to contribute an AICTE recommended book. Detail of the book you proposed is given below:\nTitle: """+tempbook.title+"""\nAuthor: """+tempbook.author+"""\nEdition: """+tempbook.edition+"""\nISBN: """+tempbook.isbn+"""\nPublisher: """+tempbook.publisher_place+"""\nYear of Publication: """+tempbook.year_of_pub+"""\n\nRegards,\nPython TBC Team\nFOSSEE - IIT Bombay"""
-            email_send(proposal.user.user.email, subject, message)
-            return HttpResponseRedirect('/?proposal=submitted')
+            book_form = BookForm(request.POST, instance=book_proposed)
+            if book_form.is_valid():
+                data = book_form.save(commit=False)
+                data.save()
+                try:
+                    proposal = Proposal.objects.get(id=proposal_id)
+                except:
+                    proposal = Proposal()
+                proposal.user = user_profile
+                proposal.status = 'Pending'
+                proposal.save()
+                textbooks = proposal.textbooks.all()
+                if textbooks:
+                    textbooks.delete()
+                tempbook = TempBook(no_chapters=0)
+                tempbook.title = book_proposed.title
+                tempbook.author = book_proposed.author
+                tempbook.category = book_proposed.category
+                tempbook.publisher_place = book_proposed.publisher_place
+                tempbook.isbn = book_proposed.isbn
+                tempbook.edition = book_proposed.edition
+                tempbook.year_of_pub = book_proposed.year_of_pub
+                tempbook.save()
+                proposal.textbooks.add(tempbook)
+                add_log(curr_user, proposal, CHANGE, 'AICTE proposal' ,proposal.id)
+                subject = "Python TBC: Proposal Acknowledgement"
+                message = """Dear """+proposal.user.user.first_name+""",\n
+    Thank you for showing interest in contributing to Python Textbook Companion Activity.\n\nWe have received your proposal & you have chosen to contribute an AICTE recommended book. Detail of the book you proposed is given below:\nTitle: """+tempbook.title+"""\nAuthor: """+tempbook.author+"""\nEdition: """+tempbook.edition+"""\nISBN: """+tempbook.isbn+"""\nPublisher: """+tempbook.publisher_place+"""\nYear of Publication: """+tempbook.year_of_pub+"""\n\nRegards,\nPython TBC Team\nFOSSEE - IIT Bombay"""
+                email_send(proposal.user.user.email, subject, message)
+                return HttpResponseRedirect('/?proposal=submitted')
+            else:
+                context['form'] = book_form
+                return render_to_response('tbc/confirm-aicte-details.html', context)
         else:
             book_form = BookForm()
             book_form.initial['title'] = book_proposed.title

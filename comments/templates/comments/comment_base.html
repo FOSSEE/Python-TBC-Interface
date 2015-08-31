@@ -96,15 +96,12 @@
                   <li><a href="{% url 'tbc:BooksUnderProgress' %}">Books Under Progress</a></li>
                 </ul>
               </li>
-              <li><a href="{% url 'tbc:InternshipForms' %}">Internship Forms</a></li>
+              <!--li><a href="{% url 'tbc:InternshipForms' %}">Internship Forms</a></li>
 
             {% if user %}
                  <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                      <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book</a></li>
-                      <li><a href="{% url 'tbc:UpdateBook' %}">Update Submission</a></li>
-                      <li><a href="{% url 'tbc:UpdatePassword' %}">Update Password</a></li>
                       <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
                     </ul>
                  </li>
@@ -123,7 +120,7 @@
             {% if anonymous %}
                   <li><a href="{% url 'tbc:UserLogin' %}">Login</a></li>
                   <li><a href="{% url 'tbc:UserRegister' %}">Sign Up</a></li>
-            {% endif %}
+            {% endif %}<-->
 
             </ul> <!--/.nav  -->
           </div><!--/.nav-collapse -->
@@ -132,68 +129,6 @@
     </div>
     <div class="container" id="comments-container">
 	{% block content %}
-	{% if up %}
-        <center>
-            <div class="alert" style="width:500px;">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <p>Book has been uploaded successfully !</p>
-            </div>
-        </center>
-        <div class="clearfix"></div>
-    {% endif %}
-    {% if login %}
-        <center>
-            <div class="alert" style="width:150px;height:23px;">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <p>Login Successful !</p>
-            </div>
-        </center>
-        <div class="clearfix"></div>
-    {% endif %}
-    {% if logout %}
-        <center>
-            <div class="alert" style="width:300px;height:23px;">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <p>You have logged out successfully !</p>
-            </div>
-        </center>
-        <div class="clearfix"></div>
-    {% endif %}
-    {% if update_book %}
-        <center>
-            <div class="alert" style="width:300px;height:23px;">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <p>Book has been updated successfully !</p>
-            </div>
-        </center>
-        <div class="clearfix"></div>
-    {% endif %}
-    {% if not_found %}
-        <center>
-            <div class="alert" style="width:650px;height:23px;">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <p>It seems that currently there is no book that you can update ! Please submit one.</p>
-            </div>
-        </center>
-        <div class="clearfix"></div>
-    {% endif %}
-	<div class="row-fluid">
-        <center><h3>Recent Submissions</h3></center>
-        {% for item in items %}
-            <div class ="module-list">
-                <a href="{% url 'tbc:BookDetails' item.book.id %}"><img src="{% static 'uploads/' %}{{ item.image.image }}"></a>
-                <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.title }}</a></center>
-            </div>
-        {% endfor %}
-    </div>
-    <br>
-    <center> 
-        <a  class="btn btn-primary" href="{% url 'tbc:BrowseBooks' %}">Browse All Books</a>
-    </center>
-    <br>
-    <!-- 
-        <input type=text> <input type=submit value=Search>
-    -->
 	{% endblock %}
     <div class="clearfix"></div>
       <hr>

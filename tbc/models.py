@@ -100,7 +100,7 @@ class Book(models.Model):
     isbn = models.CharField(max_length=50)
     edition = models.CharField(max_length=15)
     year_of_pub = models.CharField(max_length=4)
-    no_chapters = models.IntegerField(max_length=2)
+    no_chapters = models.IntegerField(max_length=2, default=0, blank=True)
     contributor = models.ForeignKey(Profile)
     reviewer = models.ForeignKey(Reviewer)
     approved = models.BooleanField(default=False)

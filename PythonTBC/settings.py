@@ -139,10 +139,14 @@ INSTALLED_APPS = (
     'tbc',
     'comments',
     'south',
+    'hitcount',
 )
 
-SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+# needed for django-hitcount to function properly
+SESSION_SAVE_EVERY_REQUEST = True
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+SOUTH_MIGRATION_MODULES = {"hitcount": "hitcount.south_migrations"}
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -171,3 +175,7 @@ LOGGING = {
         },
     }
 }
+HITCOUNT_KEEP_HIT_ACTIVE = { 'minutes': 60 }
+HITCOUNT_HITS_PER_IP_LIMIT = 0 #unlimited
+HITCOUNT_EXCLUDE_USER_GROUP = ( ) # not used
+HITCOUNT_KEEP_HIT_IN_DATABASE = { 'seconds': 10 }

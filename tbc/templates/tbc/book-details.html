@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load hitcount_tags %}
 {% block script %}
 <script>
 function redirectToIpynb(notebook)
@@ -77,5 +77,16 @@ function redirectToIpynb(notebook)
     </tr>
 
 </table>
+{% get_hit_count_js_variables for book as hitcount %}
+{% get_hit_count for book as total_hits %}
+<div class="row">
+<dl class="dl-horizontal">
+<dt>Total Hits:</dt>
+<dd>{{ total_hits }}</dd>
+</dl>
 </div>
+{%endblock%}
+{% block hitcount_javascript %}
+{% insert_hit_count_js_variables for book %}
 {% endblock %}
+</div>

@@ -492,6 +492,7 @@ def SubmitProposal(request):
             book_editions = request.POST.getlist('edition')
             book_years = request.POST.getlist('year_of_pub')
             book_chapters = request.POST.getlist('no_chapters')
+            book_link = request.POST.getlist('link')
             textbooks = proposal.textbooks.all()
             textbooks.delete()
             proposed_books = []
@@ -504,6 +505,7 @@ def SubmitProposal(request):
                 tempbook.isbn = book_isbns[item]
                 tempbook.edition = book_editions[item]
                 tempbook.year_of_pub = book_years[item]
+                tempbook.link = book_link[item]
                 tempbook.save()
                 proposal.textbooks.add(tempbook)
                 proposed_books.append(tempbook)
@@ -529,6 +531,7 @@ Thank you for showing interest in contributing to Python Textbook Companion Acti
                         form.initial['edition'] = textbooks[i].edition
                         form.initial['year_of_pub'] = textbooks[i].year_of_pub
                         form.initial['no_chapters'] = textbooks[i].no_chapters
+                        form.initial['link'] = textbooks[i].link
 
                 book_forms.append(form)
             context['book_forms'] = book_forms
@@ -611,6 +614,7 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
                 tempbook.isbn = book_proposed.isbn
                 tempbook.edition = book_proposed.edition
                 tempbook.year_of_pub = book_proposed.year_of_pub
+                tempbook.link = book_proposed.link
                 tempbook.save()
                 proposal.textbooks.add(tempbook)
                 add_log(curr_user, proposal, CHANGE, 'AICTE proposal' ,proposal.id)
@@ -631,6 +635,7 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
             book_form.initial['isbn'] = book_proposed.isbn
             book_form.initial['edition'] = book_proposed.edition
             book_form.initial['year_of_pub'] = book_proposed.year_of_pub
+            book_form.initial['link'] = book_proposed.link
             context['form'] = book_form
             return render_to_response('tbc/confirm-aicte-details.html', context)
     else:
@@ -654,6 +659,7 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
             new_book.edition = accepted_book.edition
             new_book.year_of_pub = accepted_book.year_of_pub
             new_book.no_chapters = accepted_book.no_chapters
+            new_book.link = accepted_book.link
             new_book.contributor = proposal.user
             new_book.reviewer = Reviewer.objects.get(pk=2)
             new_book.save()
@@ -837,6 +843,7 @@ def ConfirmBookDetails(request):
         book_form.initial['year_of_pub'] = book_to_update.year_of_pub
         book_form.initial['no_chapters'] = book_to_update.no_chapters
         book_form.initial['reviewer'] = book_to_update.reviewer
+        book_form.initial['link'] = book_to_update.link
         context.update(csrf(request))
         context['form'] = book_form
         context['book'] = book_to_update
@@ -1088,6 +1095,7 @@ def ApproveBook(request, book_id=None):
             fp.write("Year of publication: "+book.year_of_pub+"\n")
             fp.write("Isbn: "+book.isbn+"\n")
             fp.write("Edition: "+book.edition)
+            fp.write("Link: "+book.link)
             fp.close()
             try:
                 proposal = Proposal.objects.get(accepted=book)

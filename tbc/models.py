@@ -104,6 +104,7 @@ class Book(models.Model):
     contributor = models.ForeignKey(Profile)
     reviewer = models.ForeignKey(Reviewer)
     approved = models.BooleanField(default=False)
+    link = models.CharField(max_length=500)
     def __unicode__(self):
         name = self.title or 'Book'
         return '%s'%(name)
@@ -139,6 +140,7 @@ class TempBook(models.Model):
     edition = models.CharField(max_length=15)
     year_of_pub = models.CharField(max_length=4)
     no_chapters = models.IntegerField(max_length=2)
+    link = models.CharField(max_length=500)
     def __unicode__(self):
         name = self.title or 'Book'
         return '%s'%(name)
@@ -178,6 +180,7 @@ class AicteBook(models.Model):
     edition = models.CharField(max_length=15L)
     year_of_pub = models.CharField(max_length=4L)
     proposed = models.BooleanField(default=False)
+    link = models.CharField(max_length=500)
     def __unicode__(self):
         notebook = self.title or 'Book'
         return '%s'%(notebook)

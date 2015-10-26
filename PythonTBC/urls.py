@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^comments/', include('comments.urls')),
     url(r'^', include('tbc.urls', namespace='tbc')),
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+    url(r'hitcount/', include('hitcount.urls', namespace='hitcount')),
 )
 
 

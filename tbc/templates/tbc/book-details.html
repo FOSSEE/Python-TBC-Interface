@@ -75,7 +75,10 @@ function redirectToIpynb(notebook)
         <td>Reviewer: &nbsp;&nbsp;</td>
         <td>{{ book.reviewer.name }}</td>
     </tr>
-
+    <tr>
+        <td>GitHub: &nbsp;&nbsp;</td>
+        <td><a href= 'https://github.com/FOSSEE/Python-Textbook-Companions/tree/master/{{book.title.split|join:"_"}}_by_{{book.author.split|join:"_"}}' target="_blank">{{book.title}}</a></td>
+    </tr>
 </table>
 
 </div>

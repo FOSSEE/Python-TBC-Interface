@@ -142,8 +142,7 @@ INSTALLED_APPS = (
     
 )
 
-# needed for django-hitcount to function properly
-SESSION_SAVE_EVERY_REQUEST = True
+
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 

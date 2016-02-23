@@ -7,7 +7,7 @@ from django.core.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.models import CHANGE
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
+from django.template import RequestContext, Template, Context
 from models import *
 from tbc.forms import *
 import local
@@ -20,9 +20,9 @@ import string
 import random
 import json
 import subprocess
+import time
 from email.mime.text import MIMEText
-
-
+import datetime
 def add_log(user, object, flag, message, proposal_id=None, chat='No message'):
     '''Creates log entry of the user activities.'''
     ActivityLog(
@@ -122,7 +122,7 @@ def Home(request):
     if 'bookupdate' in request.GET:
         context['bookupdate'] =True
 
-    books = Book.objects.filter(approved=True).order_by("-id")[0:6]
+    books = Book.objects.filter(approved=True).order_by("-id")
     for book in books:
         try:
             images.append(ScreenShots.objects.filter(book=book)[0])
@@ -1197,22 +1197,29 @@ def ConvertNotebook(request, notebook_path=None):
     notebook_name = notebook_name[0].split(".")[0]
     path = path.split("/")[0:-1]
     path = "/".join(path)+"/"
-    os.chdir(path)
-    try:
-        changed_time = time.ctime(os.path.getctime(path+notebook_name+".html"))
-        modified_time = time.ctime(os.path.getctime(path+notebook_name+".ipynb"))
-        if(changed_time > modified_time):
-                template = path+notebook_name+".html"
-                return render_to_response(template, {})
-        else:
-                os.popen("ipython nbconvert --to html \""+path+notebook_name+".ipynb\"")
-                template = path+notebook_name+".html"
-                return render_to_response(template, {})
-    except:
-        os.popen("ipython nbconvert --to html \""+path+notebook_name+".ipynb\"")
-        template = path+notebook_name+".html"
-        return render_to_response(template, {})
+    os.chdir(path) # I am not sure about this! -Mahesh
+    template = path+notebook_name+".html"
+    notebook_html = str(path+notebook_name+".html")
+    notebook_ipynb =str(path+notebook_name+".ipynb")
+    changed_time = os.stat(path+notebook_name+".html").st_mtime
+    modified_time = os.stat(path+notebook_name+".ipynb").st_mtime
+    ######################################################################################################################################
 
+    try:
+        if os.path.isfile(notebook_html) and float(changed_time) > float(modified_time):
+            template = notebook_html
+            return render_to_response(template, {})
+        else:
+            notebook_convert = "ipython nbconvert --to html %s" % str(notebook_ipynb)
+            os.popen(notebook_convert)
+            template = notebook_html
+            return render_to_response(template, {})
+    
+    except Exception as error:
+	
+        return HttpResponse("Oops! It seems like the page you are trying to view is unavailable due to {0} Sorry about that :(".format(error))
+
+##################################################################################################################################
 
 def CompletedBooks(request):
     context = {}
@@ -1262,6 +1269,7 @@ def BooksUnderProgress(request):
 
 
 def GetCertificate(request, book_id=None):
+
     if request.user.is_anonymous():
         return HttpResponseRedirect('/login/?require_login=True')
     else:
@@ -1272,6 +1280,9 @@ def GetCertificate(request, book_id=None):
     context['user'] = user
     context['books'] = books
     error = False
+    out1 = ""
+    out2 = ""
+    ott=""
     cur_path = os.path.dirname(os.path.realpath(__file__))
     certificate_path = '{0}/certificate/'.format(cur_path)
     if book_id:
@@ -1302,7 +1313,10 @@ def GetCertificate(request, book_id=None):
                     (certificate_path), 'w')
             create_tex.write(content_tex)
             create_tex.close()
-            return_value, err = _make_tbc_certificate(certificate_path)
+            process = subprocess.Popen('whoami',
+            stderr = subprocess.PIPE, stdout=subprocess.PIPE, shell = True)
+            out1, out2 = process.communicate()
+            return_value, err, ott = _make_tbc_certificate(certificate_path)
             if return_value == 0:
                 file_name = 'tbc_certificate.pdf'
                 pdf = open('{0}{1}'.format(certificate_path, file_name) , 'r')
@@ -1310,20 +1324,25 @@ def GetCertificate(request, book_id=None):
                 response['Content-Disposition'] = 'attachment; \
                         filename=%s' % (file_name)
                 response.write(pdf.read())
-                _clean_tbc_certificate(certificate_path)
+                #_clean_tbc_certificate(certificate_path)
                 add_log(user, book, CHANGE, 'Certificate Downloaded'
                         ,proposal_id)
                 return response
             else:
                 error = True
+                context['emsg'] = err
                 add_log(user, book, CHANGE, err, proposal_id)
         except Exception, e:
             error = True
+            context['emsg'] = e
             add_log(user, book, CHANGE, e, proposal_id)
     
     if error:
-        _clean_tbc_certificate(certificate_path)
+        #_clean_tbc_certificate(certificate_path)
         context['error'] = error
+        context['out1'] = out1
+        context['out2'] = out2
+        context['ott'] = ott
         return render_to_response('tbc/get-certificate.html', context)
     return render_to_response('tbc/get-certificate.html', context)
 
@@ -1333,10 +1352,10 @@ def _clean_tbc_certificate(path):
     clean_process.wait()
 
 def _make_tbc_certificate(path):
-    process = subprocess.Popen('timeout 15 make -C {0} tbc'.format(path),
+    process = subprocess.Popen('timeout 15 make --debug=v -C {0} tbc'.format(path),stdout=subprocess.PIPE,
             stderr = subprocess.PIPE, shell = True)
-    err = process.communicate()[1]
-    return process.returncode, err
+    ot,err = process.communicate()
+    return process.returncode, err,ot
 
 def RedirectToIpynb(request, notebook_path=None):
     context = {}

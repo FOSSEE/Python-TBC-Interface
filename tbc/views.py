@@ -1197,20 +1197,19 @@ def ConvertNotebook(request, notebook_path=None):
     notebook_name = notebook_name[0].split(".")[0]
     path = path.split("/")[0:-1]
     path = "/".join(path)+"/"
-    os.chdir(path)
-    try:
-        changed_time = time.ctime(os.path.getctime(path+notebook_name+".html"))
-        modified_time = time.ctime(os.path.getctime(path+notebook_name+".ipynb"))
-        if(changed_time > modified_time):
-                template = path+notebook_name+".html"
-                return render_to_response(template, {})
-        else:
-                os.popen("ipython nbconvert --to html \""+path+notebook_name+".ipynb\"")
-                template = path+notebook_name+".html"
-                return render_to_response(template, {})
-    except:
-        os.popen("ipython nbconvert --to html \""+path+notebook_name+".ipynb\"")
-        template = path+notebook_name+".html"
+    template = path+notebook_name+".html"
+    notebook_html = str(path+notebook_name+".html")
+    notebook_ipynb =str(path+notebook_name+".ipynb")
+    changed_time = float(os.stat(path+notebook_name+".html").st_mtime)
+    modified_time = float(os.stat(path+notebook_name+".ipynb").st_mtime)
+
+    if os.path.isfile(notebook_html) and changed_time > modified_time:
+        template = notebook_html
+        return render_to_response(template, {})
+    else:
+        notebook_convert = "ipython nbconvert --to html %s" % str(notebook_ipynb)
+        subprocess.call (notebook_convert)
+        template = notebook_html
         return render_to_response(template, {})
 
 

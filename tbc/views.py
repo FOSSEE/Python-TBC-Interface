@@ -1191,26 +1191,19 @@ def BrowseBooks(request):
 
 def ConvertNotebook(request, notebook_path=None):
     context = {}
-    path = local.path
-    path = path+notebook_path
-    notebook_name = path.split("/")[-1:]
-    notebook_name = notebook_name[0].split(".")[0]
-    path = path.split("/")[0:-1]
-    path = "/".join(path)+"/"
-    template = path+notebook_name+".html"
-    notebook_html = str(path+notebook_name+".html")
-    notebook_ipynb =str(path+notebook_name+".ipynb")
-    changed_time = float(os.stat(path+notebook_name+".html").st_mtime)
-    modified_time = float(os.stat(path+notebook_name+".ipynb").st_mtime)
+    path = os.path.join(local.path, notebook_path.strip(".ipynb"))
+    template_html = path+".html"
+    template_ipynb =path+".ipynb"
+    changed_time = float(os.stat(template_html).st_mtime)
+    modified_time = float(os.stat(template_ipynb).st_mtime)
 
-    if os.path.isfile(notebook_html) and changed_time > modified_time:
-        template = notebook_html
-        return render_to_response(template, {})
+    if os.path.isfile(template_html) and changed_time > modified_time:
+        return render_to_response(template_html, {})
     else:
-        notebook_convert = "ipython nbconvert --to html %s" % str(notebook_ipynb)
+        notebook_convert = "ipython nbconvert --to html %s" % str(template_ipynb)
         subprocess.call (notebook_convert)
-        template = notebook_html
-        return render_to_response(template, {})
+        return render_to_response(template_html, {})
+
 
 
 def CompletedBooks(request):

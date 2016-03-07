@@ -1190,14 +1190,17 @@ def BrowseBooks(request):
 
 
 def ConvertNotebook(request, notebook_path=None):
+    """ Checks for the modified time of ipython notebooks and corresponding html page and replaces html page with 
+    new one if corresponding ipython notebook has been modified. """ 
+    
     context = {}
     path = os.path.join(local.path, notebook_path.strip(".ipynb"))
     template_html = path+".html"
     template_ipynb =path+".ipynb"
-    changed_time = float(os.stat(template_html).st_mtime)
-    modified_time = float(os.stat(template_ipynb).st_mtime)
+    modified_time_for_html = os.stat(template_html).st_mtime
+    modified_time_for_ipynb = os.stat(template_ipynb).st_mtime
 
-    if os.path.isfile(template_html) and changed_time > modified_time:
+    if os.path.isfile(template_html) and modified_time_for_html > modified_time_for_ipynb:
         return render_to_response(template_html, {})
     else:
         notebook_convert = "ipython nbconvert --to html %s" % str(template_ipynb)

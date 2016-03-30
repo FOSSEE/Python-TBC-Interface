@@ -1190,28 +1190,23 @@ def BrowseBooks(request):
 
 
 def ConvertNotebook(request, notebook_path=None):
+    """ Checks for the modified time of ipython notebooks and corresponding html page and replaces html page with 
+    new one if corresponding ipython notebook has been modified. """ 
+    
     context = {}
-    path = local.path
-    path = path+notebook_path
-    notebook_name = path.split("/")[-1:]
-    notebook_name = notebook_name[0].split(".")[0]
-    path = path.split("/")[0:-1]
-    path = "/".join(path)+"/"
-    os.chdir(path)
-    try:
-        changed_time = time.ctime(os.path.getctime(path+notebook_name+".html"))
-        modified_time = time.ctime(os.path.getctime(path+notebook_name+".ipynb"))
-        if(changed_time > modified_time):
-                template = path+notebook_name+".html"
-                return render_to_response(template, {})
-        else:
-                os.popen("ipython nbconvert --to html \""+path+notebook_name+".ipynb\"")
-                template = path+notebook_name+".html"
-                return render_to_response(template, {})
-    except:
-        os.popen("ipython nbconvert --to html \""+path+notebook_name+".ipynb\"")
-        template = path+notebook_name+".html"
-        return render_to_response(template, {})
+    path = os.path.join(local.path, notebook_path.strip(".ipynb"))
+    template_html = path+".html"
+    template_ipynb =path+".ipynb"
+    modified_time_for_html = os.stat(template_html).st_mtime
+    modified_time_for_ipynb = os.stat(template_ipynb).st_mtime
+
+    if os.path.isfile(template_html) and modified_time_for_html > modified_time_for_ipynb:
+        return render_to_response(template_html, {})
+    else:
+        notebook_convert = "ipython nbconvert --to html %s" % str(template_ipynb)
+        subprocess.call (notebook_convert)
+        return render_to_response(template_html, {})
+
 
 
 def CompletedBooks(request):

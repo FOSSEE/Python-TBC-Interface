@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %} Success {% endblock %}
+
+{% block content %}
+
+<body>
+
+{% csrf_token %}
+<h5> {{ notified_comments }} </h5>
+<p></p>
+<p> <a href = "{% url 'commentingapp.views.commenting' %}"> << Go back to Commenting Page  </a></p>
+
+</body>
+{% endblock %}

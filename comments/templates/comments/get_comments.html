@@ -1,0 +1,54 @@
+{% extends 'comments/comment_base.html' %}
+{% block content %}
+
+<div id="recent-comments-wrapper">
+    {% if comments %}
+    <h5 class="pull-left"><u>Recent comments</u></h5>
+    <h3></h3>
+    <a class="btn btn-primary btn-small pull-right" href="/comments/new/?book={{ book }}&chapter={{ chapter }}&example={{ example }}&page={{ page }}">
+        + New comment
+    </a>
+    <div class="clearfix"></div>
+    <p> Showing comments for: Book: <em>{{ book }}</em> / Chapter: <em>{{ chapter }}</em> / Example: <em>{{ example }}<em></p>
+            <div class="accordion" id="accordion2">
+                {% for comment in comments %}
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ forloop.counter }}">
+                            #{{ forloop.counter }} <em>{{ comment.title }}</em>
+                        </a>
+                    </div>
+                    <div id="collapse{{ forloop.counter }}" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <blockquote>
+                                {{ comment.body }}
+                                <small>{{ comment.email }}</small>
+                            </blockquote>
+                            <div class="replies">
+                                {% if comment.reply_set.all %}
+                                <h6><u>Recent replies</u></h6>
+                                {% endif %}
+                                {% for reply in comment.reply_set.all %}
+                                <div class="reply">
+                                    <p>{{ reply.body }}</p>
+                                    <small> - {{ comment.email }}</small>
+                                </div>
+                                {% endfor %}
+                                <a class="btn btn-success btn-small" href="/comments/new-reply/?comment_id={{ comment.id }}">+ Reply</a>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- /.accordion-group  -->
+                {% endfor %}
+            </div> <!-- /.accordion -->
+            {% else %}
+            <center>
+                <div class="well">
+                    <h5>Book: {{ book }} / Chapter: {{ chapter }} / Example: {{ example }}</h5>
+                <p> <em>Be the first one to create a comment for this example.</em> </p>
+                <a class="btn btn-primary" href="/comments/new/?book={{ book }}&chapter={{ chapter }}&example={{ example }}&page={{ page }}">+ Create a new comment</a>
+            </div>
+            </center>
+            {% endif %}
+        </div> <!-- /#recent-comments-form -->
+{% endblock %}

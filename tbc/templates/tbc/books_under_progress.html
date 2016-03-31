@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block script %}
+<script type="text/javascript">
+function submitCategory()
+{
+    document.forms.underprogress.submit();
+}
+</script>
+{% endblock %}
+
+{% block content %}
+    <center>
+        <h2> Books Under Progress </h2>
+        <hr>
+        <h4>Select Category</h4>
+        <form name="underprogress" action="/books-under-progress/" method=POST enctype="multipart/form-data">
+        {% csrf_token %}
+        <select name="category" id="category" onchange="submitCategory();">
+          <option value="all">All</option>
+          <option value="fluid mechanics">Fluid Mechanics</option>
+          <option value="control systems">Control Theory & Control Systems</option>
+          <option value="chemical engineering">Chemical Engineering</option>
+          <option value="thermodynamics">Thermodynamics</option>
+          <option value="mechanical engineering">Mechanical Engineering</option>
+          <option value="signal processing">Signal Processing</option>
+          <option value="digital communications">Digital Communications</option>
+          <option value="electrical technology">Electrical Technology</option>
+          <option value="maths & science">Mathematics & Pure Science</option>
+          <option value="analog electronics">Analog Electronics</option>
+          <option value="digital electronics">Digital Electronics</option>
+          <option value="computer programming">Computer Programming</option>
+          <option value="others">Others</option>
+        </select>
+        </form>
+    </center><br/>
+
+    <table class="table table-bordered table-hover">
+        <th>Sr #</th>
+        <th>Book</th>
+        {% for book in books_under_progress %}
+        <tr>
+            <td>
+                {{ forloop.counter }}
+            </td>
+            <td>
+                    <a href="{% url 'tbc:BookDetails' book.id %}">{{ book.title }} by {{ book.author }}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <hr>
+    <h4>The books listed below are also under progess</h4>
+    <hr>
+    <ol>
+        <li>Electronics Communication By: Dennis Roddy & John Coolen, Fourth Edition
+        <li>Fundamentals of Computing & Programming in C by V. Ramesh Babu, R. Samyuktha, M. Munirathnam
+        <li>A First Course in programming with C by T. Jeyapoovan, 1st edition
+        <li>Heat And Mass Transfer - A Practical Approach by Y. A. Cengel, 3rd edition
+        <li>Analysis and Design of Analog Integrated Circuits by Paul R. Gray, Paul J. Hurst, Stephen H. Lewis and Robert G. Meyer, 5th edition
+        <li>Mechanics of Materials by beer and johnston, 6th edition
+        <li>Programming in ANSI C by E. Balagurusamy, 4th edition
+        <li>Coulson And Richardson's Chemical Engineering, Volume 2 by J. F. Richardson, J. R. Backhurst And J. H. Harker, 5th edition
+        <li>Thermodynamics by Obert, 3rd edition
+        <li>Introduction To Chemical Engineering Thermodynamics by J. M. Smith, H. C. Van Ness And M. M. Abbott, 6th edition
+        <li>Thermodynamics by J. P. Holman, 4th edition
+        <li>Teach yourself C++ by Herbert Schildt, 3rd edition
+        <li>Turbomachinery Design And Theory by R. S. R. Gorla And A. A. Khan, 1st edition
+        <li>Diffusion: Mass Transfer In Fluid Systems by E. L. Cussler, 2nd edition
+        <li>Fluid Mechanics by A. K. Choudhary and Om Prakash , 2nd Edition
+        <li>Chemical Engineering Thermodynamics by T. E. Daubert, 1st Edition
+        <li>Elements Of Heat Transfer by M. Jacob And G. A. Hawkins, 3rd Edition
+        <li>Fluid Flow For The Practicing Chemical Engineer by J. P. Abulencia And L. Theodore , 1st Edition
+        <li>Essentials of programming in C for Life Sciences by S. Parthasarathy, 1st edition
+        <li>C: How to program by H.M. Deitel and P.J. Deitel, 3rd edition
+        <li>Data Structures using C by ISRD group, 2nd edition
+        <li>Let Us C++ by Yashwant Kanetkar, 2nd edition
+        <li>Power Plant Engineering by P. K. Nag, 3rd edition
+        <li>Elements of Mechanical Engineering by N. M. Bhatt and J. R. Mehta , 6th Edition
+        <li>Gas Dynamics and Jet Propulsion by P. Murugaperumal, 1st edition
+        <li>Internal Combustion Engines 4th Edition by H. B. Keswani
+        <li>Irrigation and Water Power Engineering by B. C. Punmia , 16th Edition
+        <li>Fundamentals Of Aerodynamic by  J. D. Anderson Jr. , 3rd edition
+        <li>Thyristors Theory And Applications by R. K. Sugandhi And K. K. Sugandhi , 2nd edition
+        <li>Fundamentals Of Data Structure In C by S. Sahni , S. Anderson-freed And E. Horowitz, 2nd edition
+        <li>Unix: Concepts And Applications by S. Das , 4th edition
+        <li>Data Structures Using C And C++ by Y. Langsam, M. Augenstein And A. M. Tenenbaum
+        <li>Electronic Measurements and Instrumentation by R. K. Rajput, 2nd edition
+        <li>Textbook Of Heat Transfer by S.P.Sukhatme, 4th edition
+        <li>C MADE EASY Herbert Schildt
+    </ol>
+<script>
+    document.getElementById('category').value = "{{ category }}";
+</script>
+{% endblock %}

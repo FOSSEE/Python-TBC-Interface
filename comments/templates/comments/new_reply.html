@@ -1,0 +1,34 @@
+{% extends 'comments/comment_base.html' %}
+{% block content %}
+<div id="new-reply-form">
+    <u> Comment: </u> <br><br>
+    <div class="well" style="width: 78%">
+        <blockquote>
+            {{ comment.body }}
+            <small>{{ comment.email }}</small>
+        </blockquote>
+        <div class="replies">
+            {% if comment.reply_set.all %}
+            <h6><u>Recent replies</u></h6>
+            {% endif %}
+            {% for reply in comment.reply_set.all %}
+            <div class="reply">
+                <p>{{ reply.body }}</p>
+                <small> - {{ reply.email }}</small>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <h5><u>New reply form</u></h5>
+    <form action="/comments/new-reply/" method="POST" accept-charset="utf-8"> {% csrf_token %}
+        {{ form.errors }}
+        {{ form.comment_id }}
+        <label>Description:</label>
+        {{ form.body }} <br>
+        <label>Email:</label>
+        {{ form.email }} <br>
+        <input class="btn btn-primary" type="submit" value="Submit">
+        <a class="btn btn-default" href="/comments/get/?book={{ comment.book }}&chapter={{ comment.chapter }}&example={{ comment.example }}&page={{ comment.page }}">Cancel</a>
+    </form>
+</div> <!-- /#new-comment-form -->
+{% endblock %}

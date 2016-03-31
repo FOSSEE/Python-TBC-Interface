@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% if book_review %}
+<center>
+        <div class="alert" style="width:230px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>Book has been approved !</p>
+        </div>
+    </center>
+{% endif %}
+{% if mail_notify %}
+<center>
+        <div class="alert" style="width:230px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>Successfully notified the required changes !</p>
+        </div>
+    </center>
+{% endif %}
+<center><h3>Books to be reviewed</h3></center>
+<ol>
+{% for book in books %}
+    <li><a href="{% url 'tbc:BookReview' book.id %}">{{ book.title }} {{ book.edition }} Edition</a>
+{% endfor %}
+</ol>
+<center><h3>Reviewed Books</h3></center>
+<ol>
+{% for book in approved_books %}
+<li><a href="{% url 'tbc:BookReview' book.id %}">{{ book.title }} {{ book.edition }} Edition</a></li>
+{% endfor %}
+<ol>
+{% endblock %}

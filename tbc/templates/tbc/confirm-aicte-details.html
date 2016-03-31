@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div id="content-wrap"  style="max-width:600px;">
+        <center>
+            <h3>AICTE Book Details</h3>
+            <hr>
+            <p>
+                Kindly verify the book details. Also, fill in the missing details & submit the proposal.
+            </p>
+            <hr>
+        </center>
+        <form id="proposal-form" action="/submit-aicte-proposal/{{ aicte_book.id }}/" method=POST enctype="multipart/form-data">
+            {% csrf_token %}
+                {{ form.as_p }}
+            <hr>
+            <input id="proposal-form-submit" class="btn btn-primary" type=submit value=submit>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+$( document ).ready(function() {
+    title = document.getElementById('id_title').readOnly = true;
+    author = document.getElementById('id_author').readOnly = true;
+    publisher_place = document.getElementById('id_publisher_place').readOnly = true;
+    $('#id_no_chapters').hide();
+    $('label[for="id_no_chapters"]').hide();
+});
+</script>
+{% endblock %}

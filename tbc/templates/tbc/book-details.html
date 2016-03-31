@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block script %}
+<script>
+function redirectToIpynb(notebook)
+{
+    alert(notebook);
+    notebook = notebook.split("/")
+    alert("http://ipynb.fossee.in/notebooks/"+notebook[1]+"/"+notebook[2]);
+    url = "http://ipynb.fossee.in/notebooks/"+notebook[1]+"/"+notebook[2]
+    window.location.replace(url)
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<center><h3>{{ book.title }}</h3></center>
+<div class="row-fluid">
+{% for image in images %}
+    <div class ="module-list">
+        {% if image.chapters_set.get.notebook %}
+            <a href="{% url 'tbc:ConvertNotebook' image.chapters_set.get.notebook %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}"></a>
+        {% else %}
+            <img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}">
+        {% endif %}
+        <center><p style="margin-top:30px;">{{ image.caption }}</p></center>
+    </div>
+{% endfor %}
+</div>
+<hr>
+<div id="content-wrap">
+<table class="table table-bordered table-hover">
+<th>Chapters</th>
+<th width=350>Download Links</th>
+{% for chapter in chapters %}
+    <tr>
+        <td>
+            <a href="{% url 'tbc:ConvertNotebook' chapter.notebook %}">{{ chapter.name }}</a>
+        </td>
+        <td>
+            <a href="{% static 'uploads/' %}{{ chapter.notebook }}">Download</a>
+        </td>
+    </tr>
+{% endfor %}
+</table>
+<hr>
+<a class="btn btn-primary btn-large" href="{% url 'tbc:GetZip' book.id %}" style="float:right; margin-top:20px;">Download Book as Zip</a>
+<table>
+    <tr>
+        <td>Author: &nbsp;&nbsp;</td>
+        <td>{{ book.author }}</td>
+    </tr>
+    <tr>
+        <td>Publisher: &nbsp;&nbsp;</td>
+        <td>{{ book.publisher_place }}</td>
+    </tr>
+    <tr>
+        <td>ISBN: &nbsp;&nbsp;</td>
+        <td><a href= http://www.isbnsearch.org/isbn/{{book.isbn}} target="_blank">{{book.isbn }}</a></td>
+    </tr>
+    <tr>
+        <td>Contributor: &nbsp;&nbsp;</td>
+        <td>{{ book.contributor.user.first_name }} {{ book.contributor.user.last_name }}</td>
+    </tr>
+    <tr>
+        <td>Institute/Organization: &nbsp;&nbsp;</td>
+        <td>{{ book.contributor.insti_org }}</td>
+    </tr>
+    <tr>
+        <td>Department/Designation: &nbsp;&nbsp;</td>
+        <td>{{ book.contributor.dept_desg }}</td>
+    </tr>
+    <tr>
+        <td>Reviewer: &nbsp;&nbsp;</td>
+        <td>{{ book.reviewer.name }}</td>
+    </tr>
+    <tr>
+        <td>GitHub: &nbsp;&nbsp;</td>
+        <td><a href= 'https://github.com/FOSSEE/Python-Textbook-Companions/tree/master/{{book.title.split|join:"_"}}_by_{{book.author.split|join:"_"}}' target="_blank">{{book.title}}</a></td>
+    </tr>
+</table>
+
+</div>
+
+{% endblock %}
+

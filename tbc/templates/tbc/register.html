@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if DuplicateEmail %}
+    <center>
+        <div class="alert" style="width:360px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>Sorry ! User with same email address already exists.</p>
+        </div>
+    </center>
+{% endif %}
+
+<div id="content-wrap" style="max-width:600px;">
+<h3>Registration</h3>
+<hr>
+    <form action="/register/" method=POST enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="btn btn-primary" type=submit value=submit>
+    </form>
+</div>
+{% endblock %}

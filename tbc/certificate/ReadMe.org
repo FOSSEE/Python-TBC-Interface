@@ -1,0 +1,21 @@
+* Python Textbook Companion certificate template
+
+** Usage
+   - To generate a PDF file type,
+     #+BEGIN_SRC sh
+       make tbc
+     #+END_SRC sh
+
+   - To clean the project
+     #+BEGIN_SRC sh
+       make clean
+     #+END_SRC sh
+
+** License
+   The tex file and all the images within this project are entirely
+   PRIVATE. It's usage outside the `Python Textbook Companion` is an legal
+   offense and will be subject to suitable punishment by Indian law.
+
+
+** Website
+   [[http://fossee.in]]

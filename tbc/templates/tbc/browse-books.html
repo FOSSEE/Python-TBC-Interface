@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block script %}
+<script type="text/javascript">
+function submitCategory()
+{
+    document.forms.browseBooks.submit();
+}
+</script>
+
+{% endblock %}
+
+{% block content %}
+<center><h4>Select a Category</h4></center>
+<form name="browseBooks" action="/browse-books/" method=POST enctype="multipart/form-data">
+{% csrf_token %}
+<center><select name="category" id="category" onchange="submitCategory();">
+  <option value="all">All</option>
+  <option value="fluid mechanics">Fluid Mechanics</option>
+  <option value="control systems">Control Theory & Control Systems</option>
+  <option value="chemical engineering">Chemical Engineering</option>
+  <option value="thermodynamics">Thermodynamics</option>
+  <option value="mechanical engineering">Mechanical Engineering</option>
+  <option value="signal processing">Signal Processing</option>
+  <option value="digital communications">Digital Communications</option>
+  <option value="electrical technology">Electrical Technology</option>
+  <option value="maths & science">Mathematics & Pure Science</option>
+  <option value="analog electronics">Analog Electronics</option>
+  <option value="digital electronics">Digital Electronics</option>
+  <option value="computer programming">Computer Programming</option>
+  <option value="others">Others</option>
+</select>
+<div class="row-fluid">
+    {% for item in items %}
+        <div class ="module-list">
+            <a href="{% url 'tbc:BookDetails' item.book.id %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ item.image.image }}"></a>
+            <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.title }}</a></center>
+        </div>
+    {% endfor %}
+    </div>
+<script>
+document.getElementById('category').value = "{{ category }}";
+</script>
+{% endblock %}

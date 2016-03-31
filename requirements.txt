@@ -1,0 +1,13 @@
+Django==1.5
+MySQL-python==1.2.5
+Pillow==2.6.1
+South==1.0.1
+Whoosh==2.6.0
+argparse==1.2.1
+django-haystack==2.3.1
+elasticsearch==1.4.0
+pysolr==3.3.0
+reportlab==3.1.8
+requests==2.6.0
+urllib3==1.10.2
+wsgiref==0.1.2

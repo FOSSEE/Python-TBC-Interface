@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script>
+function validate_content(ext, name)
+{
+    extension = document.getElementById(ext).value;
+    name = document.getElementById(name).value;
+    extension = extension.split(".");
+    if (extension == "" || name == "")
+    {
+        alert("Chapter name or file field is empty !");
+        return false;
+    }
+    if(extension.slice(Math.max(extension.length - 1, 1)) == "ipynb")
+    {
+        return true;
+    }
+    else
+    {
+        alert("Oops ! You can upload only Ipython Notebooks (.ipynb extension)");    
+        return false;
+    }
+    return true;
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="content-wrap" style="max-width:600px;">
+    <h5>You are uploading sample notebook for the book <br>{{ proposal.accepted }} by {{ proposal.accepted.author }}</h5>
+    <p>Only .ipynb files are acceptable</p>
+    {% if has_old %}
+        <form action="/submit-sample/{{ proposal.id }}/{{ old_notebook.id }}" name="with-old" method=POST enctype="multipart/form-data" onSubmit="return validate_content('old_notebook', 'ch_name_old');">
+        {% csrf_token %}
+            <input type=text id=ch_name_old name=ch_name_old value="{{ old_notebook.name }}">
+            <input type=file id=old_notebook name=old_notebook>
+        <br>
+        <hr>
+        <center><input class="btn btn-primary" type=submit value=submit></center>
+        </form>                
+    {% else %}
+        <form action="/submit-sample/{{ proposal.id }}" name="without-old" method=POST enctype="multipart/form-data" onSubmit="return validate_content('sample_notebook', 'ch_name');">
+        {% csrf_token %}
+            <input type=text id=ch_name name=ch_name placeholder="Name of the chapter you coded the solved example from">
+            <input type=file id=sample_notebook name=sample_notebook>
+        <br>
+        <hr>
+        <center><input class="btn btn-primary" type=submit value=submit></center>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

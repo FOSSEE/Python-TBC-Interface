@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<center><h2> Internship Forms </h2></center>
+<hr>
+<p align="justify">Instructions to fill up the forms:</p>
+<ol>
+    <li>Download the appropriate forms from the below given links</li>
+    <li>Fill only forms and/or portions of forms that are applicable to you</li>
+    <li>All these forms are to be sent only when you are notified to provide the forms</li>
+    <li>Note: In receipt form fill sections which have '*' marks only</li>
+</ol>
+<hr>    
+<ul>
+<li><a href="{% static 'forms/forms_students.zip' %}">Forms for Students</a>
+<li><a href="{% static 'forms/forms_professionals.zip' %}">Forms for Professionals/Corporates</a>
+</ul>
+<hr>
+<p align="justify">Mailing address:<br>
+Prof. Prabhu Ramachandran<br>
+Department of Aerospace Engineering,<br>
+IIT Bombay, Mumbai,<br>
+INDIA - 400 076<br>
+Phone: +91 22 2576 4133<br>
+Please write "Textbook Companion" on top of the envelope.</p>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <center><h3>Book(s) completed by you</h3></center>
+    <table class="table table-bordered table-hover">
+        <th>Sr #</th>
+        <th>Book</th>
+        <th>Certificate Link
+        {% for book in books %}
+            <tr>
+                <td>
+                    {{ forloop.counter }}
+                </td>
+                <td>
+                    {{ book.title }} by {{ book.author }}, {{ book.edition }} Edition
+                </td>
+                <td>
+                    <a class="btn btn-primary" href="{% url 'tbc:GetCertificate' book.id %}">Get Certificate</a>
+                </td>
+            </tr>
+        {% endfor %}
+        {% if error %}
+        <div class="alert alert-danger" role="alert"><h4>Sorry could not process your certificate. Kindly contact the FOSSEE team.</h4></div>
+        {% endif %}
+    </table>
+{% endblock %}
+
+
+
+        {% for book in completed_books %}
+        {% endfor %}
+    </table>

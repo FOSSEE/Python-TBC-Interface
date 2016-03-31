@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% block script %}
+<script src="/static/js/jquery.js" type="text/javascript"></script>
+<script>
+$(document).ready(function() {
+    $(".chapters").on('change', function() {
+        var str =  "option[id='image_"+$(this).attr('id')+"']";
+        $(str).text($(this).val());
+        });
+});
+</script>
+<script>
+function validate_content()
+{
+    no_notebooks = {{ no_notebooks }};
+    for(i=1;i<=no_notebooks;i++)
+    {
+        name = document.getElementById("chapter"+i).value;
+        extension = document.getElementById("notebook"+i).value;
+        extension = extension.split(".");
+        if (extension == "" || name == "")
+        {
+            alert("Chapter names & file fields cannot be empty !!");
+            return false;
+        }
+        if(extension.slice(Math.max(extension.length - 1, 1)) == "ipynb")
+            continue;
+        else
+            alert("Oops !! You can upload only Ipython Notebooks (.ipynb extension)");    
+            return false;
+    }
+    for(i=1;i<=3;i++)
+    {
+        caption = document.getElementById("caption"+i).value;
+        extension = document.getElementById("image"+i).value;
+        extension = extension.split(".");
+        if (extension == "" || caption == "")
+        {
+            alert("Captions and file fields cannot be empty");
+            return false;
+        }
+
+        if(extension.slice(Math.max(extension.length - 1, 1)) == "png")
+            continue;
+        else
+            alert("Only .png files are allowed for screenshots");    
+            return false;
+    }
+    return true;
+}
+</script>
+
+{% endblock %}
+{% block content %}
+    <div id="content-wrap" style="max-width:600px;">
+        <p>You are updating codes for the book {{ book.title }} by {{ book.author }}</p>
+        <p>Upload the corrected IPython Notebooks & screen shots.</p>
+        <form action="/submit-code/" method=POST enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for i in no_notebooks %}
+            <input class="chapters" type=text id=chapter{{i}} name=chapter{{i}} value="{{ chapters|lookup:i }}">
+            <input type=file name=notebook{{i}} id=notebook{{i}}>
+            {% endfor %}
+            <br>
+            <hr>
+            <p>Upload 3 screenshots from any 3 random chapters and give proper captions</p>
+            {% for screenshot in screenshots  %}
+                <input type=text name=caption{{forloop.counter}} value="{{ screenshot.caption }}">
+                <label class="label label-info" for="chapter_image{{forloop.counter}}">Select Chapter: </label><select id=chapter_image{{forloop.counter}} name=chapter_image{{forloop.counter}}>
+                    {% for chapter in chapters %}
+                    <option name=image_chapter{{forloop.counter}}  id=image_chapter{{forloop.counter}} value = chapter{{forloop.counter}} >{{ chapter.name}}</option>
+                    {% endfor %}
+                </select>
+                <input type=file id=image{{forloop.counter}} name=image{{forloop.counter}}>
+                {% endfor %}
+                <br><br>
+            <center><input class="btn btn-primary" type=submit value=submit onClick="return validate_content();"></center>
+        </form>
+    </div>
+{% endblock %}

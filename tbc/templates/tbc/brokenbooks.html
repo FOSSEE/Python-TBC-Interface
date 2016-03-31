@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block script %}
+<script type="text/javascript">
+function submitBook()
+{
+    document.forms.brokenbooks.submit();
+}
+</script>
+
+{% endblock %}
+{% block content %}
+<center><h4>Select any book from the drop down below to fix the broken link:</h4></center>
+<form name="brokenbooks" action="/brokenbooks/" method=POST enctype="multipart/form-data">
+{% csrf_token %}
+<center>
+    <select style="border-color:black" name="books" id="books" onchange="submitBook()">
+        <option value=0>Select Book</option>
+        {% for book in books_to_link %}
+        <option value={{ book.id }}>{{ book }}</option>
+        {% endfor %}
+    </select>
+{% endblock %}

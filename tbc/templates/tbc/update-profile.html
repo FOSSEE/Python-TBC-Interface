@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if profile %}
+    <center>
+        <div class="alert" style="width:500px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p> Please update your profile first and then proceed.</p>
+        </div>
+    </center>
+    <div class="clearfix"></div>
+{% endif %}
+<div id="content-wrap" style="max-width:600px;">
+    <h3>Update Your Profile</h3>
+    <hr>
+    <form action="/profile/" method=POST>
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form.errors }}
+        <br>
+        <input class="btn btn-primary" type=submit value=submit>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $( document ).ready(function() {
+                $('label[for="id_dob"]').text("DOB (yyyy/mm/dd)")
+            });
+</script>
+{% endblock %}

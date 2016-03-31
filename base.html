@@ -64,7 +64,7 @@ a.viewdescription:hover {background-color:#999; color: White;}
         .gsc-search-button,
         .gsc-clear-button {
             position: relative;
-            top: 2px;
+            top: -2px;
         }
        .badge-custom {
             padding: 1.5px 7px 1.5px;
@@ -132,7 +132,7 @@ span.question:hover { background-color: #3D6199; }
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">About<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  
+                  <li><a href="{% url 'tbc:AboutPytbc' %}">TBC Coding Guidelines</a></li>
                   <li><a href="http://fossee.in" target="_blank">FOSSEE</a></li>
                   <li><a href="http://python.fossee.in" target="_blank">Python Team</a></li>
                 </ul>
@@ -140,11 +140,11 @@ span.question:hover { background-color: #3D6199; }
 	            <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Textbooks<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="{% url 'tbc:completed_books' %}">Completed Books</a></li>
-                  <li><a href="{% url 'tbc:books_under_progress' %}">Books Under Progress</a></li>
+                  <li><a href="{% url 'tbc:CompletedBooks' %}">Completed Books</a></li>
+                  <li><a href="{% url 'tbc:BooksUnderProgress' %}">Books Under Progress</a></li>
                 </ul>
               </li>
-              <li><a href="{% url 'tbc:internship_forms' %}">Internship Forms</a></li>
+              <li><a href="{% url 'tbc:InternshipForms' %}">Internship Forms</a></li>
 
             {% if user %}
                 {% if proposal_position %}
@@ -152,28 +152,28 @@ span.question:hover { background-color: #3D6199; }
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}<span class="badge-custom" rel="tooltip" title="Pending Proposal Position: {{ proposal_position }}" data-placement="bottom" style="margin-left:5px; margin-right:5px; display: inline-block">{{ proposal_position }}</span>
                         <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                          <li><a href="{% url 'tbc:submit_book' %}">Submit Book (OLD)</a></li>
-                          <li><a href="{% url 'tbc:list_aicte' %}">Submit Proposal</a></li>
-                          <li><a href="{% url 'tbc:submit_sample' %}">Submit Sample Notebook</a></li>
-                          <li><a href="{% url 'tbc:confirm_book_details' %}">Submit Codes</a></li>
-                          <li><a href="{% url 'tbc:get_certificate' %}">Get Certificate</a></li>
-                          <li><a href="{% url 'tbc:update_profile' %}">Update Profile</a></li>
-                          <li><a href="{% url 'tbc:update_password' %}">Update Password</a></li>
-                          <li><a href="{% url 'tbc:user_logout' %}">Logout</a></li>
+                          <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book (OLD)</a></li>
+                          <li><a href="{% url 'tbc:ListAICTE' %}">Submit Proposal</a></li>
+                          <li><a href="{% url 'tbc:SubmitSample' %}">Submit Sample Notebook</a></li>
+                          <li><a href="{% url 'tbc:ConfirmBookDetails' %}">Submit Codes</a></li>
+                          <li><a href="{% url 'tbc:GetCertificate' %}">Get Certificate</a></li>
+                          <li><a href="{% url 'tbc:UpdateProfile' %}">Update Profile</a></li>
+                          <li><a href="{% url 'tbc:UpdatePassword' %}">Update Password</a></li>
+                          <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
                         </ul>
                      </li>
                 {% else %}
                      <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                          <li><a href="{% url 'tbc:submit_book' %}">Submit Book (OLD)</a></li>
-                          <li><a href="{% url 'tbc:list_aicte' %}">Submit Proposal</a></li>
-                          <li><a href="{% url 'tbc:submit_sample' %}">Submit Sample Notebook</a></li>
-                          <li><a href="{% url 'tbc:confirm_book_details' %}">Submit Codes</a></li>
-                          <li><a href="{% url 'tbc:get_certificate' %}">Get Certificate</a></li>
-                          <li><a href="{% url 'tbc:update_profile' %}">Update Profile</a></li>
-                          <li><a href="{% url 'tbc:update_password' %}">Update Password</a></li>
-                          <li><a href="{% url 'tbc:user_logout' %}">Logout</a></li>
+                          <li><a href="{% url 'tbc:SubmitBook' %}">Submit Book (OLD)</a></li>
+                          <li><a href="{% url 'tbc:ListAICTE' %}">Submit Proposal</a></li>
+                          <li><a href="{% url 'tbc:SubmitSample' %}">Submit Sample Notebook</a></li>
+                          <li><a href="{% url 'tbc:ConfirmBookDetails' %}">Submit Codes</a></li>
+                          <li><a href="{% url 'tbc:GetCertificate' %}">Get Certificate</a></li>
+                          <li><a href="{% url 'tbc:UpdateProfile' %}">Update Profile</a></li>
+                          <li><a href="{% url 'tbc:UpdatePassword' %}">Update Password</a></li>
+                          <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
                         </ul>
                      </li>
                 {% endif %}
@@ -183,17 +183,16 @@ span.question:hover { background-color: #3D6199; }
                  <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ reviewer.first_name }} {{ reviewer.last_name }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                      <li><a href="{% url 'tbc:book_review' %}">Review Books</a></li>
-                      <li><a href="{% url 'tbc:review_proposals' %}">Review Proposals</a></li>
-                      <li><a href="{% url 'tbc:admin_tools' %}">Admin Tools </a></li>
-                      <li><a href="{% url 'tbc:user_logout' %}">Logout</a></li>
+                      <li><a href="{% url 'tbc:BookReview' %}">Review Books</a></li>
+                      <li><a href="{% url 'tbc:ReviewProposals' %}">Review Proposals</a></li>
+                      <li><a href="{% url 'tbc:UserLogout' %}">Logout</a></li>
                     </ul>
                  </li>
             {% endif %}
 
             {% if anonymous %}
-                  <li><a href="{% url 'tbc:user_login' %}">Login</a></li>
-                  <li><a href="{% url 'tbc:user_register' %}">Sign Up</a></li>
+                  <li><a href="{% url 'tbc:UserLogin' %}">Login</a></li>
+                  <li><a href="{% url 'tbc:UserRegister' %}">Sign Up</a></li>
             {% endif %}
 
             </ul> <!--/.nav  -->
@@ -311,82 +310,18 @@ span.question:hover { background-color: #3D6199; }
         </center>
         <div class="clearfix"></div>
     {% endif %}
-<div style="float:right; margin-right: 50px; width: 400px;"><gcse:search></gcse:search>
-    </div>
-    <script src="http://code.jquery.com/jquery-1.4.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            
-            $("#objective").click(function(){
-            $('#details').load('{% static "templates/objectives.html" %}');
-            });
-
-        
-            $("#who").click(function(){
-            $('#details').load('{% static "templates/who.html" %}');
-            });
-
-            $("#how").click(function(){
-            $('#details').load('{% static "templates/how.html" %}');
-            });
-
-            $("#guidelines").click(function(){
-            $('#details').load('{% static "templates/guidelines.html" %}');
-            });
-
-            $("#goodies").click(function(){
-            $('#details').load('{% static "templates/goodie.html" %}');
-            });
-
-            $("#disclaimer").click(function(){
-            $('#details').load('{% static "templates/disclaimer.html" %}');
-            });
-
-            $("#faqs").click(function(){
-            $('#details').load('{% static "templates/faq.html" %}');
-            });
-
-            $("#contact").click(function(){
-            $('#details').load('{% static "templates/contactus.html" %}');
-            });
-        });
-    </script>
-
-
-    <div class="well span3" style="width:18%;margin-left:5px;margin-top:60px;">
-        <div class="nav nav-list">
-            <ul>
-                <li><a id="objective" href="#"><strong>Objective</strong></a></li>
-                <li><a id="who" href="#"><strong>Who can contribute ?</strong></a></li>
-                <li><a id="how" href="#"><strong>How to contribute ?</strong></a></li>
-                <li><a id="guidelines" href="#"><strong>Guidelines for Coding</strong></a></li>
-                <li><a id="goodies" href="#"><strong>Goodies</strong></a></li>
-                <li><a id="disclaimer" href="#"><strong>Disclaimer</strong></a></li>
-                <li><a id="faqs" href="#"><strong>FAQs</strong></a></li>
-                <li><a id="contact" href="#"><strong>Contact</strong></a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="well span9" id="details" style="float:right;width:74%;margin-left:5px;min-height:150px;">
-        <p>The Textbook Companion activity aims to create a repository of reference material for Python by coding solved examples of standard engineering textbooks using Python. This activity intends to,</p>
-         <ul>
-             <li>Make individuals learn Python through a practical approach</li>
-             <li>Provide a huge database of Companions as a learning resource</li>
-             <li>To make it easy for users of such textbooks to start using Python.</li>
-             <li>To improve the documentation available for Python</li>
-        </ul>
-    </div>
-</div>
-
+    
 <div class="row-fluid">
  <h3 style='float: left;margin-left: 50px; display: inline-block;'>Editors' Picks</h3>
-
+<div style="float:right; margin-right: 50px; width: 400px;"><gcse:search></gcse:search>
+    </div>
 <td>
 
     <span class="showonhover">
      <span class="question">?</span>
         <span class="hovertext">
-            Books with maximum usage of scientific libraries
+            Minimum or NO trivial examples<br>
+            Maximum usage of scientific libraries
         </span>
     </span>
 </td>
@@ -395,8 +330,8 @@ span.question:hover { background-color: #3D6199; }
       {% for item in items %}
        {% if item.book.tags.all %}
 <div class ="module-list">
-                <a href="{% url 'tbc:book_details' item.book.id %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ item.image.image }}"></a>
-                <center><a href="{% url 'tbc:book_details' item.book.id %}">{{ item.book.title }}</a></center>
+                <a href="{% url 'tbc:BookDetails' item.book.id %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ item.image.image }}"></a>
+                <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.title }}</a></center>
             </div>
       {% endif %}
    {% endfor %}
@@ -426,14 +361,14 @@ span.question:hover { background-color: #3D6199; }
     <div style="clear:both;"></div>
         {% for item in items|slice:":3" %}
             <div class ="module-list">
-                <a href="{% url 'tbc:book_details' item.book.id %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ item.image.image }}"></a>
-                <center><a href="{% url 'tbc:book_details' item.book.id %}">{{ item.book.title }}</a></center>
+                <a href="{% url 'tbc:BookDetails' item.book.id %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ item.image.image }}"></a>
+                <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.title }}</a></center>
             </div>
         {% endfor %}
     </div>
     <br>
     <center> 
-        <a  class="btn btn-primary" href="{% url 'tbc:browse_books' %}">Browse All Books</a>
+        <a  class="btn btn-primary" href="{% url 'tbc:BrowseBooks' %}">Browse All Books</a>
     </center>
     <br>
     <!-- 

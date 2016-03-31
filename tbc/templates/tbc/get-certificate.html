@@ -16,7 +16,7 @@
                     {{ book.title }} by {{ book.author }}, {{ book.edition }} Edition
                 </td>
                 <td>
-                    <a class="btn btn-primary" href="{% url 'tbc:GetCertificate' book.id %}">Get Certificate</a>
+                    <a class="btn btn-primary" href="{% url 'tbc:get_certificate' book.id %}">Get Certificate</a>
                 </td>
             </tr>
         {% endfor %}

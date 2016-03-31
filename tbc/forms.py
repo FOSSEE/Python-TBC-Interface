@@ -62,7 +62,7 @@ class BookForm(forms.ModelForm):
         self.fields['no_chapters'].label = "Number of Chapters"
     class Meta:
         model = Book
-        exclude = ('contributor', 'approved', 'reviewer')
+        exclude = ('contributor', 'approved', 'reviewer', 'tags')
         widgets = {
         'title':forms.TextInput(attrs={'placeholder':'Title of the Book'}),
         'author':forms.TextInput(attrs={'placeholder':'Author of the Book'}),

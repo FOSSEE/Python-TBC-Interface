@@ -70,8 +70,8 @@
     {% csrf_token %}
         {{ form.as_p }}
         <input class="btn btn-primary"type=submit value=Login>
-        <a href="{% url 'tbc:UserRegister' %}" class="btn btn-primary">Sign Up</a>
-        <a href="{% url 'tbc:ForgotPassword' %}" class="btn btn-primary">Forgot Password</a>
+        <a href="{% url 'tbc:user_register' %}" class="btn btn-primary">Sign Up</a>
+        <a href="{% url 'tbc:forgot_password' %}" class="btn btn-primary">Forgot Password</a>
     </form>
 </div>
 {% endblock %}

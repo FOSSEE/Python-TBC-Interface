@@ -20,7 +20,7 @@ function redirectToIpynb(notebook)
 {% for image in images %}
     <div class ="module-list">
         {% if image.chapters_set.get.notebook %}
-            <a href="{% url 'tbc:ConvertNotebook' image.chapters_set.get.notebook %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}"></a>
+            <a href="{% url 'tbc:convert_notebook' image.chapters_set.get.notebook %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}"></a>
         {% else %}
             <img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}">
         {% endif %}
@@ -36,7 +36,7 @@ function redirectToIpynb(notebook)
 {% for chapter in chapters %}
     <tr>
         <td>
-            <a href="{% url 'tbc:ConvertNotebook' chapter.notebook %}">{{ chapter.name }}</a>
+            <a href="{% url 'tbc:convert_notebook' chapter.notebook %}">{{ chapter.name }}</a>
         </td>
         <td>
             <a href="{% static 'uploads/' %}{{ chapter.notebook }}">Download</a>
@@ -45,7 +45,7 @@ function redirectToIpynb(notebook)
 {% endfor %}
 </table>
 <hr>
-<a class="btn btn-primary btn-large" href="{% url 'tbc:GetZip' book.id %}" style="float:right; margin-top:20px;">Download Book as Zip</a>
+<a class="btn btn-primary btn-large" href="{% url 'tbc:get_zip' book.id %}" style="float:right; margin-top:20px;">Download Book as Zip</a>
 <table>
     <tr>
         <td>Author: &nbsp;&nbsp;</td>
@@ -57,7 +57,7 @@ function redirectToIpynb(notebook)
     </tr>
     <tr>
         <td>ISBN: &nbsp;&nbsp;</td>
-        <td><a href= http://www.isbnsearch.org/isbn/{{book.isbn}} target="_blank">{{book.isbn }}</a></td>
+        <td><a href= http://www.isbnsearch.org/isbn/{{ book.isbn }} target="_blank">{{ book.isbn }}</a></td>
     </tr>
     <tr>
         <td>Contributor: &nbsp;&nbsp;</td>
@@ -77,8 +77,9 @@ function redirectToIpynb(notebook)
     </tr>
     <tr>
         <td>GitHub: &nbsp;&nbsp;</td>
-        <td><a href= 'https://github.com/FOSSEE/Python-Textbook-Companions/tree/master/{{book.title.split|join:"_"}}_by_{{book.author.split|join:"_"}}' target="_blank">{{book.title}}</a></td>
+        <td><a href= 'https://github.com/FOSSEE/Python-Textbook-Companions/tree/master/{{ book.title.split|join:"_" }}_by_{{ book.author.split|join:"_" }}' target="_blank">{{ book.title }}</a></td>
     </tr>
+
 </table>
 
 </div>

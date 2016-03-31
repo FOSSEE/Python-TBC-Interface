@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %} TBC Error Page {% endblock %}
+
+
+    </head>
+
+{% block content %}
+    <body>
+            <h3><u><center>TBC Error Page </center></u></h3>            
+            <h5> Hi <b><u>{{ user }} </b></u></h5>
+            <p><a href = "{% url 'tbc_error_page.views.broken' %}"> TBC Broken Links page </a></p>
+            {% if not context %}
+	    <center><h4> There are no new errors  </h4></center>
+            {% else %}
+            <table border = 2>
+                <tr>
+                    <td><b> Chapters With errors</b></td>
+                    <td><b> Number of errors</b></td>
+                    <td><b> Delibrate Errors</b></td>
+                </tr>
+
+            <form name = "Send Email" action = "{% url 'tbc_error_page.views.error' %}" method = "POST"> {% csrf_token %}
+            {% for errors in context %}
+                    <div class = "error"">
+
+                <tr>
+                   
+                   {% if errors.is_deliberate == 0  %}
+                    <td><a href = {{ errors.chapter_url }} target = "_blank"> {{ errors.chapter_name }} </a></td>
+                    <td> {{ errors.number_of_errors }} </td>
+                    <td> <input type = "checkbox" name = "deliberate" value = "{{ errors.chapter_url }}">
+                    {% endif %}
+                </tr>
+                    </div>
+
+           {% endfor %}
+            </table>
+            <input class = "btn" type = "submit" value = "Submit"> </input>
+        </form>
+{% endif %}
+{% endblock %}

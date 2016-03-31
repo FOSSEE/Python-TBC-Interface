@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %} Success {% endblock %}
+{% block content %}
+<p> You have added following urls as deliberate </p>
+<table border = 1>
+<th>Urls</th>
+
+{% for deliberate_links in  deliberate %}
+
+<tr><td> {{ deliberate_links }} </tr></td>
+
+
+{% endfor %}
+</table>
+<p></p>
+<p><a href = "{% url 'tbc_error_page.views.error' %}"> <<< Go back to Error Page </a></p>
+{% endblock %}

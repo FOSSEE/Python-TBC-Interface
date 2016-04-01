@@ -12,8 +12,8 @@ urlpatterns = patterns('',
     url(r'^profile/$', 'tbc.views.UserProfile', name='UserProfile'),
     url(r'^update-profile/$', 'tbc.views.UpdateProfile', name='UpdateProfile'),
     url(r'^forgot-password/$', 'tbc.views.ForgotPassword', name='ForgotPassword'),
-    url(r'^update-password/$', 'tbc.views.UpdatePassword', name='UpdatePassword'),
-    
+    url(r'^update-password/$', 'tbc.views.UpdatePassword', name='UpdatePassword'),    
+    url(r'^admin-tools/$', 'tbc.views.admin_tools', name='admin_tools'),    
     
     url(r'^submit-proposal/$', 'tbc.views.SubmitProposal', name='SubmitProposal'),
     url(r'^submit-aicte-proposal/$', 'tbc.views.ListAICTE', name='ListAICTE'),

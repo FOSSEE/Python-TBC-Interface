@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 class CronForCommenting(object):
 
     def fetch_comments_from_script(self):
-       """ Fetches comment from Commenting script"""
+        """ Fetches comment from Commenting script"""
 
         commenting_instance = DisqusCommenting()
         check_net = commenting_instance.check_internet_connection()

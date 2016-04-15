@@ -14,7 +14,7 @@ import os
 def error(req):
     ci = RequestContext(req)
     db_instance = Error()
-    error_json_data = get_json_from_file("error.json")
+    error_json_data = get_json_from_file("error.pickle")
 
     if not Error.objects.exists():
         db_instance.create_new_error_data(error_json_data)        
@@ -40,7 +40,7 @@ def broken(req):
 
     ci = RequestContext(req)    
     db_instance = Broken()
-    broken_json_data = get_json_from_file("broken.json")
+    broken_json_data = get_json_from_file("broken.pickle")
     
     if not Broken.objects.exists():
         db_instance.create_new_broken_data(broken_json_data)

@@ -47,9 +47,32 @@ class CronForCommenting(object):
                     Comments.objects.get_or_create(comments = comment, url_id = url_primary_key)
             return "Database is updated."
 
+
+    def delete_redundant_comments(self):
+       	"delete urls that have no comments in them anymore"
+        
+        url_list = [urls["chapter_urls"] for urls in self.comments_for_db]
+        url_list_db = Url.objects.values_list("url", flat = True)
+        url_difference = set(url_list_db)-set(url_list)
+        for delete_url in url_difference:
+            Url.objects.filter(url = delete_url).delete()
+
+        "delete comments that have been deleted from tbc notebooks"
+        for comment_details in self.comments_for_db:
+            url_instance = Url.objects.get(url = comment_details["chapter_urls"])
+            comment_list_db = url_instance.comments_set.values_list("comments", flat = True)
+            redundant_comment_list = set(comment_list_db)-set(comment_details["comment_list"])
+            for delete_comment in redundant_comment_list:
+                url_instance.comments_set.filter(comments = delete_comment).delete()
+        return "Redundant Comments deleted."
+
+
+
 if __name__ == '__main__':
 
     a = CronForCommenting()
     b = a.fetch_comments_from_script()
-    c = a.add_comments_to_db()
+    c = a.add_comments_to_db()        #This should always be before delete_redundant_comments
+    d = a.delete_redundant_comments() #This should always be after add_comments_to_db
     print c
+    print d

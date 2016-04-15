@@ -14,9 +14,9 @@
             {% else %}
             <table border = 2>
                 <tr>
-                    <td><b> Chapters With errors</b></td>
-                    <td><b> Number of errors</b></td>
-                    <td><b> Delibrate Errors</b></td>
+                    <th> Chapters With errors</th>
+                    <th> Number of errors</th>
+                    <th> Delibrate Errors</th>
                 </tr>
 
             <form name = "Send Email" action = "{% url 'tbc_error_page.views.error' %}" method = "POST"> {% csrf_token %}

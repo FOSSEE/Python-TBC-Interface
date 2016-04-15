@@ -40,34 +40,34 @@ class Error(models.Model):
     
     def update_error_data(self, error_json_data):
 
-        # Agreeably hacky at the moment. Will refine it.
+        # a little more refined.
 
         for error_details in error_json_data:
+            original_value = Error.objects.get(chapter_url = error_details["chapter_urls"]).number_of_errors
             # if number of errors have increased
-            if Error.objects.filter(chapter_url = error_details["chapter_urls"],
-                                    number_of_errors__lt = error_details["number_of_errors"]):
-            
+            if original_value < error_details["number_of_errors"]:
+
                 Error.objects.filter(chapter_url = error_details["chapter_urls"])\
-                .update(number_of_errors = error_details["number_of_errors"], 
+                .update(number_of_errors = error_details["number_of_errors"],
                         is_deliberate = 0
                         )
             # if number of errors have decreased
-            elif Error.objects.filter(chapter_url = error_details["chapter_urls"],
-                                      number_of_errors__gt = error_details["number_of_errors"]):
-                
+            elif original_value > error_details["number_of_errors"]:
                 Error.objects.filter(chapter_url = error_details["chapter_urls"])\
                 .update(number_of_errors = error_details["number_of_errors"], is_deliberate = 0)
             else:
                 # if new errors have been added.
-                Error.objects.get_or_create(chapter_url = error_details["chapter_urls"], 
+                Error.objects.get_or_create(chapter_url = error_details["chapter_urls"],
                                             number_of_errors = error_details["number_of_errors"]
                                             )
 
-	        Error.objects.filter(chapter_url = error_details["chapter_urls"])\
+                Error.objects.filter(chapter_url = error_details["chapter_urls"])\
                 .update(chapter_url = error_details["chapter_urls"],
                         number_of_errors = error_details["number_of_errors"],
                         chapter_name = error_details["chapter_name"]
                         )
+
+
 
 
                 

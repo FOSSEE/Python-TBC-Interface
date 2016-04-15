@@ -23,7 +23,7 @@
 				{% for urls in url_context %}
 					<tr>
 						<td colspan = ""> {{ forloop.counter }}</td>
-						<td id = "urls" colspan = ""><a href = "{{ urls.url }}"> {{ urls.url }} </a> </td>
+						<td id = "urls" colspan = ""><a href = "{{ urls.url }}" target = "blank"> {{ urls.url }} </a> </td>
 					<ul>
 					<td >
 						{% for comments in urls.comments_set.all %}

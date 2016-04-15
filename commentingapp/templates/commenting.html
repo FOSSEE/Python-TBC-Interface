@@ -1,53 +1,50 @@
 {% extends "base.html" %}
 
-            {% block title %} TBC Commenting {% endblock %}
+{% block title %} TBC Commenting {% endblock %}
 
 {% block content %}
-		<h3><center> TBC Commenting  </center></h3>
-                <h5> Hi <u> <b>{{user}} </b> </u> </h5><br/>
-	        <a href = "https://pythontbc.disqus.com" target = "blank">Go to Disqus admin Page </a>
+	<h3><center> TBC Commenting  </center></h3>
+        <h5> Hi <u> <b>{{user}} </b> </u> </h5><br/>
+	<a href = "https://pythontbc.disqus.com" target = "blank">Go to Disqus admin Page </a>
 
-                        {% if not url_context %}
-                        <center><h4> There are no new comments  </h4></center>
-                        {% else %}
+        {% if not url_context %}
+        <center><h4> There are no new comments  </h4></center>
+        {% else %}
 
-		<form name = "Send Email" action = "{% url 'commentingapp.views.commenting' %}" method = "POST">
-			{% csrf_token %}
-			<table id = "comment-table" border = 2 align = "center" style="empty-cells:hide;">
-				<tr>
-					<th style "width: 5%"> Sr. no </th>
-					<th style "width: 45%"> Url </th>
-					<th colspan = ""> Comments </th>
-				</tr>
+	<form name = "Send Email" action = "{% url 'commentingapp.views.commenting' %}" method = "POST">
+	{% csrf_token %}
+	<table id = "comment-table" border = 2 align = "center" style="empty-cells:hide;">
+	<tr>
+	<th style "width: 5%"> Sr. no </th>
+	<th style "width: 45%"> Url </th>
+	<th colspan = ""> Comments </th>
+	</tr>
 
-				{% for urls in url_context %}
-					<tr>
-						<td colspan = ""> {{ forloop.counter }}</td>
-						<td id = "urls" colspan = ""><a href = "{{ urls.url }}" target = "blank"> {{ urls.url }} </a> </td>
-					<ul>
-					<td >
-						{% for comments in urls.comments_set.all %}
-								{% if comments.is_notified == 0 %}
-									<li>
-										{{comments.comments}}
-										</li>
-										<input type = "checkbox" name = "comment" value = "{{ urls.url }}, {{comments.comments}}"></input>
-								{% endif %}
-						{% endfor %}
-						
-					</td>
-					</tr>
-					</ul>
-
-
-				{% endfor %}
-			</table>
-			<br/>
+	{% for urls in url_context %}
+	<tr>
+	<td colspan = ""> {{ forloop.counter }}</td>
+	<td id = "urls" colspan = ""><a href = "{{ urls.url }}" target = "blank"> {{ urls.url }} </a> </td>
+	<td>
+	<table width = 100%>
+	{% for comments in urls.comments_set.all %}
+	{% if comments.is_notified == 0 %}
+	<tr>
+	<td style = "align:left;">{{comments.comments}}</td>
+	<td style = "align:right;"><input type = "checkbox" name = "comment" value = "{{ urls.url }}, {{comments.comments}}"></input></td>
+	</tr>
+	{% endif %}
+	{% endfor %}
+	</td>
+	</table>
+	</tr>
+	{% endfor %}
+	</table>
+	<br/>
 	
-		<center> <input class = "btn" type = "submit" value = "Submit"> </input></center>
+	<center> <input class = "btn" type = "submit" value = "Submit"> </input></center>
 
-		</form>
-{% endif %}
+	</form>
+	{% endif %}
 
 {% endblock %}
 

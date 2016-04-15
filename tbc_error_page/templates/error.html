@@ -26,7 +26,7 @@
                 <tr>
                    
                    {% if errors.is_deliberate == 0  %}
-                    <td><a href = {{ errors.chapter_url }} target = "_blank"> {{ errors.chapter_name }} </a></td>
+                    <td><a href = {{ errors.chapter_url }} target = "blank"> {{ errors.chapter_name }} </a></td>
                     <td> {{ errors.number_of_errors }} </td>
                     <td> <input type = "checkbox" name = "deliberate" value = "{{ errors.chapter_url }}">
                     {% endif %}

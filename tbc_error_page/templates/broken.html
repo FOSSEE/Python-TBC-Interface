@@ -17,7 +17,7 @@
         {% for broken_data in broken %}
                 <tr>
                 <td> {{ forloop.counter }} </td>
-                <td> <a href = {{ broken_data.broken_url }} target = ""> {{ broken_data.broken_url }} </a> </td>
+                <td> <a href = {{ broken_data.broken_url }} target = "blank"> {{ broken_data.broken_url }} </a> </td>
                  <td><b> {{ broken_data.error_status }} </b> error </td>
                 </tr>
         {% endfor %}

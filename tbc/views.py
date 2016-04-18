@@ -1413,3 +1413,12 @@ def link_image(request):
             chapter.save()
         context['success'] = True
     return render_to_response('tbc/link_image.html', context, context_instance=ci)
+
+@login_required( login_url= "/admin")
+def admin_tools(request):
+    ci = RequestContext(request)
+    user = request.user
+    context = {"user":user}
+    return render_to_response('tbc/admin-tools.html', context, context_instance=ci)
+
+

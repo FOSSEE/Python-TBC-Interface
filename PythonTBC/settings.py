@@ -139,7 +139,8 @@ INSTALLED_APPS = (
     'tbc',
     'comments',
     'south',
-    
+    'commentingapp',
+    'tbc_error_page',
 )
 
 

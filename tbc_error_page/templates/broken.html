@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %} TBC Broken Links {% endblock %}
+{% block content %}
+         {% if not broken %}
+		<center><h4> There are no new comments  </h4></center>
+         {% else %}
+		<h3><u><center>TBC Broken Links Page </center></u></h3>
+                <h5> Hi <b><u> {{user}} </b><u> </h5>
+                <a href = "{% url 'tbc_error_page.views.error' %}"> TBC Error Status Page </a>
+<p></p>
+        <table border = 1>
+                <tr>
+                <th> Sr no. </th>
+                <th> Broken Urls </th>
+                <th> <b> HTTP status error code </th>
+                </tr>
+        {% for broken_data in broken %}
+                <tr>
+                <td> {{ forloop.counter }} </td>
+                <td> <a href = {{ broken_data.broken_url }} target = "blank"> {{ broken_data.broken_url }} </a> </td>
+                 <td><b> {{ broken_data.error_status }} </b> error </td>
+                </tr>
+        {% endfor %}
+
+        </table>
+{% endif %}
+
+{% endblock %}

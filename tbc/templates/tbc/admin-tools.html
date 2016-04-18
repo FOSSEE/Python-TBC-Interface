@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %} Admin Tools {% endblock %}
+{% block content %}
+
+<body>
+
+{% csrf_token %}
+
+<h4> Hi, {{ user }} </h4>
+
+<p></p>
+<p></p>
+<p><a href = "{% url 'commentingapp.views.commenting' %}"> Commenting </a></p>
+<p><a href = "{% url 'tbc_error_page.views.error' %}"> Error Page </a></p>
+<p><a href = "{% url 'tbc_error_page.views.broken' %}"> Broken Page </a></p>
+
+{% endblock %}

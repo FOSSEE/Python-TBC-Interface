@@ -13,10 +13,10 @@
 
 	<form name = "Send Email" action = "{% url 'commentingapp.views.commenting' %}" method = "POST">
 	{% csrf_token %}
-	<table id = "comment-table" border = 2 align = "center" style="empty-cells:hide;">
+	<table id = "comment-table" border = 2 align = "center">
 	<tr>
-	<th style "width: 5%"> Sr. no </th>
-	<th style "width: 45%"> Url </th>
+	<th style = "width: 5%"> Sr. no </th>
+	<th style = "width: 45%"> Url </th>
 	<th colspan = ""> Comments </th>
 	</tr>
 

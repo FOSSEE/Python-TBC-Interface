@@ -1,14 +1,12 @@
 from django.shortcuts import render_to_response
 from .models import Error, Broken, get_json_from_file
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import Http404
-import json
-import os
 from tbc.views import is_reviewer
 
 
-@user_passes_test(lambda u:u.is_superuser, login_url="/admin/login")
+@login_required(login_url="/login/")
 def error(request):
     ci = RequestContext(request)
     curr_user = request.user
@@ -38,7 +36,7 @@ def error(request):
         context = {"context": error_details, "user": curr_user}
         return render_to_response ("error.html", context, ci)
 
-@user_passes_test(lambda u:u.is_superuser, login_url="/admin/login")
+@login_required(login_url="/login/")
 def broken(request):
     ci = RequestContext(request)
     curr_user = request.user

@@ -2,17 +2,13 @@ from django.shortcuts import render, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from .models import Url, Comments
-from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
-from django.contrib.auth.models import User
 from collections import Counter
-import os.path
-from email.mime.text import MIMEText
 from django.http import Http404
 from tbc.models import Book, Chapters
 from tbc.views import is_reviewer
 
-@user_passes_test(lambda u:u.is_superuser, login_url="/admin/login/")
+@login_required(login_url="/login/")
 
 def commenting(request):
     ci = RequestContext(request)

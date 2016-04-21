@@ -1415,7 +1415,7 @@ def link_image(request):
         context['success'] = True
     return render_to_response('tbc/link_image.html', context, context_instance=ci)
 
-@login_required( login_url= "/admin")
+@login_required(login_url="/login/")
 def admin_tools(request):
     ci = RequestContext(request)
     curr_user = request.user

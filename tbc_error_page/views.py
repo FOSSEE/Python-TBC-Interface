@@ -28,12 +28,12 @@ def error(request):
             deliberate_urls_list = request.POST.getlist("deliberate")
             db_instance.update_deliberate_error(deliberate_urls_list)
 
-            context = {"user":request.user, "deliberate" :deliberate_urls_list}
+            context = {"reviewer":request.user, "deliberate" :deliberate_urls_list}
         
             return render_to_response ("deliberate.html", context, ci)
 
 
-        context = {"context": error_details, "user": curr_user}
+        context = {"context": error_details, "reviewer": curr_user}
         return render_to_response ("error.html", context, ci)
 
 @login_required(login_url="/login/")
@@ -54,7 +54,7 @@ def broken(request):
             db_instance.update_broken_data(broken_json_data)
             
         broken = Broken.objects.all() 
-        context = {"broken": broken, "user": curr_user}
+        context = {"broken": broken, "reviewer": curr_user}
         return render_to_response("broken.html", context, ci)
 
 

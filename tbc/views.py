@@ -1423,5 +1423,5 @@ def admin_tools(request):
     if not is_reviewer(curr_user):
         raise Http404("You are not allowed to view this page")
     else:
-        context = {"user":curr_user}
-        return render_to_response('tbc/admin-tools.html', context, context_instance=ci)
+        context = {"reviewer":curr_user}
+        return render_to_response('tbc/admin-tools.html', context, ci)

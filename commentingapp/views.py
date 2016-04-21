@@ -17,7 +17,7 @@ def commenting(request):
         raise Http404("You are not allowed to view this page")
     else:
         url_instance = Url.objects.filter(Q(comments__is_notified = 0)).distinct()
-        context = {"url_context": url_instance, "user": curr_user}
+        context = {"url_context": url_instance, "reviewer": curr_user}
 
         if request.method == "POST":
             notified_comment_list = request.POST.getlist("comment")

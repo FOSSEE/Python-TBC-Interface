@@ -1,6 +1,6 @@
 from django.utils.encoding import force_text
 from django.contrib.contenttypes.models import ContentType
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.core.context_processors import csrf
@@ -1189,6 +1189,7 @@ def BrowseBooks(request):
     return render_to_response('tbc/browse-books.html', context)
 
 
+
 def ConvertNotebook(request, notebook_path=None):
     """ Checks for the modified time of ipython notebooks and corresponding html page and replaces html page with 
     new one if corresponding ipython notebook has been modified. """ 
@@ -1417,8 +1418,10 @@ def link_image(request):
 @login_required( login_url= "/admin")
 def admin_tools(request):
     ci = RequestContext(request)
-    user = request.user
-    context = {"user":user}
-    return render_to_response('tbc/admin-tools.html', context, context_instance=ci)
-
-
+    curr_user = request.user
+    
+    if not is_reviewer(curr_user):
+        raise Http404("You are not allowed to view this page")
+    else:
+        context = {"user":curr_user}
+        return render_to_response('tbc/admin-tools.html', context, context_instance=ci)

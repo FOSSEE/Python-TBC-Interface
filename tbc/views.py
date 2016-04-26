@@ -1431,4 +1431,4 @@ def admin_tools(request):
         raise Http404("You are not allowed to view this page")
     else:
         context["reviewer"] = curr_user
-        return render_to_response('tbc/admin-tools.html', context, ci)
+        return render_to_response('tbc/admin-tools.html', context)

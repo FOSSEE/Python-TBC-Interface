@@ -1189,7 +1189,6 @@ def BrowseBooks(request):
     return render_to_response('tbc/browse-books.html', context)
 
 
-
 def ConvertNotebook(request, notebook_path=None):
     """ Checks for the modified time of ipython notebooks and corresponding html page and replaces html page with 
     new one if corresponding ipython notebook has been modified. """ 
@@ -1198,16 +1197,23 @@ def ConvertNotebook(request, notebook_path=None):
     path = os.path.join(local.path, notebook_path.strip(".ipynb"))
     template_html = path+".html"
     template_ipynb =path+".ipynb"
-    modified_time_for_html = os.stat(template_html).st_mtime
-    modified_time_for_ipynb = os.stat(template_ipynb).st_mtime
+    template_dir = os.path.dirname(path)
 
-    if os.path.isfile(template_html) and modified_time_for_html > modified_time_for_ipynb:
-        return render_to_response(template_html, {})
+    def nbconvert(template_ipynb):
+        notebook_convert = "ipython nbconvert --to html {0} --FilesWriter.build_directory={1}".format(template_ipynb, template_dir)
+        subprocess.call (notebook_convert, shell = True)
+
+
+    if os.path.isfile(template_html):
+        modified_time_for_html = os.stat(template_html).st_mtime
+        modified_time_for_ipynb = os.stat(template_ipynb).st_mtime
+        if not modified_time_for_html > modified_time_for_ipynb:
+            nbconvert(template_ipynb)
+            
     else:
-        notebook_convert = "ipython nbconvert --to html %s" % str(template_ipynb)
-        subprocess.call (notebook_convert)
-        return render_to_response(template_html, {})
-
+        nbconvert(template_ipynb)
+    
+    return render_to_response(template_html, context)
 
 
 def CompletedBooks(request):
@@ -1415,7 +1421,7 @@ def link_image(request):
         context['success'] = True
     return render_to_response('tbc/link_image.html', context, context_instance=ci)
 
-@login_required( login_url= "/admin")
+@login_required(login_url="/login/")
 def admin_tools(request):
     ci = RequestContext(request)
     curr_user = request.user
@@ -1423,5 +1429,5 @@ def admin_tools(request):
     if not is_reviewer(curr_user):
         raise Http404("You are not allowed to view this page")
     else:
-        context = {"user":curr_user}
-        return render_to_response('tbc/admin-tools.html', context, context_instance=ci)
+        context = {"reviewer":curr_user}
+        return render_to_response('tbc/admin-tools.html', context, ci)

@@ -6,8 +6,8 @@
 
 {% block content %}
     <body>
-            <h3><u><center>TBC Error Page </center></u></h3>            
-            <h5> Hi <b><u>{{ user }} </b></u></h5>
+            <h3><u><center>TBC Error Page </center></u></h3>
+            <h5> Hi <b><u> {{reviewer.get_full_name}} </b><u> </h5>
             <p><a href = "{% url 'tbc_error_page.views.broken' %}"> TBC Broken Links page </a></p>
             {% if not context %}
 	    <center><h4> There are no new errors  </h4></center>

@@ -1,16 +1,15 @@
 from django.shortcuts import render_to_response
 from .models import Error, Broken, get_json_from_file
-from django.contrib.auth.decorators import user_passes_test
-from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
+from django.core.context_processors import csrf
 from django.http import Http404
-import json
-import os
 from tbc.views import is_reviewer
 
 
-@user_passes_test(lambda u:u.is_superuser, login_url="/admin/login")
+@login_required(login_url="/login/")
 def error(request):
-    ci = RequestContext(request)
+    context = {}
+    context.update(csrf(request))
     curr_user = request.user
     if not is_reviewer(curr_user):
         raise Http404("You are not allowed to view this page")
@@ -30,17 +29,19 @@ def error(request):
             deliberate_urls_list = request.POST.getlist("deliberate")
             db_instance.update_deliberate_error(deliberate_urls_list)
 
-            context = {"user":request.user, "deliberate" :deliberate_urls_list}
+            context["reviewer"] = request.user
+            context["deliberate"] = deliberate_urls_list
         
-            return render_to_response ("deliberate.html", context, ci)
+            return render_to_response ("deliberate.html", context)
 
+        context["context"] = error_details
+        context[ "reviewer"] = curr_user
+        return render_to_response ("error.html", context)
 
-        context = {"context": error_details, "user": curr_user}
-        return render_to_response ("error.html", context, ci)
-
-@user_passes_test(lambda u:u.is_superuser, login_url="/admin/login")
+@login_required(login_url="/login/")
 def broken(request):
-    ci = RequestContext(request)
+    context = {}
+    context.update(csrf(request))
     curr_user = request.user
     if not is_reviewer(curr_user):
         raise Http404("You are not allowed to view this page")
@@ -56,7 +57,8 @@ def broken(request):
             db_instance.update_broken_data(broken_json_data)
             
         broken = Broken.objects.all() 
-        context = {"broken": broken, "user": curr_user}
-        return render_to_response("broken.html", context, ci)
+        context["broken"] = broken
+        context[ "reviewer"] = curr_user
+        return render_to_response("broken.html", context)
 
 

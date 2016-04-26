@@ -1423,11 +1423,12 @@ def link_image(request):
 
 @login_required(login_url="/login/")
 def admin_tools(request):
-    ci = RequestContext(request)
+    context = {}
+    context.update(csrf(request))
     curr_user = request.user
     
     if not is_reviewer(curr_user):
         raise Http404("You are not allowed to view this page")
     else:
-        context = {"reviewer":curr_user}
+        context["reviewer"] = curr_user
         return render_to_response('tbc/admin-tools.html', context, ci)

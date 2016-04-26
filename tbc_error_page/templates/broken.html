@@ -5,7 +5,7 @@
 		<center><h4> There are no new comments  </h4></center>
          {% else %}
 		<h3><u><center>TBC Broken Links Page </center></u></h3>
-                <h5> Hi <b><u> {{user}} </b><u> </h5>
+                <h5> Hi <b><u> {{reviewer.get_full_name}} </b><u> </h5>
                 <a href = "{% url 'tbc_error_page.views.error' %}"> TBC Error Status Page </a>
 <p></p>
         <table border = 1>

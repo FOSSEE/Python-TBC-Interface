@@ -4,7 +4,7 @@
 
 {% block content %}
 	<h3><center> TBC Commenting  </center></h3>
-        <h5> Hi <u> <b>{{user}} </b> </u> </h5><br/>
+        <h5> Hi <u> <b>{{reviewer.get_full_name}} </b> </u> </h5><br/>
 	<a href = "https://pythontbc.disqus.com" target = "blank">Go to Disqus admin Page </a>
 
         {% if not url_context %}

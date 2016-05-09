@@ -1194,7 +1194,7 @@ def ConvertNotebook(request, notebook_path=None):
     new one if corresponding ipython notebook has been modified. """ 
     
     context = {}
-    path = os.path.join(local.path, notebook_path.strip(".ipynb"))
+    path = os.path.join(local.path, notebook_path.rsplit(".", 1)[0])
     template_html = path+".html"
     template_ipynb =path+".ipynb"
     template_dir = os.path.dirname(path)

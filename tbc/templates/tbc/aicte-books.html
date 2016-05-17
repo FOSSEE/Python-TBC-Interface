@@ -16,7 +16,7 @@ function submitCategory()
     <hr>
     <div id="content-wrap">
         <p>Below is the list of AICTE recommended books. You can propose a book just by clicking on the link. However, if you wish to submit your own preferences other than AICTE books, click the button given below.</p>
-        <a href="{% url 'tbc:SubmitProposal' %}" class="btn btn-primary">I don't want to propose AICTE book</a>
+        <a href="{% url 'tbc:submit_proposal' %}" class="btn btn-primary">I don't want to propose AICTE book</a>
         <hr>
         <center><h4>Select a Category</h4></center>
         <form name="aictebooks" action="/submit-aicte-proposal/" method=POST enctype="multipart/form-data">
@@ -52,7 +52,7 @@ function submitCategory()
                         {{ forloop.counter }}
                     </td>
                     <td>
-                        <a href="{% url 'tbc:SubmitAICTEProposal' book.id %}">{{ book.title }} by {{ book.author }}, {{ book.edition }} Edition</a>
+                        <a href="{% url 'tbc:submit_aicte_proposal' book.id %}">{{ book.title }} by {{ book.author }}, {{ book.edition }} Edition</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -37,7 +37,7 @@
         <b><u> Below are the links to the chapters:</u></b><br>
 
         {% for chapter in chapters %}
-        <a href="{% url 'tbc:ConvertNotebook' chapter.notebook %}" target="_blank">{{ chapter }}</a>
+        <a href="{% url 'tbc:convert_notebook' chapter.notebook %}" target="_blank">{{ chapter }}</a>
         <br>
         {% endfor %}
     </div>

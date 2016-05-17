@@ -34,8 +34,8 @@ function submitCategory()
 <div class="row-fluid">
     {% for item in items %}
         <div class ="module-list">
-            <a href="{% url 'tbc:BookDetails' item.book.id %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ item.image.image }}"></a>
-            <center><a href="{% url 'tbc:BookDetails' item.book.id %}">{{ item.book.title }}</a></center>
+            <a href="{% url 'tbc:book_details' item.book.id %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ item.image.image }}"></a>
+            <center><a href="{% url 'tbc:book_details' item.book.id %}">{{ item.book.title }}</a></center>
         </div>
     {% endfor %}
     </div>

@@ -25,13 +25,13 @@
                                 ISBN: {{ textbook.isbn }}<br>
                                 Year of Pub.: {{ textbook.year_of_pub }}<br>
                                 Category: {{ textbook.category }}<br>
-                                <a class="btn btn-primary btn-mini" href="{% url 'tbc:ReviewProposals' proposal.id textbook.id %}">Approve & Ask for Samples</a>
+                                <a class="btn btn-primary btn-mini" href="{% url 'tbc:review_proposals' proposal.id textbook.id %}">Approve & Ask for Samples</a>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
                 <h5><b>Status:</b> You are yet to review this proposal</h5>
-                <a class="btn btn-primary" href="{% url 'tbc:RejectProposal' proposal.id %}">Reject</a>
+                <a class="btn btn-primary" href="{% url 'tbc:reject_proposal' proposal.id %}">Reject</a>
             </div>
     {% endfor %}
     </ol>
@@ -71,8 +71,8 @@
                 {% ifequal proposal.proposal.status "sample resubmitted" %}
                     {% if proposal.sample.sample_notebook %}
                         <h5><a href="{% static 'Python-Textbook-Companions/' %}{{ proposal.sample.sample_notebook }}">sample notebook</a><br></h5>
-                        <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.proposal.id %}">Disapprove Samples</a>
-                        <a class="btn btn-primary" href="{% url 'tbc:AllotBook' proposal.proposal.id %}">Alot Book</a>
+                        <a class="btn btn-primary" href="{% url 'tbc:disapprove_proposal' proposal.proposal.id %}">Disapprove Samples</a>
+                        <a class="btn btn-primary" href="{% url 'tbc:allot_book' proposal.proposal.id %}">Alot Book</a>
                         <h5>This is resubmission of the sample notebook</h5>
                     {% else %}
                         <h5>Contributor has not re submitted sample notebook yet.</h5>
@@ -81,8 +81,8 @@
                 {% ifequal proposal.proposal.status "sample submitted" %}
                     {% if proposal.sample.sample_notebook %}
                         <h5><a href="{% static 'Python-Textbook-Companions/' %}{{ proposal.sample.sample_notebook }}">sample notebook</a><br></h5>
-                        <a class="btn btn-primary" href="{% url 'tbc:DisapproveProposal' proposal.proposal.id %}">Disapprove Samples</a>
-                        <a class="btn btn-primary" href="{% url 'tbc:AllotBook' proposal.proposal.id %}">Alot Book</a>
+                        <a class="btn btn-primary" href="{% url 'tbc:disapprove_proposal' proposal.proposal.id %}">Disapprove Samples</a>
+                        <a class="btn btn-primary" href="{% url 'tbc:allot_book' proposal.proposal.id %}">Alot Book</a>
                     {% else %}
                         <h5>Contributor has not submitted sample notebook yet.</h5>
                     {% endif %}

@@ -42,7 +42,7 @@ function submitCategory()
                 {{ forloop.counter }}
             </td>
             <td>
-                    <a href="{% url 'tbc:BookDetails' book.id %}">{{ book.title }} by {{ book.author }}</a>
+                    <a href="{% url 'tbc:book_details' book.id %}">{{ book.title }} by {{ book.author }}</a>
             </td>
         </tr>
         {% endfor %}

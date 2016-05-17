@@ -6,7 +6,7 @@
 {% for image in images %}
     <div class ="module-list">
         {% if image.chapters_set.get.notebook %}
-            <a href="{% url 'tbc:ConvertNotebook' image.chapters_set.get.notebook %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}"></a>
+            <a href="{% url 'tbc:convert_notebook' image.chapters_set.get.notebook %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}"></a>
         {% else %}
             <img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}">
         {% endif %}
@@ -18,7 +18,7 @@
 <table class="table table-bordered table-hover">
     {% for chapter in chapters %}
         <tr>
-            <td><a href="{% url 'tbc:ConvertNotebook' chapter.notebook %}">{{ chapter.name }}</a></td>
+            <td><a href="{% url 'tbc:convert_notebook' chapter.notebook %}">{{ chapter.name }}</a></td>
         </tr>
     {% endfor %}
 </table>

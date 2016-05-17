@@ -20,13 +20,13 @@
 <center><h3>Books to be reviewed</h3></center>
 <ol>
 {% for book in books %}
-    <li><a href="{% url 'tbc:BookReview' book.id %}">{{ book.title }} {{ book.edition }} Edition</a>
+    <li><a href="{% url 'tbc:book_review' book.id %}">{{ book.title }} {{ book.edition }} Edition</a>
 {% endfor %}
 </ol>
 <center><h3>Reviewed Books</h3></center>
 <ol>
 {% for book in approved_books %}
-<li><a href="{% url 'tbc:BookReview' book.id %}">{{ book.title }} {{ book.edition }} Edition</a></li>
+<li><a href="{% url 'tbc:book_review' book.id %}">{{ book.title }} {{ book.edition }} Edition</a></li>
 {% endfor %}
 <ol>
 {% endblock %}

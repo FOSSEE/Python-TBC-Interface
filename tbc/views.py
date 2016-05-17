@@ -55,7 +55,7 @@ def is_reviewer(user):
         return True
 
 
-def InternshipForms(request):
+def internship_forms(request):
     context = {}
     images = []
     if request.user.is_anonymous():
@@ -68,11 +68,11 @@ def InternshipForms(request):
     return render_to_response('tbc/internship-forms.html', context)
 
 
-def SampleIpynb(request):
+def sample_ipynb(request):
     return render_to_response('tbc/sample.html')
 
 
-def AboutPytbc(request):
+def about_pytbc(request):
     context = {}
     images = []
     if request.user.is_anonymous():
@@ -85,7 +85,7 @@ def AboutPytbc(request):
     return render_to_response('tbc/about-pytbc.html', context)
 
 
-def Home(request):
+def home(request):
     context = {}
     images = []
     if request.user.is_anonymous():
@@ -122,7 +122,7 @@ def Home(request):
     if 'bookupdate' in request.GET:
         context['bookupdate'] =True
 
-    books = Book.objects.filter(approved=True).order_by("-id")[0:6]
+    books = Book.objects.filter(approved=True).order_by("-id")
     for book in books:
         try:
             images.append(ScreenShots.objects.filter(book=book)[0])
@@ -152,11 +152,11 @@ def Home(request):
     return render_to_response('base.html', context)
 
 
-def _checkProfile(user):
+def _checkprofile(user):
     return Profile.objects.filter(user=user).exists()
 
 
-def UserLogin(request):
+def user_login(request):
     context = {}
     context.update(csrf(request))
     if 'require_login' in request.GET:
@@ -197,7 +197,7 @@ def UserLogin(request):
     return render_to_response('tbc/login.html', context)
 
 
-def UserRegister(request):
+def user_register(request):
     context = {}
     context.update(csrf(request))
     if request.method == 'POST':
@@ -224,7 +224,7 @@ def UserRegister(request):
     return render_to_response('tbc/register.html', context)
 
 
-def UserProfile(request):
+def user_profile(request):
     context = {}
     user = request.user
     if user.is_authenticated():
@@ -256,13 +256,13 @@ def UserProfile(request):
         return HttpResponseRedirect('/login/?require_login=True')
 
 
-def UpdateProfile(request):
+def update_profile(request):
     user = request.user
     context = {}
     context.update(csrf(request))
     if user.is_anonymous():
         return HttpResponseRedirect('/login/?require_login=True')
-    if not _checkProfile(user):
+    if not _checkprofile(user):
         return HttpResponseRedirect("/profile/?update=profile")
     context['user'] = user   
     user_profile = Profile.objects.get(user=user)
@@ -290,7 +290,7 @@ def UpdateProfile(request):
     context['form'] = form
     return render_to_response('tbc/update-profile.html', context)
 
-def UserLogout(request):
+def user_logout(request):
     user = request.user
     if user.is_authenticated() and user.is_active:
         logout(request)
@@ -298,7 +298,7 @@ def UserLogout(request):
     return redirect('/?logout=done')
 
 
-def ForgotPassword(request):
+def forgot_password(request):
     context = {}
     user_emails = []
     context.update(csrf(request))
@@ -328,7 +328,7 @@ def ForgotPassword(request):
         return render_to_response("tbc/forgot-password.html", context)
 
 
-def UpdatePassword(request):
+def update_password(request):
     context = {}
     user = request.user
     context.update(csrf(request))
@@ -366,14 +366,14 @@ def UpdatePassword(request):
         return render_to_response("tbc/login.html", context)
 
 
-def SubmitBook(request):
+def submit_book(request):
     context = {}
     if request.user.is_anonymous():
         return HttpResponseRedirect("/login/?require_login=true")
     else:
         curr_user = request.user
         if curr_user.is_authenticated():
-            if not _checkProfile(curr_user):
+            if not _checkprofile(curr_user):
                 return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=curr_user)
     curr_proposals = Proposal.objects.filter(user=user_profile)
@@ -414,9 +414,9 @@ def SubmitBook(request):
         
 
 
-def SubmitCodeOld(request, book_id=None):
+def submit_code_old(request, book_id=None):
     user = request.user
-    if not _checkProfile(user):
+    if not _checkprofile(user):
         return HttpResponseRedirect("/profile/?update=profile")
     curr_profile = Profile.objects.get(user=user)
     context = {}
@@ -456,9 +456,9 @@ def SubmitCodeOld(request, book_id=None):
         return render_to_response('tbc/upload-content-old.html', context)
 
 
-def SubmitProposal(request):
+def submit_proposal(request):
     curr_user = request.user
-    if not _checkProfile(curr_user):
+    if not _checkprofile(curr_user):
         return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=curr_user.id)
     context = {}
@@ -537,12 +537,12 @@ Thank you for showing interest in contributing to Python Textbook Companion Acti
         return HttpResponseRedirect('/?proposal_pending=True')
 
 
-def ListAICTE(request):
+def list_aicte(request):
     if request.user.is_anonymous():
         return HttpResponseRedirect('/login/?require_login=True')
     else:
         curr_user = request.user
-    if not _checkProfile(curr_user):
+    if not _checkprofile(curr_user):
         return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=curr_user.id)
     user_proposals = Proposal.objects.filter(user=user_profile)
@@ -565,12 +565,12 @@ def ListAICTE(request):
     return render_to_response('tbc/aicte-books.html', context)
 
 
-def SubmitAICTEProposal(request, aicte_book_id=None):
+def submit_aicte_proposal(request, aicte_book_id=None):
     if request.user.is_anonymous():
         return HttpResponseRedirect('/login/?require_login=True')
     else:
         curr_user = request.user
-    if not _checkProfile(curr_user):
+    if not _checkprofile(curr_user):
         return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=curr_user.id)
     context = {}
@@ -637,7 +637,7 @@ def SubmitAICTEProposal(request, aicte_book_id=None):
         return HttpResponseRedirect('/?proposal_pending=True')
 
 
-def ReviewProposals(request, proposal_id=None, textbook_id=None):
+def review_proposals(request, proposal_id=None, textbook_id=None):
     context = {}
     user = request.user
     if is_reviewer(user):
@@ -689,7 +689,7 @@ def ReviewProposals(request, proposal_id=None, textbook_id=None):
         return HttpResponse("not allowed")
 
 
-def DisapproveProposal(request, proposal_id=None):
+def disapprove_proposal(request, proposal_id=None):
     context = {}
     context.update(csrf(request))
     proposal = Proposal.objects.get(id=proposal_id)
@@ -709,7 +709,7 @@ def DisapproveProposal(request, proposal_id=None):
         return render_to_response('tbc/disapprove-sample.html', context)
 
 
-def AllotBook(request, proposal_id=None):
+def allot_book(request, proposal_id=None):
     context = {}
     proposal = Proposal.objects.get(id=proposal_id)
     proposal.status = "book alloted"
@@ -721,7 +721,7 @@ def AllotBook(request, proposal_id=None):
     return HttpResponseRedirect("/book-review/?book_alloted=done")
 
 
-def RejectProposal(request, proposal_id=None):
+def reject_proposal(request, proposal_id=None):
     context = {}
     context.update(csrf(request))
     proposal = Proposal.objects.get(id=proposal_id)
@@ -746,13 +746,13 @@ def RejectProposal(request, proposal_id=None):
         return render_to_response('tbc/reject-proposal.html', context)
 
 
-def SubmitSample(request, proposal_id=None, old_notebook_id=None):
+def submit_sample(request, proposal_id=None, old_notebook_id=None):
     context = {}
     if request.user.is_anonymous():
         return HttpResponseRedirect('/login/?require_login=True')
     else:
         user = request.user
-    if not _checkProfile(user):
+    if not _checkprofile(user):
         return HttpResponseRedirect("/profile/?update=profile")
     context.update(csrf(request))
     if request.method == "POST":
@@ -793,13 +793,13 @@ def SubmitSample(request, proposal_id=None, old_notebook_id=None):
             return render_to_response('tbc/submit-sample.html', context)
 
 
-def ConfirmBookDetails(request):
+def confirm_book_details(request):
     context = {}
     if request.user.is_anonymous():
         return HttpResponseRedirect('/login/?require_login=True')
     else:
         current_user = request.user
-    if not _checkProfile(current_user):
+    if not _checkprofile(current_user):
         return HttpResponseRedirect("/profile/?update=profile")
     user_profile = Profile.objects.get(user=current_user)
     try:
@@ -843,12 +843,14 @@ def ConfirmBookDetails(request):
         return render_to_response('tbc/confirm-details.html', context)
 
 
-def SubmitCode(request):
+
+
+def submit_code(request):
     if request.user.is_anonymous():
         return HttpResponseRedirect('/login/?require_login=True')
     else:
         user = request.user
-    if not _checkProfile(user):
+    if not _checkprofile(user):
         return HttpResponseRedirect("/profile/?update=profile")
     curr_profile = Profile.objects.get(user=user)
     context = {}
@@ -943,7 +945,7 @@ def SubmitCode(request):
         return render_to_response('tbc/upload-content.html', context)
 
 
-def UpdateContent(request, book_id=None):
+def update_content(request, book_id=None):
     context = {}
     if request.user.is_anonymous():
         return HttpResponseRedirect('/login/?require_login=True')
@@ -983,7 +985,7 @@ def UpdateContent(request, book_id=None):
         return render_to_response('tbc/update-content.html', context)
 
 
-def generateZip(book_id):
+def generate_zip(book_id):
     book = Book.objects.get(id=book_id)
     files_to_zip = []
     file_path = os.path.abspath(os.path.dirname(__file__))
@@ -1003,7 +1005,7 @@ def generateZip(book_id):
     return s, zipfile_name
 
 
-def GetZip(request, book_id=None):
+def get_zip(request, book_id=None):
     user = request.user
     s, zipfile_name = generateZip(book_id)
     resp = HttpResponse(s.getvalue(), mimetype = "application/x-zip-compressed")
@@ -1011,7 +1013,7 @@ def GetZip(request, book_id=None):
     return resp
 
 
-def BookDetails(request, book_id=None):
+def book_details(request, book_id=None):
     context = {}
     if request.user.is_anonymous():
         context['anonymous'] = True
@@ -1029,7 +1031,7 @@ def BookDetails(request, book_id=None):
     return render_to_response('tbc/book-details.html', context)
 
 
-def BookReview(request, book_id=None):
+def book_review(request, book_id=None):
     context = {}
     if is_reviewer(request.user):
         if book_id:
@@ -1066,7 +1068,7 @@ def BookReview(request, book_id=None):
         return render_to_response('tbc/forbidden.html')
 
 
-def ApproveBook(request, book_id=None):
+def approve_book(request, book_id=None):
     context = {}
     user = request.user
     if is_reviewer(request.user):
@@ -1120,7 +1122,7 @@ Congratulations !\nThe book - """+book.title+""" is now complete & published.\nP
         return render_to_response('tbc/forbidden.html')
 
 
-def NotifyChanges(request, book_id=None):
+def notify_changes(request, book_id=None):
     context = {}
     if is_reviewer(request.user):
         book = Book.objects.get(id=book_id)
@@ -1156,7 +1158,7 @@ def NotifyChanges(request, book_id=None):
         return render_to_response('tbc/forbidden.html')
 
 
-def BrowseBooks(request):
+def browse_books(request):
     context = {}
     category = None
     images = []
@@ -1189,10 +1191,10 @@ def BrowseBooks(request):
     return render_to_response('tbc/browse-books.html', context)
 
 
-def ConvertNotebook(request, notebook_path=None):
+
+def convert_notebook(request, notebook_path=None):
     """ Checks for the modified time of ipython notebooks and corresponding html page and replaces html page with 
     new one if corresponding ipython notebook has been modified. """ 
-    
     context = {}
     path = os.path.join(local.path, notebook_path.rsplit(".", 1)[0])
     template_html = path+".html"
@@ -1216,7 +1218,7 @@ def ConvertNotebook(request, notebook_path=None):
     return render_to_response(template_html, context)
 
 
-def CompletedBooks(request):
+def completed_books(request):
     context = {}
     context.update(csrf(request))
     category = "All"
@@ -1240,7 +1242,7 @@ def CompletedBooks(request):
     return render_to_response('tbc/completed_books.html', context)
     
 
-def BooksUnderProgress(request):
+def books_under_progress(request):
     context = {}
     context.update(csrf(request))
     if request.user.is_anonymous():
@@ -1263,7 +1265,7 @@ def BooksUnderProgress(request):
     return render_to_response('tbc/books_under_progress.html', context)
 
 
-def GetCertificate(request, book_id=None):
+def get_certificate(request, book_id=None):
     if request.user.is_anonymous():
         return HttpResponseRedirect('/login/?require_login=True')
     else:
@@ -1340,7 +1342,7 @@ def _make_tbc_certificate(path):
     err = process.communicate()[1]
     return process.returncode, err
 
-def RedirectToIpynb(request, notebook_path=None):
+def redirect_to_ipynb(request, notebook_path=None):
     context = {}
     notebook = notebook_path.split("/")
     notebook[0] = "notebooks"

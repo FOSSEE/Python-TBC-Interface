@@ -1007,7 +1007,7 @@ def generate_zip(book_id):
 
 def get_zip(request, book_id=None):
     user = request.user
-    s, zipfile_name = generateZip(book_id)
+    s, zipfile_name = generate_zip(book_id)
     resp = HttpResponse(s.getvalue(), mimetype = "application/x-zip-compressed")
     resp['Content-Disposition'] = 'attachment; filename=%s' % zipfile_name
     return resp

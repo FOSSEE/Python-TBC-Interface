@@ -1,3 +1,6 @@
+"""
+A view is a callable which takes a request and returns a response. This can be more than just a function, and Django provides an example of some classes which can be used as views. These allow you to structure your views and reuse code by harnessing inheritance and mixins. There are also some generic views for simple tasks which we’ll get to later, but you may want to design your own structure of reusable views which suits your use case. 
+"""
 from django.utils.encoding import force_text
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -32,12 +35,12 @@ def add_log(user, object, flag, message, proposal_id=None, chat='No message'):
         object_repr=force_text(object),
         action_flag=flag,
         change_message=message,
-        proposal_id = proposal_id,
-        conversation = chat,
+        proposal_id=proposal_id,
+        conversation=chat,
     ).save()
 
 
-def email_send(to,subject,msg):
+def email_send(to, subject, msg):
     try:
         smtpObj = smtplib.SMTP('localhost')
         mail_from = "textbook@fossee.in"
@@ -118,9 +121,9 @@ def home(request):
     if 'sample_notebook' in request.GET:
         context['sample_notebook'] = True
     if 'cannot_submit_sample' in request.GET:
-        context['cannot_submit_sample'] =True
+        context['cannot_submit_sample'] = True
     if 'bookupdate' in request.GET:
-        context['bookupdate'] =True
+        context['bookupdate'] = True
 
     books = Book.objects.filter(approved=True).order_by("-id")
     for book in books:
@@ -140,14 +143,17 @@ def home(request):
         curr_user = request.user
         user_profile = Profile.objects.filter(user=curr_user)
 
-        pending_proposal_list = list(Proposal.objects.filter(status="pending").order_by('id'))
+        pending_proposal_list = list(Proposal.objects.filter(status="pend\
+        ing").order_by('id'))
         try:
-            pending_user_proposal = Proposal.objects.get(user=user_profile, status="pending")
+            pending_user_proposal = Proposal.objects.get(
+            user=user_profile, status="pending")
         except:
             pending_user_proposal = None
 
         if pending_user_proposal:
-            context['proposal_position'] = pending_proposal_list.index(pending_user_proposal) + 1
+            context['proposal_position'] = pending_proposal_list.index(
+            pending_user_proposal) + 1
 
     return render_to_response('base.html', context)
 
@@ -238,7 +244,7 @@ def user_profile(request):
                 data = form.save(commit=False)
                 data.user = request.user
                 data.save()
-                add_log(user, user, CHANGE,'Profile entry')
+                add_log(user, user, CHANGE, 'Profile entry')
                 return HttpResponseRedirect('/')
             else:
                 context.update(csrf(request))
@@ -315,7 +321,12 @@ def forgot_password(request):
             user.set_password(password)
             user.save()
             subject = "PythonTBC: Password Reset"
-            message = """Dear """+user.first_name+""",\nYour password for Python TBC interface has been reset. Your credentials are:\nUsername: """+user.username+"""\nPassword: """+password+"""\n\nKindly login with the given password and update your password through the link given below.\nLink: http://tbc-python.fossee.in/update-password.\n\nThank You !\n\nRegards,\n Python TBC Team,\nFOSSEE - IIT Bombay."""
+            message = """Dear """+user.first_name+""",\nYour password for Python TBC\
+             interface has been reset. Your credentials are:\nUsername: """+user.username+"""\n\
+            Password: """+password+"""\n\nKindly login with the given password\
+             and update your password through the link given below.\nLink: \
+            http://tbc-python.fossee.in/update-password.\n\nThank You !\n\nRegards,\n Python\
+             TBC Team,\nFOSSEE - IIT Bombay."""
             email_send(email, subject, message)
             form = UserLoginForm()
             context['form'] = form
@@ -441,10 +452,17 @@ def submit_code_old(request, book_id=None):
             chapter.screen_shots.add(screenshot)
             chapter.save()
         subject = "Python-TBC: Codes Submitted Acknowledgement"
-        message = """Hi """+curr_book.contributor.user.first_name+""",\nThank you for your contribution to Python TBC.\nWe have received the book & codes submitted by you.\nDetails of the book are given below: \nBook Title: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\n\nPlease be patient while we review your book & get back to you. Review of the book will take a minimum of 45 days. Hoping for kind cooperation."""
+        message = """Hi """+curr_book.contributor.user.first_name+""",\nThank you for your \
+        contribution to Python TBC.\nWe have received the book & codes submitted by you\
+        .\nDetails of the book are given below: \nBook Title: """+curr_book.title+"""\nAuthor:\
+         """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: \
+        """+curr_book.isbn+"""\n\nPlease be patient while we review your book & get back to \
+        you. Review of the book will take a minimum of 45 days. Hoping for kind cooperation."""
         email_send(curr_book.contributor.user.email, subject, message)
         subject = "Python-TBC: Book Submission"
-        message = """Hi """+curr_book.reviewer.name+""",\nA book has been submitted on the Python TBC interface.\n Details of the book & contributor:\n Contributor: """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
+        message = """Hi """+curr_book.reviewer.name+""",\nA book has been submitted on the \
+        Python TBC interface.\n Details of the book & contributor:\n Contributor\
+        : """+curr_book.contributor.user.first_name+""" """+curr_book.contributor.user.last_name+"""\nBook Title"""+curr_book.title+"""\nAuthor: """+curr_book.title+"""\nAuthor: """+curr_book.author+"""\n Publisher: """+curr_book.publisher_place+"""\nISBN: """+curr_book.isbn+"""\nFollow the link to riview the book:\nhttp://tbc-python.fosse.in/book-review/"""+str(curr_book.id)
         email_send(curr_book.reviewer.email, subject, message)
         return HttpResponseRedirect('/?up=done')
     else:

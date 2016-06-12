@@ -10,14 +10,14 @@ from urlparse import urljoin
 class DisqusCommenting(object):
     """ A class for getting disqus comments per url, also features getting flagged comments."""
   
-    base_disqus_url  = "http://disqus.com/api/"
+    base_disqus_url="http://disqus.com/api/"
 
 
     def check_internet_connection(self):
         """ Checks for the internet connection."""
-  
+
         try:
-            requests.get(self.base_disqus_url, timeout = 10)
+            requests.get(self.base_disqus_url, timeout=10)
             self.internet_status = {"status":True, "message": "Connection Passed."}
 
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
@@ -32,7 +32,8 @@ class DisqusCommenting(object):
         api_version = str(api_version)
         try:
             if self.internet_status["status"] == True:
-                url = urljoin(self.base_disqus_url,api_version)+"/forums/details.json" # get a better way to do this. Apparently urljoin doesnt work that way.
+                url = urljoin(self.base_disqus_url,api_version)+"/forums/details.json"
+                # get a better way to do this. Apparently urljoin doesnt work that way.
                 payload = {"api_key":public_key, "forum":forum_name}
                 connect_api = requests.get(url, params = payload).json()
   
@@ -78,12 +79,12 @@ class DisqusCommenting(object):
         for thread_id in self.counter.keys():   # Find a better way to do this
             comment_list = []
             payload = {"api_key": self.public_key, "thread": thread_id}
-            thread_url = urljoin(self.base_disqus_url,self.api_version)+"/threads/list.json" 
-            thread_data = requests.get(thread_url, params = payload).json()
-            comment_dict = {}
+            thread_url=urljoin(self.base_disqus_url,self.api_version)+"/threads/list.json" 
+            thread_data=requests.get(thread_url, params = payload).json()
+            comment_dict={}
             comment_dict["chapter_urls"] =  thread_data["response"][0]["link"]
-            comment_url = urljoin(self.base_disqus_url,self.api_version)+"/threads/listPosts.json" 
-            comment_data = requests.get(comment_url, params = payload).json()
+            comment_url=urljoin(self.base_disqus_url,self.api_version)+"/threads/listPosts.json" 
+            comment_data=requests.get(comment_url, params = payload).json()
 
             for comments in comment_data["response"]:
                 comment_list.append(comments["raw_message"])

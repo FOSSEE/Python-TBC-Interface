@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span6">
+        <u> Books without start and end time </u>
+        <ol>
+            {% for book in books_incomplete %}
+                <li><a href="{% url 'tbc:edit_book' book.id %}"> {{ book.title }} </a> </li>
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="span6">
+        <u> Books with start and end time </u>
+        <ol>
+            {% for book in books_complete %}
+                <li><a href="{% url 'tbc:edit_book' book.id %}"> {{ book.title }} </a></li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+
+
+
+{% endblock %}
+

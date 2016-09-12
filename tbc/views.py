@@ -366,6 +366,46 @@ def update_password(request):
         return render_to_response("tbc/login.html", context)
 
 
+def books(request):
+    user = request.user
+    if user.is_superuser:
+        books = Book.objects.all()
+        books_incomplete = []
+        books_complete = []
+        for book in books:
+            if book.start_time is None or book.end_time is None:
+                books_incomplete.append(book)
+            else:
+                books_complete.append(book)
+        context = {'books_incomplete': books_incomplete, 'books_complete': books_complete}
+        return render_to_response('tbc/books.html', context)
+    else:
+        return HttpResponseRedirect("/login/?require_login=true")
+
+
+def edit_book(request, book_id):
+    user = request.user
+    if user.is_superuser:
+        book = Book.objects.get(id=book_id)
+        context = {}
+        context.update(csrf(request))
+        if request.method == 'POST':
+            form = BookForm(request.POST, instance=book)
+            if form.is_valid():
+                form.save()
+                return books(request)
+            else:
+                context['form'] = form
+                context['book'] = book
+                return render_to_response('tbc/edit-book.html', context)
+        form = BookForm(instance=book)
+        context['form'] = form
+        context['book'] = book
+        return render_to_response('tbc/edit-book.html', context)
+    else:
+        return HttpResponseRedirect("/login/?require_login=true")
+
+
 def submit_book(request):
     context = {}
     if request.user.is_anonymous():

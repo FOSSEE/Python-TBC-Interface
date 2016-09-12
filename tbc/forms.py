@@ -71,4 +71,6 @@ class BookForm(forms.ModelForm):
         'edition':forms.TextInput(attrs={'placeholder':'Edition of the Book'}),
         'year_of_pub':forms.TextInput(attrs={'placeholder':'Year when the Book was published'}),
         'no_chapters':forms.TextInput(attrs={'placeholder':'Total number of chapters in the Book (only include chapters that have solved examples)'}),
+        'start_time': forms.DateInput(attrs={'class':'datepicker'}),
+        'end_time': forms.DateInput(attrs={'class':'datepicker'}),
         }

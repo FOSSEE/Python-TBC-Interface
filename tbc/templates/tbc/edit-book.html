@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block script %}
+<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script>
+
+$(document).ready(function() {
+         console.log("rogkor")
+    $(".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "2000:2030",
+    });
+  });
+</script>
+{% endblock %}
+{% block content %}
+<div class="well">
+    <center><a href="{% url 'tbc:books' %}" class="btn btn-primary"> BACK </a></center>
+    <form action="{% url 'tbc:edit_book' book.id %}" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <center><input class="btn btn-primary" type="submit" value="SAVE"></center>
+    </form>
+</div>
+
+{% endblock %}
+

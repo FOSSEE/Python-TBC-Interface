@@ -52,6 +52,8 @@ urlpatterns = patterns('',
     url(r'^notify-changes/(?P<book_id>\d+)$', 'tbc.views.notify_changes', name='notify_changes'),
     url(r'^brokenbooks/$', 'tbc.views.get_broken_books', name='broken_books'),
     url(r'^link-image/$', 'tbc.views.link_image', name='link_image'),
+    url(r'^books/$', 'tbc.views.books', name='books'),
+    url(r'^edit-book/(?P<book_id>\d+)/$', 'tbc.views.edit_book', name='edit_book'),
 
     # ajax urls
     url(r'^ajax/matching-books/$', 'tbc.views.ajax_matching_books', name='AjaxMatchingBooks'),

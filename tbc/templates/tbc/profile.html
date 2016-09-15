@@ -15,7 +15,6 @@
     <form action="/profile/" method=POST>
         {% csrf_token %}
         {{ form.as_p }}
-        {{ form.errors }}
         <br>
         <input class="btn btn-primary" type=submit value=submit>
     </form>

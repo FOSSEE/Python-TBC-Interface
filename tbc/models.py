@@ -80,6 +80,9 @@ class Profile(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER)
     phone_no = models.CharField(max_length=15)
     about_proj = models.CharField(max_length=50, choices=ABOUT_PROJ)
+    city = models.CharField(max_length=50, default=None)
+    state = models.CharField(max_length=50, default=None)
+    pin_code = models.IntegerField(max_length=6, default=None)
     def __unicode__(self):
         name = self.user.first_name or 'Profile'
         return '%s'%(name)

@@ -228,12 +228,10 @@ def user_profile(request):
     context = {}
     user = request.user
     if user.is_authenticated():
+        user_profile = Profile.objects.filter(user=user)
+        profile = user_profile[0] if user_profile.exists() else None
         if request.method == 'POST':
-            user_profile = Profile.objects.filter(user=user)
-            if user_profile.exists():
-                form = UserProfileForm(request.POST, instance=user_profile[0])
-            else:
-                form = UserProfileForm(request.POST)
+            form = UserProfileForm(request.POST, instance=profile)
             if form.is_valid():
                 data = form.save(commit=False)
                 data.user = request.user
@@ -244,8 +242,7 @@ def user_profile(request):
                 context.update(csrf(request))
                 context['form'] = form
                 return render_to_response('tbc/profile.html', context)
-        else:
-            form = UserProfileForm()
+        form = UserProfileForm(instance=profile)
         context.update(csrf(request))
         context['form'] = form
         context['user'] = user
@@ -267,7 +264,7 @@ def update_profile(request):
     context['user'] = user   
     user_profile = Profile.objects.get(user=user)
     if request.method == "POST":
-        form = UserProfileForm(request.POST)
+        form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             data = form.save(commit=False)
             data.user = request.user
@@ -278,15 +275,7 @@ def update_profile(request):
             context['form'] = form
             return render_to_response('tbc/update-profile.html', context)
     else:
-        form = UserProfileForm()
-        form.initial['about'] = user_profile.about
-        form.initial['insti_org'] = user_profile.insti_org
-        form.initial['course'] = user_profile.course
-        form.initial['dept_desg'] = user_profile.dept_desg
-        form.initial['dob'] = user_profile.dob
-        form.initial['gender'] = user_profile.gender
-        form.initial['phone_no'] = user_profile.phone_no
-        form.initial['about_proj'] = user_profile.about_proj
+        form = UserProfileForm(instance=user_profile)
     context['form'] = form
     return render_to_response('tbc/update-profile.html', context)
 
@@ -372,12 +361,19 @@ def books(request):
         books = Book.objects.all()
         books_incomplete = []
         books_complete = []
+        auto = []
+        manual = []
         for book in books:
             if book.start_time is None or book.end_time is None:
                 books_incomplete.append(book)
             else:
                 books_complete.append(book)
-        context = {'books_incomplete': books_incomplete, 'books_complete': books_complete}
+        for book in books_incomplete:
+            if book.approved_textbook.all():
+                auto.append(book)
+            else:
+                manual.append(book)
+        context = {'auto': auto, 'manual': manual, 'books_complete': books_complete}
         return render_to_response('tbc/books.html', context)
     else:
         return HttpResponseRedirect("/login/?require_login=true")

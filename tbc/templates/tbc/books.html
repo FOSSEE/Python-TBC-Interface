@@ -5,8 +5,17 @@
 <div class="row-fluid">
     <div class="span6">
         <u> Books without start and end time </u>
+        <br \>
+        <u> Books without any log available </u>
         <ol>
-            {% for book in books_incomplete %}
+            {% for book in manual %}
+                <li><a href="{% url 'tbc:edit_book' book.id %}"> {{ book.title }} </a> </li>
+            {% endfor %}
+        </ol>
+        <br \>
+        <u> Books with log available, so can be automated </u>
+        <ol>
+            {% for book in auto %}
                 <li><a href="{% url 'tbc:edit_book' book.id %}"> {{ book.title }} </a> </li>
             {% endfor %}
         </ol>

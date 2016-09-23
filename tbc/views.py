@@ -862,6 +862,11 @@ def confirm_book_details(request):
                 context['no_notebooks'] = [i for i in range(1, book_to_update.no_chapters+1)]
                 return render_to_response('tbc/update-code.html', context)
             return HttpResponseRedirect('/submit-code/')
+        else:
+            context.update(csrf(request))
+            context['form'] = book_form
+            context['book'] = book_to_update
+            return render_to_response('tbc/confirm-details.html', context)
     else:
         book_form = BookForm()
         book_form.initial['title'] = book_to_update.title

@@ -107,8 +107,8 @@ class Book(models.Model):
     contributor = models.ForeignKey(Profile)
     reviewer = models.ForeignKey(Reviewer)
     approved = models.BooleanField(default=False)
-    start_time = models.DateField(null=True, default=None)
-    end_time = models.DateField(null=True, default=None)
+    start_time = models.DateField(auto_now_add=True)
+    end_time = models.DateField(auto_now=True)
     tags = TaggableManager()
     def __unicode__(self):
         name = self.title or 'Book'

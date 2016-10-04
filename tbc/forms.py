@@ -16,7 +16,7 @@ class UserProfileForm(forms.ModelForm):
         self.fields['about_proj'].label = "How did you come to know about the project"
     class Meta:
         model = Profile
-        exclude = ('user')
+        exclude = ('user',)
         widgets = {
         'about':forms.TextInput(attrs={'placeholder':'Tell us about yourself'}),
         'dob':forms.TextInput(attrs={'placeholder':'mm/dd/yyyy'}),

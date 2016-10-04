@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response
 from .models import Error, Broken, get_json_from_file
 from django.contrib.auth.decorators import login_required
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.http import Http404
 from tbc.views import is_reviewer
 

@@ -82,7 +82,7 @@ class Profile(models.Model):
     about_proj = models.CharField(max_length=50, choices=ABOUT_PROJ)
     city = models.CharField(max_length=50, default=None)
     state = models.CharField(max_length=50, default=None)
-    pin_code = models.IntegerField(max_length=6, default=None)
+    pin_code = models.IntegerField(default=None)
     def __unicode__(self):
         name = self.user.first_name or 'Profile'
         return '%s'%(name)
@@ -103,7 +103,7 @@ class Book(models.Model):
     isbn = models.CharField(max_length=50)
     edition = models.CharField(max_length=15)
     year_of_pub = models.CharField(max_length=4)
-    no_chapters = models.IntegerField(max_length=2, default=0, blank=True)
+    no_chapters = models.IntegerField(default=0, blank=True)
     contributor = models.ForeignKey(Profile)
     reviewer = models.ForeignKey(Reviewer)
     approved = models.BooleanField(default=False)
@@ -144,7 +144,7 @@ class TempBook(models.Model):
     isbn = models.CharField(max_length=50)
     edition = models.CharField(max_length=15)
     year_of_pub = models.CharField(max_length=4)
-    no_chapters = models.IntegerField(max_length=2)
+    no_chapters = models.IntegerField()
     def __unicode__(self):
         name = self.title or 'Book'
         return '%s'%(name)

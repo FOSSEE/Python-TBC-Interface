@@ -1,5 +1,5 @@
 import scrapy
-from items import TbcErrorItems, TbcBrokenItems 
+from .items import TbcErrorItems, TbcBrokenItems
 from scrapy.utils.response import get_base_url
 from scrapy.utils.url import urljoin_rfc
 from scrapy.http import Request

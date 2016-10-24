@@ -74,5 +74,5 @@ if __name__ == '__main__':
     b = a.fetch_comments_from_script()
     c = a.add_comments_to_db()        #This should always be before delete_redundant_comments
     d = a.delete_redundant_comments() #This should always be after add_comments_to_db
-    print c
-    print d
+    print (c)
+    print (d)

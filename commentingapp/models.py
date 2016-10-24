@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from django.db import models
 from tbc.models import Chapters, Book
 from django.contrib.auth.models import User
@@ -14,9 +13,9 @@ class Url (models.Model):
     url = models.URLField()
     
     def get_contributor_details(self, counter):
-        notebooks = [os.path.join(chapter_name.split("/")[-2], chapter_name.split('/')[-1]) for chapter_name in counter.keys()]
+        notebooks = [os.path.join(chapter_name.split("/")[-2], chapter_name.split('/')[-1]) for chapter_name in list(counter.keys())]
         contributor_list  = []
-        for notebook,url,number_of_comments in zip(notebooks, counter.keys(), counter.values()):
+        for notebook,url,number_of_comments in zip(notebooks, list(counter.keys()), list(counter.values())):
             contributor_dict = {}
             contributor_id = Book.objects.filter(Q(chapters__notebook = notebook)).values_list("contributor_id", flat = True)
             contributor = User.objects.filter(id = contributor_id[0]).values("email", "first_name", "last_name")

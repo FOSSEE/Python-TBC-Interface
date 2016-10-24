@@ -1,12 +1,12 @@
 from django.db import models
 import os
-import cPickle
+import pickle
 
 def get_json_from_file(filename):
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
     if os.path.isfile(path):
         with  open(path) as json_dump:
-            json_data =cPickle.load(json_dump)
+            json_data =pickle.load(json_dump)
             return json_data
     else:
         return False

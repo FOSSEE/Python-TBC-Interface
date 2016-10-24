@@ -3,7 +3,7 @@
 import requests
 import collections
 import os
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 
 
@@ -75,7 +75,7 @@ class DisqusCommenting(object):
 
         json_like_list = []
 
-        for thread_id in self.counter.keys():   # Find a better way to do this
+        for thread_id in list(self.counter.keys()):   # Find a better way to do this
             comment_list = []
             payload = {"api_key": self.public_key, "thread": thread_id}
             thread_url = urljoin(self.base_disqus_url,self.api_version)+"/threads/list.json" 
@@ -103,4 +103,4 @@ if __name__ == "__main__":
     z = x.get_thread_ids()   
     z1 = x.get_comments()
 
-    print z1 # this will print out a json like list of all the urls and the comments on each url
+    print(z1) # this will print out a json like list of all the urls and the comments on each url

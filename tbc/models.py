@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from PythonTBC import settings
 from django.contrib.admin.models import LogEntry
-from local import sitemap_path
+from .local import sitemap_path
 from taggit.managers import TaggableManager
 
 CATEGORY = (("fluid mechanics", "Fluid Mechanics"),
@@ -177,12 +177,12 @@ class ActivityLog(LogEntry):
 
 class AicteBook(models.Model):
     title = models.TextField()
-    author = models.CharField(max_length=300L)
-    category = models.CharField(max_length=32L)
-    publisher_place = models.CharField(max_length=200L)
-    isbn = models.CharField(max_length=50L)
-    edition = models.CharField(max_length=15L)
-    year_of_pub = models.CharField(max_length=4L)
+    author = models.CharField(max_length=300)
+    category = models.CharField(max_length=32)
+    publisher_place = models.CharField(max_length=200)
+    isbn = models.CharField(max_length=50)
+    edition = models.CharField(max_length=15)
+    year_of_pub = models.CharField(max_length=4)
     proposed = models.BooleanField(default=False)
     def __unicode__(self):
         notebook = self.title or 'Book'

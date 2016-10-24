@@ -6,7 +6,7 @@ import django.contrib.sitemaps.views
 from django.contrib import admin
 admin.autodiscover()
 
-from sitemap import TbcBookSitemap
+from .sitemap import TbcBookSitemap
 sitemaps = { 
     'book': TbcBookSitemap, 
 }

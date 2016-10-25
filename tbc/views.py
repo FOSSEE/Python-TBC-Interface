@@ -8,12 +8,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.models import CHANGE
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from models import *
+from .models import *
 from tbc.forms import *
-import local
+from . import local
 import os
 import zipfile
-import StringIO
+import io
 import smtplib
 import shutil
 import string
@@ -1362,7 +1362,7 @@ def get_certificate(request, book_id=None):
             else:
                 error = True
                 add_log(user, book, CHANGE, err, proposal_id)
-        except Exception, e:
+        except Exception as e:
             error = True
             add_log(user, book, CHANGE, e, proposal_id)
     

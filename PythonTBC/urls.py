@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^admin-tools/commenting', commentingapp.views.commenting, name = 'commenting'),
     url(r'^admin-tools/error_page', tbc_error_page.views.error, name = 'error_page'),
     url(r'^admin-tools/broken_page', tbc_error_page.views.broken, name = 'broken_page'),
-   
+    url(r'hitcount/', include('hitcount.urls', namespace='hitcount')),
 
 ]
 

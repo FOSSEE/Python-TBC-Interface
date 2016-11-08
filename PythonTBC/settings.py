@@ -144,6 +144,7 @@ INSTALLED_APPS = (
     'tbc_error_page',
     'taggit',
     'taggit_templatetags2',
+    
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

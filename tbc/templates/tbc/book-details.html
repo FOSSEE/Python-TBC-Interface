@@ -3,7 +3,7 @@
 
 {% block script %}
 {% load staticfiles %}
-<script src="{% static 'hitcount/jquery.postcsrf.js' %}"></script>
+<script src="{% static 'js/jquery.postcsrf.js' %}"></script>
 
 {% load hitcount_tags %}
 {% get_hit_count_js_variables for book as hitcount %}
@@ -98,11 +98,12 @@ function redirectToIpynb(notebook)
         <td>GitHub: &nbsp;&nbsp;</td>
         <td><a href= 'https://github.com/FOSSEE/Python-Textbook-Companions/tree/master/{{ book.title.split|join:"_" }}_by_{{ book.author.split|join:"_" }}' target="_blank">{{ book.title }}</a></td>
     </tr>
-<tr>
+<!--<tr>
         <td>Page Hits: &nbsp;&nbsp;</td>
 <td>{% get_hit_count for book %}</td>
 
 </tr>
+-->
 </table>
 
 </div>

@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'hitcount',
     'tbc',
     'comments',
     #'south',
@@ -143,6 +144,7 @@ INSTALLED_APPS = (
     'tbc_error_page',
     'taggit',
     'taggit_templatetags2',
+    
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

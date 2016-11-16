@@ -21,7 +21,7 @@ import random
 import json
 import subprocess
 from email.mime.text import MIMEText
-
+import StringIO
 
 def add_log(user, object, flag, message, proposal_id=None, chat='No message'):
     '''Creates log entry of the user activities.'''

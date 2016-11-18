@@ -1,9 +1,9 @@
 # Django settings for PythonTBC project.
 
 from os.path import *
-from local import *
+from .local import *
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 
@@ -29,7 +29,7 @@ DATABASES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -97,7 +97,7 @@ SECRET_KEY = 'a8zm$)bj&k9p2$1*biby#mo5fga#8$sr4&cmz%h=vum-xkbkme'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+     #'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -136,16 +136,16 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'hitcount',
     'tbc',
     'comments',
-    'south',
+    #'south',
     'commentingapp',
     'tbc_error_page',
     'taggit',
     'taggit_templatetags2',
+    
 )
-
-
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 

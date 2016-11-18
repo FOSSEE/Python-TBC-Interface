@@ -1,6 +1,6 @@
 from django.shortcuts import render, render_to_response
 from django.contrib.auth.decorators import login_required
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from .models import Url, Comments
 from django.db.models import Q
 from collections import Counter

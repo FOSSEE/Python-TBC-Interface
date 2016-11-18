@@ -3,17 +3,17 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.models import CHANGE
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from models import *
+from .models import *
 from tbc.forms import *
-import local
+from . import local
 import os
 import zipfile
-import StringIO
+import io
 import smtplib
 import shutil
 import string
@@ -21,7 +21,7 @@ import random
 import json
 import subprocess
 from email.mime.text import MIMEText
-
+import StringIO
 
 def add_log(user, object, flag, message, proposal_id=None, chat='No message'):
     '''Creates log entry of the user activities.'''
@@ -1049,7 +1049,7 @@ def generate_zip(book_id):
 def get_zip(request, book_id=None):
     user = request.user
     s, zipfile_name = generate_zip(book_id)
-    resp = HttpResponse(s.getvalue(), mimetype = "application/x-zip-compressed")
+    resp = HttpResponse(s.getvalue(), content_type = "application/x-zip-compressed")
     resp['Content-Disposition'] = 'attachment; filename=%s' % zipfile_name
     return resp
 
@@ -1362,7 +1362,7 @@ def get_certificate(request, book_id=None):
             else:
                 error = True
                 add_log(user, book, CHANGE, err, proposal_id)
-        except Exception, e:
+        except Exception as e:
             error = True
             add_log(user, book, CHANGE, e, proposal_id)
     

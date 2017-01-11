@@ -4,6 +4,8 @@ from PythonTBC import settings
 from django.contrib.admin.models import LogEntry
 from .local import sitemap_path
 from taggit.managers import TaggableManager
+from django.core.files.storage import FileSystemStorage
+import os
 
 CATEGORY = (("fluid mechanics", "Fluid Mechanics"),
             ("control systems", "Control Theory & Control Systems"),
@@ -114,6 +116,14 @@ class Book(models.Model):
         name = self.title or 'Book'
         return '%s'%(name)
 
+class OverwriteStorage(FileSystemStorage):
+
+    def get_available_name(self, name):
+        if self.exists(name):
+            os.remove(os.path.join("/Site/tbc-python_fossee_in/PythonTBC/Python-TBC-Interface/tbc/static/Python-Textbook-Companions/", name))
+        return name
+
+fs = OverwriteStorage(location="/Site/tbc-python_fossee_in/PythonTBC/Python-TBC-Interface/tbc/static/Python-Textbook-Companions/")
         
 class Chapters(models.Model):
     name = models.CharField(max_length=200)

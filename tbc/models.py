@@ -120,14 +120,14 @@ class OverwriteStorage(FileSystemStorage):
 
     def get_available_name(self, name):
         if self.exists(name):
-            os.remove(os.path.join("/Site/tbc-python_fossee_in/PythonTBC/Python-TBC-Interface/tbc/static/Python-Textbook-Companions/", name))
+            os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
 
 fs = OverwriteStorage(location="/Site/tbc-python_fossee_in/PythonTBC/Python-TBC-Interface/tbc/static/Python-Textbook-Companions/")
         
 class Chapters(models.Model):
     name = models.CharField(max_length=200)
-    notebook = models.FileField(upload_to=get_notebook_dir)
+    notebook = models.FileField(storage=OverwriteStorage(), upload_to=get_notebook_dir)
     book = models.ForeignKey(Book)
     screen_shots = models.ManyToManyField('ScreenShots')
     def __unicode__(self):
@@ -139,7 +139,7 @@ class Chapters(models.Model):
 
 class ScreenShots(models.Model):
     caption = models.CharField(max_length=128)
-    image = models.FileField(upload_to=get_image_dir)
+    image = models.FileField(storage=OverwriteStorage(), upload_to=get_image_dir)
     book = models.ForeignKey(Book)
     def __unicode__(self):
         name = self.caption or 'ScreenShots'
@@ -174,7 +174,7 @@ class Proposal(models.Model):
 class SampleNotebook(models.Model):
     proposal = models.ForeignKey(Proposal)
     name = models.CharField(max_length=40)
-    sample_notebook = models.FileField(upload_to=get_sample_dir)
+    sample_notebook = models.FileField(storage=OverwriteStorage(), upload_to=get_sample_dir)
     def __unicode__(self):
         notebook = self.proposal.accepted.title or 'notebook'
         return '%s'%(notebook)

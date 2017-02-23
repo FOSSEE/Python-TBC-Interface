@@ -57,7 +57,7 @@ function redirectToIpynb(notebook)
             <a href="{% url 'tbc:convert_notebook' chapter.notebook %}">{{ chapter.name }}</a>
         </td>
         <td>
-            <a href="{% static 'uploads/' %}{{ chapter.notebook }}">Download</a>
+            <a href="{% static 'Python-Textbook-Companions/' %}{{ chapter.notebook }}">Download</a>
         </td>
     </tr>
 {% endfor %}

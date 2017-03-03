@@ -38,11 +38,11 @@ function redirectToIpynb(notebook)
 {% for image in images %}
 <span class="showonhover">  
     <div class ="module-list">
-        {% if image.chapters_set.get.notebook %}
-            <a href="{% url 'tbc:convert_notebook' image.chapters_set.get.notebook %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}"></a></span>
         <span class="hovertext">
             Click to view -{{ image.chapters_set.get.name }}
         </span>
+        {% if image.chapters_set.get.notebook %}
+            <a href="{% url 'tbc:convert_notebook' image.chapters_set.get.notebook %}"><img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}"></a></span>
         {% else %}
             <img src="{% static 'Python-Textbook-Companions/' %}{{ image.image }}">
         {% endif %}

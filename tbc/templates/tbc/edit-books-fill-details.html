@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block script %}
+<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+{% endblock %}
+{% block content %}
+<div class="well">
+    <center><a href="{% url 'tbc:books_fill_details' %}" class="btn btn-primary"> BACK </a></center>
+    <form action="{% url 'tbc:edit_books_fill_details' book.id %}" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <center><input class="btn btn-primary" type="submit" value="SAVE"></center>
+    </form>
+</div>
+{% endblock %}

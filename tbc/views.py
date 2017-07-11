@@ -401,7 +401,63 @@ def edit_book(request, book_id):
     else:
         return HttpResponseRedirect("/login/?require_login=true")
 
+def books_fill_details(request):
+    user = request.user
+    if user.is_superuser:
+        books = Book.objects.all()
+        books_incomplete = []
+        books_complete = []
+        auto = []
+        manual = []
+        for book in books:
+            if book.courses is None or book.year is None or book.university is None:
+                books_incomplete.append(book)
+                auto.append(book)
+            else:
+                books_complete.append(book)
+                manual.append(book)
+        context = {'auto': auto, 'manual': manual, 'books_complete': books_complete}
+        return render_to_response('tbc/books-fill-details.html', context)
+    else:
+        return HttpResponseRedirect("/login/?require_login=true")
 
+def edit_books_fill_details(request, book_id):
+    user = request.user
+    if user.is_superuser:
+        book = Book.objects.get(id=book_id)
+        context = {}
+        context.update(csrf(request))
+        if request.method == 'POST':
+            form = BookForm(request.POST, instance=book)
+            if form.is_valid():
+                form.save()
+                return books_fill_details(request)
+            else:
+                form.fields['title'].widget.attrs['readonly'] = True
+                form.fields['author'].widget.attrs['readonly'] = True
+                form.fields['publisher_place'].widget.attrs['readonly'] = True
+                form.fields['isbn'].widget.attrs['readonly'] = True
+                form.fields['edition'].widget.attrs['readonly'] = True
+                form.fields['year_of_pub'].widget.attrs['readonly'] = True
+                form.fields['no_chapters'].widget.attrs['readonly'] = True
+
+                context['form'] = form
+                context['book'] = book
+                return render_to_response('tbc/edit-books-fill-details.html', context)
+        form = BookForm(instance=book)
+        form.fields['title'].widget.attrs['readonly'] = True
+        form.fields['author'].widget.attrs['readonly'] = True
+        form.fields['publisher_place'].widget.attrs['readonly'] = True
+        form.fields['isbn'].widget.attrs['readonly'] = True
+        form.fields['edition'].widget.attrs['readonly'] = True
+        form.fields['year_of_pub'].widget.attrs['readonly'] = True
+        form.fields['no_chapters'].widget.attrs['readonly'] = True
+        context['form'] = form
+        context['book'] = book
+        return render_to_response('tbc/edit-books-fill-details.html', context)
+    else:
+        return HttpResponseRedirect("/login/?require_login=true")
+    
 def submit_book(request):
     context = {}
     if request.user.is_anonymous():
@@ -1202,9 +1258,15 @@ def notify_changes(request, book_id=None):
 def browse_books(request):
     context = {}
     category = None
+    courses = None
+    year = None
+    university = None
     images = []
     book_images = []
     books = None
+    #course_books = None
+    #year_of_course_list = None
+    #university_list = None
     if request.user.is_anonymous():
         context['anonymous'] = True
     else:
@@ -1214,22 +1276,37 @@ def browse_books(request):
             context['user'] = request.user
     context.update(csrf(request))
     books = Book.objects.filter(approved=True)
-    if request.method == "POST":
-        category = request.POST['category']
-        if category == "all":
+   # course_books = Book.objects.filter(approved=True)
+   # year_of_course = Book.objects.filter(approved=True)
+   # university_list = Book.objects.filter(approved=True)
+    if request.method == "GET":
+        category = request.GET.get('category')
+        courses = request.GET.get('courses')
+        year = request.GET.get('year')
+        university = request.GET.get('university')
+        if category == "all" and courses == "all" and year == "all" and university == "all":
             books = Book.objects.filter(approved=True)
+        elif category !="all" and courses == "all" and year == "all" and university == "all":
+            books = Book.objects.filter(category=category)
+        elif category =="all" and courses != "all" and year == "all" and university == "all":
+            books = Book.objects.filter(courses=courses)
+        elif category !="all" and courses == "all" and year != "all" and university == "all":
+            books = Book.objects.filter(year=year)
+        elif category !="all" and courses == "all" and year == "all" and university != "all":
+            books = Book.objects.filter(university=university)
         else:
-            books = Book.objects.filter(category=category, approved=True)
-    else:
-        books = Book.objects.filter(approved=True)
+            books = Book.objects.filter(category=category,courses=courses,year=year,university=university)
     for book in books:
-       images.append(ScreenShots.objects.filter(book=book)[0])
+        images.append(ScreenShots.objects.filter(book=book)[0])
     for i in range(len(books)):
        obj = {'book':books[i], 'image':images[i]}
        book_images.append(obj)
-    context['items'] = book_images
+    context['   items'] = book_images
     context['category'] = category
-    return render_to_response('tbc/browse-books.html', context)
+    context['courses'] = courses
+    context['year'] = year
+    context['university'] = university
+    return render_to_response('tbc/browse-books.html', context, context_instance=RequestContext(request))
 
 
 

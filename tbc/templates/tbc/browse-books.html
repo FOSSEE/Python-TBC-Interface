@@ -31,6 +31,198 @@ function submitCategory()
   <option value="computer programming">Computer Programming</option>
   <option value="others">Others</option>
 </select>
+<center><h4>Select a Course</h4></center>
+<form name="browseBooks" action="/browse-books/" method=GET enctype="multipart/form-data">
+{% csrf_token %}
+<center><select name="courses" id="courses" onchange="submitCategory();">
+  <option value="all">All</option>
+  <option value="M.Tech">M.Tech</option>
+  <option value="ME">ME</option>
+  <option value="MSc">MSc</option>
+  <option value="MScIT">MScIT</option>
+  <option value="MCA">MCA</option>
+  <option value="B.Tech">B.Tech</option>
+  <option value="BE">BE</option>
+  <option value="BCA">BCA</option>
+  <option value="BScIt">BScIt</option>
+  <option value="others">Others</option>
+</select>
+<center><h4>Select year of course</h4></center>
+<form name="browseBooks" action="/browse-books/" method=GET enctype="multipart/form-data">
+{% csrf_token %}
+<center><select name="year" id="year" onchange="submitCategory();">
+  <option value="all">All</option>
+  <option value="first">First year</option>
+  <option value="second">Second year</option>
+  <option value="third">Third year</option>
+  <option value="fourth">Fourth year</option>
+
+
+</select>
+<center><h4>Select University</h4></center>
+<form name="browseBooks" action="/browse-books/" method=GET enctype="multipart/form-data">
+{% csrf_token %}
+<center><select name="university" id="university" onchange="submitCategory();">
+<option value="all">All</option>
+<option value="A.I Kalsekar Technical Campus, Mumbai University">A.I Kalsekar Technical Campus, Mumbai University</option>
+<option value="AALIM MOHAMED SALEGH COLLEGE OF ENGINEERING">AALIM MOHAMED SALEGH COLLEGE OF ENGINEERING</option>
+<option value="ABAL Technologies">ABAL Technologies</option>
+<option value="ABES Engineering College">ABES Engineering College</option>
+<option value="Acharya Narendra Dev College">Acharya Narendra Dev College</option>
+<option value="Acropolis Institute of Technology & Research, Indore">Acropolis Institute of Technology & Research, Indore</option>
+<option value="Adamas University">Adamas University</option>
+<option value="Aggarwal public school">Aggarwal public school</option>
+<option value="AIKTC, Panvel">AIKTC, Panvel</option>
+<option value="AISSMS COE PUNE">AISSMS COE PUNE</option>
+<option value="AKU patna">AKU patna</option>
+<option value="AL AMEEN ENGINEERING COLLEGE">AL AMEEN ENGINEERING COLLEGE</option>
+<option value="Alliance University">Alliance University</option>
+<option value="Alpha College of Engineering & Tech., Kalol">Alpha College of Engineering & Tech., Kalol</option>
+<option value="Amity University">Amity University</option>
+<option value="Amrita School of Engineering, Bangalore">Amrita School of Engineering, Bangalore</option>
+<option value="Andalas university">Andalas university</option>
+<option value="Andhra Loyola College">Andhra Loyola College</option>
+<option value="Andhra university">Andhra university</option>
+<option value="Anglo Eastern ship management india Pvt. Ltd">Anglo Eastern ship management india Pvt. Ltd</option>
+<option value="Anjuman -I-Islam Kalsekar Technical Campus and School of Enginering">Anjuman -I-Islam Kalsekar Technical Campus and School of Enginering</option>
+<option value="Anna university">Anna university</option>
+<option value="Apex institute of technology and managment">Apex institute of technology and managment</option>
+<option value="APG UNIVERSITY SHIMLA">APG UNIVERSITY SHIMLA</option>
+<option value="Atharva College Of Engineering">Atharva College Of Engineering</option>
+<option value="Autonomous/kumaraguru college of technology coimbatore">Autonomous/kumaraguru college of technology coimbatore</option>
+<option value="Ayya Nadar Janaki Ammal College,Sivakasi">Ayya Nadar Janaki Ammal College,Sivakasi</option>
+<option value="B M S College of Engineering ,Bangalore">B M S College of Engineering ,Bangalore</option>
+<option value="Bannari Amman Institute of Technology">Bannari Amman Institute of Technology</option>
+<option value="Bapurao deshmukh college of engg.,nagpur university">Bapurao deshmukh college of engg.,nagpur university</option>
+<option value="Barkatullah university">Barkatullah university</option>
+<option value="BCRCE,DURGAPUR">BCRCE,DURGAPUR</option>
+<option value="Bhai Gurdas Polytechnic College">Bhai Gurdas Polytechnic College</option>
+<option value="Bharath university">Bharath university</option>
+<option value="Bharati Vidyapeeth College of Engineering">Bharati Vidyapeeth College of Engineering</option>
+<option value="Biju Patnaik University of Technology">Biju Patnaik University of Technology</option>
+<option value="BIRLA INSTITUTE OF TECHNOLOGY MESRA">BIRLA INSTITUTE OF TECHNOLOGY MESRA</option>
+<option value="Brahmanand institute of management & science">Brahmanand institute of management & science</option>
+<option value="BVRIT Hyderabad College of Engineering For Women">BVRIT Hyderabad College of Engineering For Women</option>
+<option value="Central University of Rajasthan">Central University of Rajasthan</option>
+<option value="Charusat University Changa">Charusat University Changa</option>
+<option value="CMR Institute of technology">CMR Institute of technology</option>
+<option value="College of engineering and technology,Bhubaneswar">College of engineering and technology,Bhubaneswar</option>
+<option value="COLLEGE OF ENGINEERING MUNNAR">COLLEGE OF ENGINEERING MUNNAR</option>
+<option value="College of Engineering Pune">College Of Engineering Roorkee</option>
+<option value="College Of Engineering Roorkee">Charusat University Changa</option>
+<option value="Concordia University">Concordia University</option>
+<option value="Cummins College Of Engineering for Women, Pune">Cummins College Of Engineering for Women, Pune</option>
+<option value="D. D. University">D. D. University</option>
+<option value="D. Y. P. I. E. T, Pimpri, Pune">D. Y. P. I. E. T, Pimpri, Pune</option>
+<option value="D.J. Sanghavi College of Engineering">D.J. Sanghavi College of Engineering</option>
+<option value="Deenbandhu Chhotu Ram University of Science & Technology">Deenbandhu Chhotu Ram University of Science & Technology</option>
+<option value="Defence Institute of Advanced Technology,Pune">Defence Institute of Advanced Technology,Pune</option>
+<option value="DELHI TECHNOLOGICAL UNIVERSITY">DELHI TECHNOLOGICAL UNIVERSITY</option>
+<option value="Dev Bhoomi Group Of Institution">Dev Bhoomi Group Of Institution</option>
+<option value="Dharamshinh desai university ,nadiad">Dharamshinh desai university ,nadiad</option>
+<option value="Don Bosco Institute of Technology, Kurla">Don Bosco Institute of Technology, Kurla</option>
+<option value="Dr. Babasaheb Ambedkar Marathwada University, Aurangabad">Dr. Babasaheb Ambedkar Marathwada University, Aurangabad</option>
+<option value="Dr.Mgr Educational and research institute university">Dr.Mgr Educational and research institute university</option>
+<option value="Excel Engineering College">Excel Engineering College</option>
+<option value="Fr. Conceicao Rodrigues College of Engineering">Fr. Conceicao Rodrigues College of Engineering</option>
+<option value="G.H.PATEL COLLEGE OF ENGINEERING AND TECHNOLOGY">G.H.PATEL COLLEGE OF ENGINEERING AND TECHNOLOGY</option>
+<option value="G.L. Bajaj Group of Institutions, Mathura">G.L. Bajaj Group of Institutions, Mathura</option>
+<option value="Gautam Buddha University , Greater Noida">Gautam Buddha University , Greater Noida</option>
+<option value="GD Goenka University">GD Goenka University</option>
+<option value="Genba Sopanrao Moze College Of Engineering">Genba Sopanrao Moze College Of Engineering</option>
+<option value="GITAM University, Visakhapatnam">GITAM University, Visakhapatnam</option>
+<option value="Gokaraju Rangaraju Institute of Engineering and Technology">Gokaraju Rangaraju Institute of Engineering and Technology</option>
+<option value="Government College of Engineering,Salem">Government College of Engineering,Salem</option>
+<option value="Government polytechnic awasari,Pune">Government polytechnic awasari,Pune</option>
+<option value="Govind Ballabh Pant Engineering College, Pauri Garhwal">Govind Ballabh Pant Engineering College, Pauri Garhwal</option>
+<option value="Gujarat Technical University">Gujarat Technical University</option>
+<option value="Gurgaon College of Engineering">Gurgaon College of Engineering</option>
+<option value="Gurunanak College">Gurunanak College</option>
+<option value="Harish-Chandra Research Institute, Allahabad">Harish-Chandra Research Institute, Allahabad</option>
+<option value="Heritage Institute of Technology">Heritage Institute of Technology</option>
+<option value="Ideal Institute of Technology,Ghaziabad">Ideal Institute of Technology,Ghaziabad</option>
+<option value="IIMT College of engineering,Gr.Noida">IIMT College of engineering,Gr.Noida</option>
+<option value="Indian Institute of chemical technology">Indian Institute of chemical technology</option>
+<option value="Indian Institute of Engineering Bombay">Indian Institute of Engineering Bombay</option>
+<option value="Indian Institute Of Information Technology Allahabad">Indian Institute Of Information Technology Allahabad</option>
+<option value="INDIAN INSTITUTE OF SCIENCE EDUCATION AND RESEARCH KOLKATA">INDIAN INSTITUTE OF SCIENCE EDUCATION AND RESEARCH KOLKATA</option>
+<option value="Indian Institute of Space Science and Technology">Indian Institute of Space Science and Technology</option>
+<option value="Indian Institute of Technology Madras">Indian Institute of Technology Madras</option>
+<option value="Indian Institute Of Technology, Hyderabad">Indian Institute Of Technology, Hyderabad</option>
+<option value="Indian School of Mines, Dhanbad">Indian School of Mines, Dhanbad</option>
+<option value="Indira Gandhi Delhi Technical University for Women, Delhi">Indira Gandhi Delhi Technical University for Women, Delhi</option>
+<option value="Institute of Technology & Management, Gwalior">Institute of Technology & Management, Gwalior</option>
+<option value="Institute of Chemical Technology,Mumbai">Institute of Chemical Technology,Mumbai</option>
+<option value="Institute of Road and transport Technology">Institute of Road and transport Technology</option>
+<option value="J.B. Institute of Engineering and Technology">J.B. Institute of Engineering and Technology</option>
+<option value="Jaggaiya peta engineering college">Jaggaiya peta engineering college</option>
+<option value="Jain college of Engineering (affiliated to VTU)">Jain college of Engineering (affiliated to VTU)</option>
+<option value="Jamia Milia Islamia, Delhi">Jamia Milia Islamia, Delhi</option>
+<option value="Jayamukhi Institute Of Technological Sciences">Jayamukhi Institute Of Technological Sciences</option>
+<option value="Jaypee Insitute of Information Technology,Noida">Jaypee Insitute of Information Technology,Noida</option>
+<option value="Kakatiya University">Kakatiya University</option>
+<option value="Krishna Institute of Engineering and Technology">Krishna Institute of Engineering and Technology</option>
+<option value="Koneru Lakshmaiah University">Koneru Lakshmaiah University</option>
+<option value="Lourdes Matha College of Science and Technology">Lourdes Matha College of Science and Technology</option>
+<option value="Madhav Institute of Technology and Science, Gwalior">Madhav Institute of Technology and Science, Gwalior</option>
+<option value="Maharaja Surajmal Institute of Technology, New Delhi">Maharaja Surajmal Institute of Technology, New Delhi</option>
+<option value="Manipal Institute of Technology, Manipal">Manipal Institute of Technology, Manipal</option>
+<option value="Manipal Institute of Technology,Jaipur">Manipal Institute of Technology,Jaipur</option>
+<option value="Motilal Nehru National Institute of Technology">Motilal Nehru National Institute of Technology</option>
+<option value="National institute of foundary and forge technology,Ranchi">National institute of foundary and forge technology,Ranchi</option>
+<option value="National Institute of Technology Agartala">National Institute of Technology Agartala</option>
+<option value="NATIONAL INSTITUTE OF TECHNOLOGY DURGAPUR">NATIONAL INSTITUTE OF TECHNOLOGY DURGAPUR</option>
+<option value="National Institute of Technology Karnataka">National Institute of Technology Karnataka</option>
+<option value="National Institute of Technology Kurukshetra">National Institute of Technology Kurukshetra</option>
+<option value="National Institute Of technology Meghalaya">National Institute Of technology Meghalaya</option>
+<option value="National Institute Of Technology Warangal">National Institute Of Technology Warangal</option>
+<option value="National Institute of Technology, Suratkal">National Institute of Technology, Suratkal</option>
+<option value="NATIONAL INSTITUTE OF TECHONOLOGY CALICUT">NATIONAL INSTITUTE OF TECHONOLOGY CALICUT</option>
+<option value="NIT,Jamshedpur">NIT,Jamshedpur</option>
+<option value="NIT TRICHY">NIT TRICHY</option>
+<option value="NIT Raipur">NIT Raipur</option>
+<option value="NIT jalandhar">NIT jalandhar</option>
+<option value="NBN Sinhgad School of engineering, Ambegaon(Bk), Pune">NBN Sinhgad School of engineering, Ambegaon(Bk), Pune</option>
+<option value="Osmania university">Osmania university</option>
+<option value="PES Insitute of Technology,Bangalore">PES Insitute of Technology,Bangalore</option>
+<option value="Padmabhushan Vasantdada Patil Pratishthan's College of Engineering">Padmabhushan Vasantdada Patil Pratishthan's College of Engineering</option>
+<option value="Roorkee Institute Of Technology">Roorkee Institute Of Technology</option>
+<option value="Sanjay Ghodawat Polytechnic Kolhapur">Sanjay Ghodawat Polytechnic Kolhapur</option>
+<option value="Sardar Vallabhbhai National Institute of Technology">Sardar Vallabhbhai National Institute of Technology</option>
+<option value="Saurashtra University">Saurashtra University</option>
+<option value="Savitribai phule pune university">Savitribai phule pune university</option>
+<option value="Sharda University,Greater Noida">Sharda University,Greater Noida</option>
+<option value="Shivaji University,Kolhapur">Shivaji University,Kolhapur</option>
+<option value="Shri Brahmanand Institute of Management and Computer Science">Shri Brahmanand Institute of Management and Computer Science</option>
+<option value="Shri Govindram Seksaria Institute of Technology and Science">Shri Govindram Seksaria Institute of Technology and Science</option>
+<option value="Shri Ramdeobaba College of Engineering and Management, Nagpur">Shri Ramdeobaba College of Engineering and Management, Nagpur</option>
+<option value="SIES GST- Mumbai University">SIES GST- Mumbai University</option>
+<option value="Sinhgad Institute Of Science and Technology,Narhe">Sinhgad Institute Of Science and Technology,Narhe</option>
+<option value="Sri Mittapalli College of Engineering">Sri Mittapalli College of Engineering</option>
+<option value="Sri Ramakrishna Engineering College, Coimbatore">Sri Ramakrishna Engineering College, Coimbatore</option>
+<option value="Sri Venkateswara university college of engineering">Sri Venkateswara university college of engineering</option>
+<option value="Stanley college of engineering and technology for women">Stanley college of engineering and technology for women</option>
+<option value="Swami Keshvanand Institute of Technology Management & Gramothan">Swami Keshvanand Institute of Technology Management & Gramothan</option>
+<option value="Symbiosis Institute of Computer Studies and Research">Symbiosis Institute of Computer Studies and Research</option>
+<option value="The LNM Institute of Information Technology">The LNM Institute of Information Technology</option>
+<option value="TKR College of Engineering Technology">TKR College of Engineering Technology</option>
+<option value="University of Alabama Huntsville">University of Alabama Huntsville</option>
+<option value="University Of Calicut">University Of Calicut</option>
+<option value="University of Delhi">University of Delhi</option>
+<option value="University of Mumbai">University of Mumbai</option>
+<option value="University of Pune">University of Pune</option>
+<option value="University of South Australia">University of South Australia</option>
+<option value="University of Vigo (Spain)">University of Vigo (Spain)</option>
+<option value="Uttarakhand Technical University">Uttarakhand Technical University</option>
+<option value="V R Siddhartha Engineering College">V R Siddhartha Engineering College</option>
+<option value="V. E. S. Institute of technology">V. E. S. Institute of technology</option>
+<option value="Vellore instiute of technology">Vellore instiute of technology</option>
+<option value="Vidya Pratishthan's College of Engineering">Vidya Pratishthan's College of Engineering</option>
+<option value="Vivekanand Education Society Institute Of Technology">Vivekanand Education Society Institute Of Technology</option>
+<option value="Walchand College of Engineering">Walchand College of Engineering</option>
+
+</select>
+
 <div class="row-fluid">
     {% for item in items %}
         <div class ="module-list">
@@ -42,4 +234,14 @@ function submitCategory()
 <script>
 document.getElementById('category').value = "{{ category }}";
 </script>
+<script>
+document.getElementById('courses').value = "{{ courses }}";
+</script>
+<script>
+document.getElementById('year').value = "{{ year }}";
+</script>
+<script>
+document.getElementById('university').value = "{{ university }}";
+</script>
 {% endblock %}
+    

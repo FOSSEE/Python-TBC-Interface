@@ -57,7 +57,8 @@ urlpatterns = [
     url(r'^link-image/$', tbc.views.link_image, name='link_image'),
     url(r'^books/$', tbc.views.books, name='books'),
     url(r'^edit-book/(?P<book_id>\d+)/$', tbc.views.edit_book, name='edit_book'),
-
+    url(r'^books-fill-details/$', tbc.views.books_fill_details, name='books_fill_details'),
+    url(r'^edit-books-fill-details/(?P<book_id>\d+)/$', tbc.views.edit_books_fill_details, name='edit_books_fill_details'),
     # ajax urls
     url(r'^ajax/matching-books/$', tbc.views.ajax_matching_books, name='AjaxMatchingBooks'),
 

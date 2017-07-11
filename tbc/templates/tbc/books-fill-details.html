@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% if bookfill %}
+<center>
+        <div class="alert" style="width:230px;height:23px;">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <p>Book has been approved !</p>
+        </div>
+    </center>
+{% endif %}
+<div class="row-fluid">
+    <div class="span6">
+        <u> Books without details </u>
+        <ol>
+            {% for book in auto  %}
+                <li><a href="{% url 'tbc:edit_books_fill_details' book.id %}"> {{ book.title }} </a> </li>
+            {% endfor %}
+        </ol>
+        <br \>
+      <!--  <u> Books with log available, so can be automated </u>
+        <ol>
+            {% for book in auto %}
+                <li><a href="{% url 'tbc:edit_books_fill_details' book.id %}"> {{ book.title }} </a> </li>
+            {% endfor %}
+        </ol>-->
+    </div>
+    <div class="span6">
+        <u> Books with details </u>
+        <ol>
+            {% for book in books_complete %}
+                <li><a href="{% url 'tbc:edit_books_fill_details' book.id %}"> {{ book.title }} </a></li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+{% endblock %}

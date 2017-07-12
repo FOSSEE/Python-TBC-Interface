@@ -401,7 +401,7 @@ def edit_book(request, book_id):
     else:
         return HttpResponseRedirect("/login/?require_login=true")
 
-def books_fill_details(request):
+def books_fill_details(request, bookfill=None):
     user = request.user
     if user.is_superuser:
         books = Book.objects.all()
@@ -416,7 +416,7 @@ def books_fill_details(request):
             else:
                 books_complete.append(book)
                 manual.append(book)
-        context = {'auto': auto, 'manual': manual, 'books_complete': books_complete}
+        context = {'auto': auto, 'manual': manual, 'books_complete': books_complete, 'bookfill': bookfill}
         return render_to_response('tbc/books-fill-details.html', context)
     else:
         return HttpResponseRedirect("/login/?require_login=true")
@@ -431,7 +431,7 @@ def edit_books_fill_details(request, book_id):
             form = BookForm(request.POST, instance=book)
             if form.is_valid():
                 form.save()
-                return books_fill_details(request)
+                return books_fill_details(request, True)
             else:
                 form.fields['title'].widget.attrs['readonly'] = True
                 form.fields['author'].widget.attrs['readonly'] = True

@@ -42,7 +42,7 @@ pyasn1==0.1.9
 pyasn1-modules==0.0.8
 pycparser==2.14
 pycurl==7.19.0
-Pygments==2.0.2
+Pygments==2.7.4
 pygobject==3.14.0
 pygpgme==0.3
 pyliblzma==0.5.3

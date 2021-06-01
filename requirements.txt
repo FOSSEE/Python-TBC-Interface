@@ -72,7 +72,7 @@ terminado==0.5
 tornado==4.2.1
 Twisted==16.1.1
 urlgrabber==3.10
-urllib3==1.10.2
+urllib3==1.26.5
 virtualenv==15.0.3
 w3lib==1.14.2
 Whoosh==2.6.0

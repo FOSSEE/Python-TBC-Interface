@@ -70,7 +70,7 @@ sphinx-rtd-theme==0.1.8
 sympy==0.7.6
 terminado==0.5
 tornado==4.2.1
-Twisted==16.1.1
+Twisted==22.1.0
 urlgrabber==3.10
 urllib3==1.10.2
 virtualenv==15.0.3
